@@ -292,6 +292,11 @@ Your database is brand new and empty. Fill it (only once):
    ```
    *(adds the 15 phone cases, images, prices, reviews, regions, shipping)*
 
+   ```sh
+   npx medusa exec ./src/scripts/seed-accessories.ts
+   ```
+   *(adds the 50 speakers / power banks / cables / MagSafe / AirPods accessories — idempotent, safe to re-run)*
+
 3. ⚠️ **While the seed runs, look at its log output.** Near the end it prints:
 
    ```
@@ -448,7 +453,7 @@ Open each and confirm:
 
 - [ ] `https://flowcase-backend.onrender.com/health` → 200
 - [ ] `https://admin.flowcase.in/app` → Flowcase login → sign in with `admin@flowcase.dev` / `YOUR_ADMIN_PASSWORD` → dashboard shows your store name
-- [ ] Admin → **Products** → shows all 15 cases (if empty: the seed did not run — redo Step 8.5)
+- [ ] Admin → **Products** → shows all 65 products — 15 cases + 50 accessories (if empty: the seed did not run — redo Step 8.5)
 - [ ] `https://flowcase.in` → hero video plays, **Shop** works
 - [ ] Shop page → products show prices in ₹, badges (Limited / New / Sale)
 - [ ] Product page → colour options switch the images, **Add to bag** works
@@ -497,6 +502,7 @@ Everything checked? **You are live. 🎉**
 | Render build fails: `bash: -c: line 1: unexpected EOF while looking for matching` | The Build Command field has a stray quote/backtick → retype it exactly `npm install && npm run build` (plain text, no quotes, no backticks) → Save (redeploys) |
 | Render deploy: `Error: connect ECONNREFUSED ::1:5433` | `DATABASE_URL` was copied from `.env.local` (local dev) → replace it in Render → Environment with the Supabase pooler URL from `.env` (port `6543`) → Save. Scan all env vars: none may contain `localhost` |
 | Render deploy: `bash: line 1: >: command not found` + `Exited with status 127` | Start Command has backticks around it → retype it exactly `npm start` (plain) → Save |
+| Render deploy: `relation "currency" does not exist` / `relation "payment_provider" does not exist` | The database is connected but **empty** — tables were never created. Run the 3 one-time commands in Step 8.5 via the **Shell** tab (`npx medusa db:migrate` first), then let the service restart |
 | Render build fails: “JavaScript heap out of memory” | Render → Environment → add `NODE_OPTIONS` = `--max-old-space-size=450` → Save (redeploys) |
 | Storefront shows **no products** | Seed did not run — redo Step 8.5. Check admin → Products. |
 | Browser console: **CORS error** (`blocked by CORS policy`) | Fix the three CORS values exactly (Step 8.2) → Save → wait for redeploy → hard-refresh |
