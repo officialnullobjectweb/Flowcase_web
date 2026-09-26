@@ -170,9 +170,11 @@ This guide contains your admin password, so the repo must not stay public:
 
 ```sh
 # 1. copy your latest code into a clone of the repo
-# (--exclude .git keeps any nested repos out; secrets stay out via .gitignore)
-rsync -a --exclude node_modules --exclude .next --exclude .env --exclude '.env.*' \
-  --exclude .pgdata --exclude .git --exclude .medusa \
+# (--exclude .git keeps any nested repos out; secrets stay out via .gitignore.
+#  NOTE: do NOT use --exclude '.env.*' — it would also drop the .env.example
+#  templates, which belong in the repo.)
+rsync -a --exclude node_modules --exclude .next --exclude .env --exclude .env.local --exclude '.env.*.local' --exclude .env.template-backup \
+  --exclude .pgdata --exclude .git --exclude .medusa --exclude tsconfig.tsbuildinfo \
   /Users/karandhiver/Developer/hero/mindup-game/E-com/  ~/Flowcase_web/E-com/
 
 # 2. commit + push
