@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+/*
+  Flowcase — editorial monochrome system
+  ink/paper + hairlines. Signal blue is reserved for primary buttons/CTAs,
+  focus rings, and button hovers — never decoration.
+  Hierarchy = type scale + whitespace + hairlines. No shadows.
+*/
+@theme {
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-body: var(--font-nunito-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-primary: #0a0a0a;
+  --color-primary-foreground: #ffffff;
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #52525b;
+  --color-border: #e5e5e5;
+  --color-accent: #f4f4f5;
+  --color-surface: #ffffff;
+  --color-signal: #0700ff;
+  --color-ring: #0a0a0a;
+  --color-success: #15803d;
+  --color-danger: #b91c1c;
+  --color-hero-ink: #0a0a0a;
+  --color-hero-paper: #ffffff;
+  --color-hero-muted: #a1a1aa;
+}
+
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+@utility display-tight {
+  letter-spacing: -0.03em;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+}
+
+::selection {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Reviews marquee ─────────────────────────────────────────── */
+.marquee-track {
+  animation: marquee-scroll 110s linear infinite;
+}
+.marquee-track:hover,
+.marquee-track:focus-within {
+  animation-play-state: paused;
+}
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ── Drawn check / cross marks (order tracker) ───────────────── */
+.draw-mark {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: draw-in 0.45s ease-out 0.15s forwards;
+}
+@keyframes draw-in {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ── How-it-works scenes (ReuseSteps) ─────────────────────────── */
+.scene-bg {
+  background-image: radial-gradient(circle at 1px 1px, rgba(10, 10, 10, 0.13) 1px, transparent 0);
+  background-size: 15px 15px;
+}
+/* marching dashes along motion paths (dash patterns sum to 10 → -20 is seamless) */
+.scene-dash {
+  animation: scene-dash 1.6s linear infinite;
+}
+@keyframes scene-dash {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+/* rubber stamp presses down, settles with a hair of overshoot */
+.scene-stamp {
+  animation: scene-stamp 4.5s ease-in-out infinite;
+}
+@keyframes scene-stamp {
+  0%,
+  55% {
+    transform: translateY(0);
+  }
+  62% {
+    transform: translateY(-9px);
+  }
+  70% {
+    transform: translateY(1px);
+  }
+  76%,
+  100% {
+    transform: translateY(0);
+  }
+}
+/* envelope floats gently between the two hands */
+.scene-glide {
+  animation: scene-glide 4s ease-in-out infinite;
+}
+@keyframes scene-glide {
+  0%,
+  100% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+/* 10% badge pops */
+.scene-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: scene-pop 3.6s ease-in-out infinite;
+}
+@keyframes scene-pop {
+  0%,
+  55%,
+  100% {
+    transform: scale(1);
+  }
+  65% {
+    transform: scale(1.22);
+  }
+  75% {
+    transform: scale(0.94);
+  }
+  85% {
+    transform: scale(1);
+  }
+}
+
+/* ── Range slider (custom, native inputs underneath) ─────────── */
+.range-slider input[type="range"] {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  transform: translateY(-50%);
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  pointer-events: none;
+}
+.range-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--color-foreground);
+  border: 3px solid var(--color-background);
+  box-shadow: 0 0 0 1px var(--color-foreground);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.range-slider input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--color-foreground);
+  border: 3px solid var(--color-background);
+  box-shadow: 0 0 0 1px var(--color-foreground);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.range-slider input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 2px;
+}

@@ -1,0 +1,9 @@
+{
+  "name": "mindup-ecom",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm run dev --prefix apps/backend",
+    "dev:storefront": "npm run dev --prefix apps/storefront",
+    "build": "npm run build --prefix apps/backend && npm run build --prefix apps/storefront"
+  }
+}

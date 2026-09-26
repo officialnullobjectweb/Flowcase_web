@@ -1,0 +1,60 @@
+{
+  "announcement": {
+    "enabled": true,
+    "pages": [
+      "home",
+      "shop",
+      "cart",
+      "product"
+    ],
+    "marquee": false,
+    "speed": 24,
+    "link": "",
+    "messages": [
+      {
+        "text": "Free shipping over ₹999 · 7-day returns · 10% off with reuse10",
+        "link": ""
+      }
+    ]
+  },
+  "promo": {
+    "enabled": false,
+    "image": "",
+    "title": "10% off your first case",
+    "body": "Use code reuse10 at checkout — sustainability bonus included.",
+    "cta_label": "Shop cases",
+    "cta_link": "/shop",
+    "delay": 4
+  },
+  "heroes": {
+    "home": [
+      {
+        "src": "https://res.cloudinary.com/dvekceihu/video/upload/f_auto,q_auto,w_1600/v1790321523/ttkpfoett07jlyvrlh09.mp4",
+        "poster": "https://res.cloudinary.com/dvekceihu/video/upload/so_0,w_1600,q_auto,f_jpg/v1790321523/ttkpfoett07jlyvrlh09.jpg",
+        "alt": "Phone spinning in a Flowcase case"
+      },
+      {
+        "src": "https://res.cloudinary.com/dvekceihu/video/upload/f_auto,q_auto,w_1600/v1790321522/j7vl6vmjuuhhrr2c6x4h.mp4",
+        "poster": "https://res.cloudinary.com/dvekceihu/video/upload/so_0,w_1600,q_auto,f_jpg/v1790321522/j7vl6vmjuuhhrr2c6x4h.jpg",
+        "alt": "Close-up of case texture and camera ring"
+      }
+    ],
+    "shop": {
+      "src": "https://res.cloudinary.com/dvekceihu/video/upload/f_auto,q_auto,w_1600/v1790321522/avgvexercaikpgl7evln.mp4",
+      "poster": "https://res.cloudinary.com/dvekceihu/video/upload/so_0,w_1600,q_auto,f_jpg/v1790321522/avgvexercaikpgl7evln.jpg",
+      "alt": "Phone spinning in a Flowcase case"
+    }
+  },
+  "payments": [],
+  "pdp": {
+    "highlights": [],
+    "details": "",
+    "categories": [
+      "Quality",
+      "Pricing",
+      "Grip",
+      "Protection"
+    ],
+    "carousel": true
+  }
+}

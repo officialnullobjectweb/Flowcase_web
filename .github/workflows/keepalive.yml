@@ -1,0 +1,32 @@
+# Supabase keepalive — SELECT 1 resets the 7-day inactivity pause (every 3 days).
+# Render uptime is handled separately by UptimeRobot (every 5 min, /health).
+#   Medusa/Render + storefront pings below are belt-and-suspenders backups;
+#   they no-op (SKIP) until secrets are set.
+# Set these repo secrets after deploying:
+#   SUPABASE_DB_URL, MEDUSA_URL, STORE_URL
+name: keepalive
+
+on:
+  schedule:
+    - cron: "0 4 */3 * *" # 04:00 UTC every 3rd day = 09:30 IST
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: E-com/apps/backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Ping Supabase + Medusa + storefront
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          MEDUSA_URL: ${{ secrets.MEDUSA_URL }}
+          STORE_URL: ${{ secrets.STORE_URL }}
+        run: |
+          npm install --omit=dev --no-audit --no-fund
+          node scripts/keepalive.mjs

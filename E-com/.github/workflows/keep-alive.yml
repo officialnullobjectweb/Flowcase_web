@@ -1,0 +1,20 @@
+name: Keep Render Awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping /store/health
+        env:
+          BACKEND_URL: ${{ vars.MEDUSA_BACKEND_URL }}
+        run: |
+          if [ -z "$BACKEND_URL" ]; then
+            echo "Set repo variable MEDUSA_BACKEND_URL (e.g. https://your-service.onrender.com)" >&2
+            exit 1
+          fi
+          curl -fsS --max-time 30 "$BACKEND_URL/store/health"
