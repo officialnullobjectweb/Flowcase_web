@@ -152,6 +152,7 @@ Repo: **https://github.com/officialnullobjectweb/Flowcase_web**
 ```sh
 # 1. copy your latest code into a clone of the repo
 rsync -a --exclude node_modules --exclude .next --exclude .env --exclude '.env.*' \
+  --exclude .pgdata \
   /Users/karandhiver/Developer/hero/mindup-game/E-com/  ~/Flowcase_web/E-com/
 
 # 2. commit + push
