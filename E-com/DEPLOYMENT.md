@@ -274,6 +274,12 @@ Vercel and Render **auto-redeploy** when they see the push.
 
 Your database is brand new and empty. Fill it (only once):
 
+> **No Shell tab (Render free plan doesn't include it)?** Run the same 4 commands from **your own computer** — they hit the exact same database:
+> 1. In `E-com/apps/backend`, rename `.env.local` → `.env.local.bak` (it would override the production database URL).
+> 2. Run the 4 commands below from that folder.
+> 3. Rename `.env.local.bak` back to `.env.local`.
+> Render's server then boots on its own once the tables exist.
+
 1. Render dashboard → your service → **Shell** tab (left menu). It opens a terminal **inside** the server.
 2. Run these one by one:
 
@@ -502,7 +508,7 @@ Everything checked? **You are live. 🎉**
 | Render build fails: `bash: -c: line 1: unexpected EOF while looking for matching` | The Build Command field has a stray quote/backtick → retype it exactly `npm install && npm run build` (plain text, no quotes, no backticks) → Save (redeploys) |
 | Render deploy: `Error: connect ECONNREFUSED ::1:5433` | `DATABASE_URL` was copied from `.env.local` (local dev) → replace it in Render → Environment with the Supabase pooler URL from `.env` (port `6543`) → Save. Scan all env vars: none may contain `localhost` |
 | Render deploy: `bash: line 1: >: command not found` + `Exited with status 127` | Start Command has backticks around it → retype it exactly `npm start` (plain) → Save |
-| Render deploy: `relation "currency" does not exist` / `relation "payment_provider" does not exist` | The database is connected but **empty** — tables were never created. Run the 3 one-time commands in Step 8.5 via the **Shell** tab (`npx medusa db:migrate` first), then let the service restart |
+| Render deploy: `relation "currency" does not exist` / `relation "payment_provider" does not exist` | The database is connected but **empty** — tables were never created. Run the 3 one-time commands in Step 8.5 (Shell tab — or from your own computer if you are on the free plan, see the note in 8.5), `npx medusa db:migrate` first, then let the service restart |
 | Render build fails: “JavaScript heap out of memory” | Render → Environment → add `NODE_OPTIONS` = `--max-old-space-size=450` → Save (redeploys) |
 | Storefront shows **no products** | Seed did not run — redo Step 8.5. Check admin → Products. |
 | Browser console: **CORS error** (`blocked by CORS policy`) | Fix the three CORS values exactly (Step 8.2) → Save → wait for redeploy → hard-refresh |

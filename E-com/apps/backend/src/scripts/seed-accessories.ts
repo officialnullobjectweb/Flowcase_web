@@ -178,6 +178,10 @@ const CATEGORIES: CategorySeed[] = [
 ]
 
 const NEW_CATEGORY_DEFS = [
+  { name: "Phone case", handle: "phone-case" },
+  { name: "Speakers", handle: "speakers" },
+  { name: "Powerbank", handle: "powerbank" },
+  { name: "Cables", handle: "cables" },
   { name: "MagSafe Cases", handle: "magsafe-cases" },
   { name: "AirPods Cases", handle: "airpods-cases" },
 ]
