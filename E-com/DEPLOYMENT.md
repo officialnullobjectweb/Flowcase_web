@@ -211,6 +211,11 @@ Vercel and Render **auto-redeploy** when they see the push.
    `bash: -c: line 1: unexpected EOF while looking for matching` — retype the
    field clean and Save.
 
+   The same rule applies to the **Start Command**: type plain `npm start`, no
+   backticks. If Render's log shows `` Running '`npm start`' `` followed by
+   `bash: line 1: >: command not found` / `Exited with status 127`, the
+   backticks made bash execute the log output as a command — retype it clean.
+
 4. **Do not deploy yet** — first add the environment variables (next section).
 5. Open the **Environment** tab → **Add Environment Variable** → add every row below.
 
@@ -219,6 +224,11 @@ Vercel and Render **auto-redeploy** when they see the push.
 > **Rule: copy the value of each key from `E-com/apps/backend/.env` on your computer,
 > EXCEPT the rows below which have their own value.**
 > ⚠️ Do **NOT** add a `PORT` variable — Render gives the port by itself (if you set `PORT=9000` the site breaks).
+> ⚠️ **Every value must come from `.env` (production), NEVER from `.env.local` (local dev).**
+> Sanity check before saving: if any value contains `localhost` — most commonly
+> `DATABASE_URL=…localhost:5433…` — you copied the wrong file, and the deploy
+> crashes with `Error: connect ECONNREFUSED ::1:5433`. The five keys that differ
+> are `DATABASE_URL`, `MEDUSA_BACKEND_URL`, `STORE_CORS`, `ADMIN_CORS`, `AUTH_CORS`.
 
 | Key | Value |
 |---|---|
@@ -485,6 +495,8 @@ Everything checked? **You are live. 🎉**
 | Problem | Fix |
 |---|---|
 | Render build fails: `bash: -c: line 1: unexpected EOF while looking for matching` | The Build Command field has a stray quote/backtick → retype it exactly `npm install && npm run build` (plain text, no quotes, no backticks) → Save (redeploys) |
+| Render deploy: `Error: connect ECONNREFUSED ::1:5433` | `DATABASE_URL` was copied from `.env.local` (local dev) → replace it in Render → Environment with the Supabase pooler URL from `.env` (port `6543`) → Save. Scan all env vars: none may contain `localhost` |
+| Render deploy: `bash: line 1: >: command not found` + `Exited with status 127` | Start Command has backticks around it → retype it exactly `npm start` (plain) → Save |
 | Render build fails: “JavaScript heap out of memory” | Render → Environment → add `NODE_OPTIONS` = `--max-old-space-size=450` → Save (redeploys) |
 | Storefront shows **no products** | Seed did not run — redo Step 8.5. Check admin → Products. |
 | Browser console: **CORS error** (`blocked by CORS policy`) | Fix the three CORS values exactly (Step 8.2) → Save → wait for redeploy → hard-refresh |
