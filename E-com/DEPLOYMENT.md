@@ -91,9 +91,17 @@ Open each site, sign up (most support “Sign up with GitHub”):
    - Copy **service_role** key → this is `SUPABASE_SERVICE_ROLE_KEY` (keep it secret!)
 6. Now fix the Auth settings (very important):
    1. Left menu → **Authentication → Sign In / Providers → Email**
-   2. Turn **Confirm email** → **OFF** → Save.
-      (If this stays ON, new customers get a “check your inbox” email and cannot sign in.)
-   3. Left menu → **Authentication → URL Configuration**:
+   2. **Confirm email** → keep it **ON** (this is how you set it up). New
+      customers sign up → get a confirmation email → the link drops them
+      straight into their account. Turn it OFF only if you want instant
+      signup with no email.
+      ⚠️ Free Supabase sends only a few auth emails per hour — if signups say
+      “email rate limit exceeded”, wait a while (or turn this OFF).
+   3. **Providers → Google** must show **Enabled** (you already turned it on).
+      Customers click **Continue with Google** → Google → back to their account.
+   4. **Providers → Phone** must show **Enabled** with **Twilio** as the SMS
+      provider (you already set this up) — it powers the one-time SMS step.
+   5. Left menu → **Authentication → URL Configuration**:
       - **Site URL:** `https://flowcase.in`
       - **Redirect URLs:** add both:
         - `https://flowcase.in/account/auth/callback`
@@ -307,7 +315,7 @@ Click **Environment Variables** and add every row.
 | `NEXT_PUBLIC_MEDUSA_BACKEND_URL` | `https://flowcase-backend.onrender.com` |
 | `MEDUSA_BACKEND_URL` | `https://flowcase-backend.onrender.com` |
 | `NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY` | the **new** `pk_…` key the seed printed (Step 8.5). Fallback: `pk_013a317fd91ffc8b5c5fd6a111bef67ae60486c75e3c596dfc5a07500c4da0b7` if you are reusing your local database |
-| `NEXT_PUBLIC_PHONE_VERIFY` | `off` |
+| `NEXT_PUBLIC_PHONE_VERIFY` | `on` |
 | `MEDUSA_ADMIN_EMAIL` | `admin@flowcase.dev` |
 | `MEDUSA_ADMIN_PASSWORD` | `Flowcase#2026` |
 
@@ -357,6 +365,7 @@ Go to your registrar → DNS settings / Manage DNS → add exactly these:
 ### 10.4 When DNS is live
 
 - `https://flowcase.in` → your storefront ✅
+- `https://admin.flowcase.in` (bare, no `/app`) → **auto-redirects** to the admin login ✅
 - `https://admin.flowcase.in/app` → your admin panel (login `admin@flowcase.dev` / `Flowcase#2026`) ✅
 - `https://flowcase-backend.onrender.com` → still works (internal/backend API)
 
@@ -423,7 +432,10 @@ Open each and confirm:
 - [ ] Product page → colour options switch the images, **Add to bag** works
 - [ ] Bag → Checkout (Razorpay **test mode**: card `4111 1111 1111 1111`, any future date, CVV `123`) → order confirmation appears
 - [ ] Render → **Logs** → you see `razorpay-webhook` request with **200** after the test payment
-- [ ] Sign-up on the storefront lands straight on `/account` (no “check your inbox” — that would mean Supabase email-confirm is still ON)
+- [ ] Sign-up on the storefront shows **“Check your inbox to confirm your email”** → open the email → click the link → you land signed in on your account (Confirm email is ON; if you ever turn it OFF you land on `/account` instantly instead)
+- [ ] After signing in the first time, the **Verify phone** step appears → enter your mobile → you get a real SMS code → enter it → account opens
+- [ ] `https://admin.flowcase.in` (bare, without `/app`) → redirects to the admin login
+- [ ] Admin → **Reports** → KPIs, daily-revenue chart, movement + inventory tables load; add a test expense → it appears → delete it
 - [ ] Your account page shows the test order
 - [ ] UptimeRobot → both monitors green
 - [ ] GitHub → keepalive workflow ran with PASS
@@ -472,6 +484,8 @@ Everything checked? **You are live. 🎉**
 | Domain doesn’t open after hours | Re-check the 3 DNS records (Step 10.3): name `@` / `www` / `admin`, no duplicate old records; wait for propagation |
 | New products uploaded from admin don’t show | Admin → products → click **Publish** (drafts are not visible on the store) |
 | Storefront build shows **0 routes / empty manifest** | Cancel → **Redeploy** (a corrupted cache build) |
+| Signups say **“email rate limit exceeded”** | Free Supabase allows only a few auth emails per hour → wait an hour, or turn **Confirm email** OFF for instant signup |
+| Customer stuck on **“Verify phone”** | They must finish the one-time SMS step — if no SMS arrives, check Supabase → Authentication → Providers → Phone (Twilio) is enabled |
 
 ---
 

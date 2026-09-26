@@ -74,6 +74,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password: input.password,
         options: {
           data: { first_name: input.first_name, last_name: input.last_name },
+          // Confirm email is ON: the email link must land back here with a
+          // PKCE code (same origin stores the code_verifier) or the session
+          // never completes.
+          emailRedirectTo: `${window.location.origin}/account/auth/callback`,
         },
       })
       if (error) throw authError(error)
