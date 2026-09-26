@@ -143,6 +143,16 @@ Your videos are already uploaded to your Cloudinary cloud `dvekceihu`, and the 3
 
 Repo: **https://github.com/officialnullobjectweb/Flowcase_web**
 
+### ⚠️ First: make the repo PRIVATE (30 seconds)
+
+This guide contains your admin password, so the repo must not stay public:
+
+1. Open the repo on GitHub → **Settings** (top tab) → scroll down to **Danger Zone**
+2. **Change visibility → Make private**
+3. Type the repo name to confirm → **I understand, change repository visibility**
+
+**Do this before deploying anything.**
+
 - The repo contains **only** the `E-com` folder (plus `.github/workflows/keepalive.yml`, a tiny automation script that stops your free database from sleeping).
 - Structure inside: `E-com/apps/backend` (Medusa) and `E-com/apps/storefront` (Next.js).
 - `.env` files are **not** in the repo (secrets never go to GitHub).
