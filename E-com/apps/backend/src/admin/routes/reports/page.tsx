@@ -821,5 +821,5 @@ export default function ReportsPage() {
 export const config = defineRouteConfig({
   label: "Reports",
   icon: ChartBar,
-  rank: 2,
+  rank: 3,
 })

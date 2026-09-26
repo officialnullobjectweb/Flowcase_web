@@ -5,7 +5,10 @@ import { loadCatalog } from "@/lib/api"
 
 export const metadata: Metadata = {
   title: "Search",
-  description: "Search Flowcase cases by model, device, or finish.",
+  description: "Search Flowcase cases, speakers, power banks, cables, MagSafe and AirPods accessories.",
+  // search-result pages are thin by nature — keep them out of the index,
+  // let link equity flow to products, collections, and guides instead.
+  robots: { index: false, follow: true },
 }
 
 export default async function SearchPage({
@@ -43,8 +46,8 @@ export default async function SearchPage({
         title={p.q ? <>Results for “{p.q}”</> : "What are you looking for?"}
         description={
           p.q
-            ? `${count} ${count === 1 ? "case matches" : "cases match"} your search.`
-            : "Search by model — iPhone 17 Pro, Galaxy S25 Ultra, and everything between."
+            ? `${count} ${count === 1 ? "match" : "matches"} for your search.`
+            : "Search by model, speaker, power bank, cable, MagSafe, or AirPods."
         }
       />
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">

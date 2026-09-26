@@ -25,6 +25,13 @@ const PAGES: { key: string; label: string }[] = [
 
 const TABS = ["announcement", "promo", "heroes", "pdp", "payments"] as const
 type Tab = (typeof TABS)[number]
+const TAB_LABELS: Record<Tab, string> = {
+  announcement: "Announcement bar",
+  promo: "Popup offer",
+  heroes: "Hero videos",
+  pdp: "Product page",
+  payments: "Payments",
+}
 
 function fetchCms(): Promise<CmsConfig> {
   return sdk.client.fetch<CmsConfig>("/admin/cms", {
@@ -132,6 +139,71 @@ function PromoPreview({ p }: { p: CmsConfig["promo"] }) {
           </span>
         ) : null}
       </div>
+    </div>
+  )
+}
+
+function PdpPreview({ p }: { p: CmsConfig["pdp"] }) {
+  const rows = p.highlights.filter(
+    (row) => row.term.trim() || row.detail.trim()
+  )
+  const cats = p.categories.filter((c) => c.trim())
+  return (
+    <div className="rounded-md border border-ui-border-base bg-white p-5 text-black">
+      <div className="flex gap-5 border-b border-black/10 pb-2 text-xs uppercase tracking-widest">
+        <span className="border-b-2 border-black pb-1 font-semibold">
+          Highlights
+        </span>
+        <span className="text-black/40">Full details</span>
+        <span className="text-black/40">Reviews</span>
+      </div>
+      {rows.length ? (
+        <dl className="mt-3 space-y-2 text-sm">
+          {rows.map((row, i) => (
+            <div
+              key={i}
+              className="flex justify-between gap-6 border-b border-dashed border-black/10 pb-1.5"
+            >
+              <dt className="font-medium">{row.term || "Term"}</dt>
+              <dd className="text-right text-black/60">{row.detail || "—"}</dd>
+            </div>
+          ))}
+        </dl>
+      ) : (
+        <p className="mt-3 text-sm text-black/40">
+          No rows — each product derives its own highlights.
+        </p>
+      )}
+      <p className="mt-4 line-clamp-3 text-sm text-black/60">
+        {p.details ||
+          "(empty — every product falls back to its own description)"}
+      </p>
+      {cats.length > 0 && (
+        <div
+          className={
+            p.carousel
+              ? "mt-4 flex gap-3 overflow-x-auto pb-1"
+              : "mt-4 flex flex-wrap gap-3"
+          }
+        >
+          {cats.map((cat, i) => (
+            <div
+              key={i}
+              className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-full border-2 border-black/15 text-center"
+            >
+              <span className="text-sm font-bold">
+                {(4.9 - i * 0.2).toFixed(1)}
+              </span>
+              <span className="px-1 text-[9px] leading-tight text-black/50">
+                {cat}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+      <p className="mt-3 text-[10px] uppercase tracking-widest text-black/30">
+        preview · sample scores
+      </p>
     </div>
   )
 }
@@ -274,11 +346,7 @@ export default function CmsPage() {
                   : "text-ui-fg-muted hover:text-ui-fg-base"
               }`}
             >
-              {t === "promo"
-                ? "Popup offer"
-                : t === "pdp"
-                  ? "Product page"
-                  : t}
+              {TAB_LABELS[t]}
             </button>
           ))}
         </div>
@@ -643,7 +711,9 @@ export default function CmsPage() {
               </Row>
             </div>
             <div>
-              <Text className="mb-2 font-medium">Where this shows</Text>
+              <Text className="mb-2 font-medium">Live preview</Text>
+              <PdpPreview p={cfg.pdp} />
+              <Text className="mb-2 mt-6 font-medium">Where this shows</Text>
               <div className="space-y-3 text-sm text-ui-fg-subtle">
                 <p>
                   <span className="text-ui-fg-base">Highlights / Full details</span> —

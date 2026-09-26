@@ -1,13 +1,15 @@
 import type { Metadata } from "next"
+import Link from "next/link"
 import { Catalog } from "@/components/Catalog"
 import { VideoHero } from "@/components/VideoHero"
 import { loadCatalog } from "@/lib/api"
 import { getCms } from "@/lib/cms"
 
 export const metadata: Metadata = {
-  title: "Shop",
+  title: "Shop Phone Cases, Speakers, Power Banks & Accessories",
   description:
-    "Browse Flowcase cases for iPhone 15–17 and Samsung Galaxy A & S series.",
+    "Shop Flowcase: drop-tested iPhone 15–17 & Samsung Galaxy cases, Bluetooth speakers, fast-charging power banks, braided cables, MagSafe and AirPods cases.",
+  alternates: { canonical: "/shop" },
 }
 
 export default async function ShopPage({
@@ -79,6 +81,35 @@ export default async function ShopPage({
           products={products}
           tags={tags}
         />
+        {/* indexable category copy + internal links */}
+        <div className="mx-auto mt-14 max-w-3xl border-t border-border pt-8 text-center">
+          <h2 className="display-tight font-display text-2xl font-bold">
+            Cases, audio, and charging — one standard.
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            Every Flowcase product earns its place: phone cases moulded to one
+            exact model, speakers tuned for rooms not labs, power banks rated
+            in real charges, and cables braided to survive bags and cars. Free
+            shipping over ₹999, 7-day returns, and a reuse programme that keeps
+            old cases out of landfill.
+          </p>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            {[
+              { href: "/collections/iphone", label: "iPhone cases" },
+              { href: "/collections/samsung-galaxy", label: "Samsung cases" },
+              { href: "/collections/accessories", label: "Accessories" },
+              { href: "/sustainability", label: "Our mission" },
+            ].map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="label border-b border-foreground pb-0.5 transition hover:border-muted-foreground hover:text-muted-foreground"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
     </>
   )

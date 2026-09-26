@@ -6,9 +6,23 @@ import { useAuth } from "@/context/AuthContext"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
+const DUPLICATE_RE =
+  /user_already_exists|already registered|already been registered|already exists/i
+
 function formError(err: unknown): string {
-  if (err instanceof Error && err.message) return err.message
-  return "Something went wrong — check your details and try again."
+  const raw = err instanceof Error && err.message ? err.message : ""
+  if (DUPLICATE_RE.test(raw))
+    return "This email is already registered — sign in instead."
+  return raw || "Something went wrong — check your details and try again."
+}
+
+/** "+91 98765 43210" / "98765 43210" → E.164 "+919876543210". */
+function e164(raw: string): string {
+  const trimmed = raw.trim()
+  const digits = trimmed.replace(/\D/g, "")
+  if (trimmed.startsWith("+")) return `+${digits}`
+  if (digits.length === 10) return `+91${digits}`
+  return `+${digits}`
 }
 
 function GoogleIcon() {
@@ -34,13 +48,18 @@ export function AuthForm({
   next?: string
   defaultTab?: "signin" | "signup"
 }) {
-  const { login, register, loginWithGoogle } = useAuth()
+  const { login, register, loginWithGoogle, sendPhoneOtp, verifyPhoneOtp } =
+    useAuth()
   const router = useRouter()
   const [tab, setTab] = useState<"signin" | "signup">(defaultTab)
+  const [channel, setChannel] = useState<"email" | "phone">("email")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [phone, setPhone] = useState("+91 ")
+  const [otpSent, setOtpSent] = useState(false)
+  const [otp, setOtp] = useState("")
   const [busy, setBusy] = useState(false)
   const [googleBusy, setGoogleBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -55,8 +74,22 @@ export function AuthForm({
     setBusy(true)
     setError(null)
     try {
-      if (tab === "signin") {
+      if (channel === "phone") {
+        if (!otpSent) {
+          await sendPhoneOtp(
+            e164(phone),
+            tab === "signup"
+              ? { first_name: firstName, last_name: lastName }
+              : undefined
+          )
+          setOtpSent(true)
+        } else {
+          await verifyPhoneOtp(e164(phone), otp)
+          go()
+        }
+      } else if (tab === "signin") {
         await login(email, password)
+        go()
       } else {
         await register({
           email,
@@ -64,10 +97,16 @@ export function AuthForm({
           first_name: firstName,
           last_name: lastName,
         })
+        go()
       }
-      go()
     } catch (err) {
-      setError(formError(err))
+      const msg = formError(err)
+      setError(msg)
+      // "already exists → sign in, not signup"
+      if (DUPLICATE_RE.test(msg)) {
+        setChannel("email")
+        setTab("signin")
+      }
     } finally {
       setBusy(false)
     }
@@ -88,6 +127,16 @@ export function AuthForm({
   const switchTab = (t: "signin" | "signup") => {
     setTab(t)
     setError(null)
+    setOtpSent(false)
+    setOtp("")
+  }
+
+  const switchChannel = () => {
+    const next = channel === "email" ? "phone" : "email"
+    setChannel(next)
+    setError(null)
+    setOtpSent(false)
+    setOtp("")
   }
 
   return (
@@ -144,45 +193,112 @@ export function AuthForm({
           </div>
         )}
         <label className="block">
-          <span className="label text-muted-foreground">Email</span>
-          <Input
-            type="email"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label className="block">
           <span className="label text-muted-foreground">
-            {tab === "signup"
-              ? "Password (min 8 characters)"
-              : "Password"}
+            {channel === "phone"
+              ? "Mobile number"
+              : "Email"}
           </span>
-          <Input
-            type="password"
-            required
-            minLength={tab === "signup" ? 8 : undefined}
-            autoComplete={
-              tab === "signup" ? "new-password" : "current-password"
-            }
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          {channel === "phone" ? (
+            <Input
+              type="tel"
+              required
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder="+91 98765 43210"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          ) : (
+            <Input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          )}
         </label>
+        {channel === "phone" ? (
+          otpSent && (
+            <label className="block">
+              <span className="label text-muted-foreground">6-digit code</span>
+              <Input
+                required
+                autoComplete="one-time-code"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                value={otp}
+                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+              />
+            </label>
+          )
+        ) : (
+          <label className="block">
+            <span className="label text-muted-foreground">
+              {tab === "signup"
+                ? "Password (min 8 characters)"
+                : "Password"}
+            </span>
+            <Input
+              type="password"
+              required
+              minLength={tab === "signup" ? 8 : undefined}
+              autoComplete={
+                tab === "signup" ? "new-password" : "current-password"
+              }
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+        )}
         {error && (
           <p role="alert" className="label border border-danger px-3 py-2.5 text-danger">
             {error}
           </p>
         )}
-        <Button type="submit" size="lg" className="h-12 w-full" disabled={busy}>
-          {busy
-            ? tab === "signin"
-              ? "Signing in…"
-              : "Creating account…"
-            : tab === "signin"
-              ? "Sign in"
-              : "Create account"}
+        {channel === "phone" && otpSent && (
+          <p className="label text-muted-foreground">
+            Code sent to {e164(phone)}{" "}
+            <button
+              type="button"
+              onClick={() => {
+                sendPhoneOtp(
+                  e164(phone),
+                  tab === "signup"
+                    ? { first_name: firstName, last_name: lastName }
+                    : undefined
+                ).catch((e) => setError(formError(e)))
+              }}
+              className="border-b border-foreground text-foreground"
+            >
+              Resend code
+            </button>
+          </p>
+        )}
+        <Button
+          type="submit"
+          size="lg"
+          className="h-12 w-full"
+          disabled={
+            busy || (channel === "phone" && otpSent && otp.length !== 6)
+          }
+        >
+          {channel === "phone"
+            ? busy
+              ? otpSent
+                ? "Verifying…"
+                : "Sending code…"
+              : otpSent
+                ? "Verify & continue"
+                : "Send code"
+            : busy
+              ? tab === "signin"
+                ? "Signing in…"
+                : "Creating account…"
+              : tab === "signin"
+                ? "Sign in"
+                : "Create account"}
         </Button>
       </form>
 
@@ -203,6 +319,18 @@ export function AuthForm({
         <GoogleIcon />
         {googleBusy ? "Redirecting…" : "Continue with Google"}
       </Button>
+
+      <button
+        type="button"
+        onClick={switchChannel}
+        className="label mx-auto block border-b border-foreground text-foreground"
+      >
+        {channel === "email"
+          ? tab === "signup"
+            ? "Sign up with mobile number"
+            : "Sign in with mobile number"
+          : "Use email instead"}
+      </button>
     </div>
   )
 }

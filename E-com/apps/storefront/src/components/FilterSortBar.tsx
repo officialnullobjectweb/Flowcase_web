@@ -34,6 +34,10 @@ export const SWATCHES: Record<string, string> = {
   Sage: "#a9b8a0",
   Blush: "#e6c9c9",
   Ocean: "#aec6d8",
+  Crimson: "#c2373f",
+  Amber: "#e0a437",
+  Forest: "#3d6b4f",
+  Lavender: "#c3b2e0",
 }
 
 const RATING_OPTS = [

@@ -116,7 +116,7 @@ function ReviewCard({ review }: { review: Review }) {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={review.avatar}
-            alt=""
+            alt={review.name}
             onError={() => setBroken(true)}
             className="h-9 w-9 shrink-0 rounded-full object-cover grayscale"
             loading="lazy"
@@ -137,7 +137,7 @@ function ReviewCard({ review }: { review: Review }) {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={review.photo}
-            alt=""
+            alt={`${review.model} case — buyer photo`}
             loading="lazy"
             className="h-11 w-11 shrink-0 border border-border object-cover grayscale"
           />
@@ -235,7 +235,7 @@ export function ReviewsMarquee({ products = [] }: { products?: Product[] }) {
     <section className="mx-auto max-w-7xl px-4 sm:px-6" aria-labelledby="reviews-heading">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <SectionHeader
-          index="07"
+          index="09"
           label="Reviews"
           title="Stories from the drop test."
           className="w-full border-t-0 pt-0"

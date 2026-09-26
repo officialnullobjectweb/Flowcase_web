@@ -23,6 +23,7 @@ const LINKS = [
   { href: "/shop", label: "Shop", mega: null as null },
   { href: "/shop?tags=samsung", label: "Samsung", mega: "samsung" as const },
   { href: "/shop?tags=apple", label: "Apple", mega: "apple" as const },
+  { href: "/collections/accessories", label: "Accessories", mega: null },
   { href: "/shop?badge=limited", label: "Limited edition", mega: null },
 ]
 
@@ -495,7 +496,10 @@ export function SiteHeader({
           className={`transition-colors duration-300 ${
             solid
               ? "border-b border-border bg-background/90 text-foreground backdrop-blur-xl"
-              : "border-b border-transparent bg-transparent text-white"
+              // transparent over the hero: gradient scrim guarantees the white
+              // nav stays readable over bright videos, light posters, or a
+              // slow-loading hero — no white-on-white, ever.
+              : "border-b border-transparent bg-gradient-to-b from-black/55 via-black/15 to-transparent text-white"
           }`}
         >
           <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
@@ -815,6 +819,15 @@ export function SiteHeader({
                       </Link>
                     ))}
                   </div>
+
+                  <Link
+                    href="/collections/accessories"
+                    onClick={() => setMobileMenu(false)}
+                    className="mt-4 flex items-center justify-between border border-border p-4 transition hover:border-foreground active:bg-muted"
+                  >
+                    <span className="label">Accessories — speakers · power banks · cables</span>
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
 
                   <Link
                     href="/shop?badge=limited"

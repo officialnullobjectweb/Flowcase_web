@@ -57,7 +57,13 @@ function VerifyPhone() {
     const target = phone.trim()
     try {
       const { error: err } = await supabase.auth.updateUser({ phone: target })
-      if (err) throw new Error(err.message)
+      if (err) {
+        throw new Error(
+          /already|in use|registered|exists/i.test(err.message)
+            ? "That mobile number is already linked to another account — sign in with it instead."
+            : err.message
+        )
+      }
       setSentTo(target)
       setStep("otp")
       setCode("")

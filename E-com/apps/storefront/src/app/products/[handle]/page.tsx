@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { ImageGallery } from "@/components/ImageGallery"
+import { JsonLd, siteUrl } from "@/components/JsonLd"
 import { ProductCard } from "@/components/ProductCard"
 import { ProductInfo } from "@/components/ProductInfo"
 import { SelectionProvider } from "@/context/SelectionContext"
@@ -23,18 +24,83 @@ export async function generateMetadata({
   try {
     const product = await getProductByHandle(handle)
     if (!product) return { title: "Product not found" }
+    const desc = product.description?.slice(0, 160) ?? product.title
     return {
       title: product.title,
-      description: product.description?.slice(0, 160) ?? product.title,
+      description: desc,
+      alternates: { canonical: `/products/${product.handle}` },
       openGraph: {
         title: product.title,
-        description: product.description?.slice(0, 160) ?? product.title,
+        description: desc,
+        url: `/products/${product.handle}`,
+        images: product.thumbnail ? [{ url: product.thumbnail, alt: product.title }] : undefined,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: product.title,
+        description: desc,
         images: product.thumbnail ? [product.thumbnail] : undefined,
       },
     }
   } catch {
     return { title: "Product" }
   }
+}
+
+import type { Product } from "@/lib/types"
+
+/** Product + rating + breadcrumb rich results for the PDP. */
+function ProductJsonLd({ product }: { product: Product }) {
+  const base = siteUrl()
+  const variant = product.variants?.[0]
+  const price = variant?.calculated_price?.calculated_amount ?? null
+  const currency = (variant?.calculated_price?.currency_code ?? "inr").toUpperCase()
+  const rating = Number(product.metadata?.rating ?? 0)
+  const reviewCount = Number(product.metadata?.review_count ?? 0)
+  const inStock =
+    !variant?.manage_inventory ||
+    variant?.allow_backorder ||
+    (variant?.inventory_quantity ?? 0) > 0
+  return (
+    <JsonLd
+      data={[
+        {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.title,
+          description: product.description ?? product.title,
+          image: (product.images ?? []).map((i) => i.url).slice(0, 8),
+          brand: { "@type": "Brand", name: "Flowcase" },
+          ...(rating > 0 && reviewCount > 0
+            ? { aggregateRating: { "@type": "AggregateRating", ratingValue: rating, reviewCount } }
+            : {}),
+          offers: {
+            "@type": "Offer",
+            url: `${base}/products/${product.handle}`,
+            priceCurrency: currency,
+            ...(price != null ? { price } : {}),
+            availability: inStock
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+          },
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "Home", item: base },
+            { "@type": "ListItem", position: 2, name: "Shop", item: `${base}/shop` },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: product.title,
+              item: `${base}/products/${product.handle}`,
+            },
+          ],
+        },
+      ]}
+    />
+  )
 }
 
 export default async function ProductPage({
@@ -67,6 +133,7 @@ export default async function ProductPage({
 
   return (
     <SelectionProvider product={product}>
+      <ProductJsonLd product={product} />
       <div className="mx-auto max-w-7xl px-4 pb-28 pt-8 sm:px-6 sm:pb-24 sm:pt-12 lg:pb-12">
         <Breadcrumbs
           items={[{ href: "/shop", label: "Shop" }, { label: product.title }]}

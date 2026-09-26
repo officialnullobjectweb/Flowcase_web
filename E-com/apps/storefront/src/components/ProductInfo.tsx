@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { useCart } from "@/context/CartContext"
 import { useSelection } from "@/context/SelectionContext"
+import { SWATCHES } from "@/components/FilterSortBar"
 import { formatPrice } from "@/lib/format"
 import type { Product, ProductVariant } from "@/lib/types"
 import { Button } from "./ui/button"
@@ -91,6 +92,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const manage = variant?.manage_inventory ?? false
   const inStock = !manage || backorder || (stock != null && stock > 0)
 
+  const colors = String(product.metadata?.colors ?? "")
+    .split(",")
+    .map((c) => c.trim())
+    .filter(Boolean)
+
   const handleAdd = () => {
     if (!variant) return
     addItem({
@@ -166,6 +172,27 @@ export function ProductInfo({ product }: ProductInfoProps) {
           Inclusive of all taxes · shipping calculated at checkout
         </span>
       </div>
+
+      {colors.length > 0 && (
+        <div>
+          <p className="label mb-3 text-muted-foreground">Colours</p>
+          <ul className="flex flex-wrap justify-center gap-x-5 gap-y-2 lg:justify-start">
+            {colors.map((c) => (
+              <li
+                key={c}
+                className="label flex items-center gap-2 text-muted-foreground"
+              >
+                <span
+                  className="h-5 w-5 shrink-0 rounded-full border border-border"
+                  style={{ background: SWATCHES[c] ?? "#e5e5e5" }}
+                  aria-hidden="true"
+                />
+                {c}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {(product.options ?? []).map((option) => (
         <div key={option.id}>

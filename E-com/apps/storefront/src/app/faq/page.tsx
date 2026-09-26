@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Hero } from "@/components/Hero"
+import { JsonLd } from "@/components/JsonLd"
 import { Accordion } from "@/components/ui/accordion"
 
 export const metadata: Metadata = {
@@ -42,6 +43,17 @@ const FAQS = [
 export default function FaqPage() {
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQS.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }}
+      />
       <Hero
         variant="paper"
         eyebrow="Help"

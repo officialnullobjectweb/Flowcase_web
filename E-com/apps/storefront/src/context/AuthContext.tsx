@@ -23,6 +23,11 @@ interface AuthContextValue {
     last_name: string
   }) => Promise<void>
   loginWithGoogle: () => Promise<void>
+  sendPhoneOtp: (
+    phone: string,
+    profile?: { first_name: string; last_name: string }
+  ) => Promise<void>
+  verifyPhoneOtp: (phone: string, code: string) => Promise<void>
   logout: () => Promise<void>
   refreshUser: () => Promise<User | null>
 }
@@ -80,7 +85,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           emailRedirectTo: `${window.location.origin}/account/auth/callback`,
         },
       })
-      if (error) throw authError(error)
+      if (error) {
+        if (/user_already_exists|already registered/i.test(error.message))
+          throw new Error("This email is already registered — sign in instead.")
+        throw authError(error)
+      }
+      // Email confirmation ON: re-signing-up an existing account returns a
+      // user with an EMPTY identities array and no error (GoTrue hides the
+      // account) — treat it as a duplicate, not as "check your inbox".
+      if (data.user && (data.user.identities?.length ?? 0) === 0) {
+        throw new Error("This email is already registered — sign in instead.")
+      }
       if (!data.session) {
         throw new Error(
           "Check your inbox to confirm your email, then sign in."
@@ -100,6 +115,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw authError(error)
   }, [])
 
+  const sendPhoneOtp = useCallback(
+    async (phone: string, profile?: { first_name: string; last_name: string }) => {
+      // Passwordless: sign-up and sign-in are the same OTP flow (GoTrue
+      // creates the account on first code if signups are enabled).
+      const { error } = await supabase.auth.signInWithOtp({
+        phone,
+        options: profile ? { data: profile } : undefined,
+      })
+      if (error) throw authError(error)
+    },
+    []
+  )
+
+  const verifyPhoneOtp = useCallback(async (phone: string, code: string) => {
+    const { error } = await supabase.auth.verifyOtp({
+      phone,
+      token: code,
+      type: "sms",
+    })
+    if (error) throw authError(error)
+  }, [])
+
   const logout = useCallback(async () => {
     await supabase.auth.signOut()
     setUser(null)
@@ -112,8 +149,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const value = useMemo<AuthContextValue>(
-    () => ({ user, loading, login, register, loginWithGoogle, logout, refreshUser }),
-    [user, loading, login, register, loginWithGoogle, logout, refreshUser]
+    () => ({
+      user,
+      loading,
+      login,
+      register,
+      loginWithGoogle,
+      sendPhoneOtp,
+      verifyPhoneOtp,
+      logout,
+      refreshUser,
+    }),
+    [user, loading, login, register, loginWithGoogle, sendPhoneOtp, verifyPhoneOtp, logout, refreshUser]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

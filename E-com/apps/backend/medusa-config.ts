@@ -1,6 +1,11 @@
+import path from "node:path"
 import { loadEnv, defineConfig } from "@medusajs/framework/utils"
+import { config as loadDotenv } from "dotenv"
 
 loadEnv(process.env.NODE_ENV || "development", process.cwd())
+// .env = production values (the copy-source for Render); local dev overrides
+// live in .env.local. No .env.local on Render → silent no-op.
+loadDotenv({ path: path.join(process.cwd(), ".env.local"), override: true })
 
 // Redis (Upstash) — activates cache / events / workflows / locking on Redis.
 // Without REDIS_URL the spread collapses to [] and Medusa uses its local defaults.

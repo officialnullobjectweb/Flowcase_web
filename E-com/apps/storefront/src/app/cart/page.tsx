@@ -3,7 +3,7 @@ import { RotateCcw, ShieldCheck, Truck, Wallet } from "lucide-react"
 import { CartView } from "@/components/CartView"
 import { PageHeader } from "@/components/PageHeader"
 
-export const metadata: Metadata = { title: "Your bag" }
+export const metadata: Metadata = { title: "Your bag", robots: { index: false, follow: true } }
 
 const CART_TRUST = [
   { icon: Truck, label: "Free shipping over ₹999" },

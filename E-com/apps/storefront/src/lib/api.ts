@@ -7,7 +7,7 @@ const PRODUCT_LIST_FIELDS =
   "*variants.calculated_price,id,title,handle,thumbnail,metadata,images.id,images.url,images.alt,tags.id,tags.value,variants.id,variants.title,variants.sku,variants.inventory_quantity,variants.manage_inventory,variants.allow_backorder"
 
 const PRODUCT_DETAIL_FIELDS =
-  "*variants.calculated_price,id,title,handle,description,thumbnail,collection_id,images.id,images.url,images.alt,tags.id,tags.value,options.id,options.title,options.values.id,options.values.value,variants.id,variants.title,variants.sku,variants.inventory_quantity,variants.manage_inventory,variants.allow_backorder,variants.options.id,variants.options.option_id,variants.options.value"
+  "*variants.calculated_price,id,title,handle,description,thumbnail,collection_id,metadata,images.id,images.url,images.alt,tags.id,tags.value,options.id,options.title,options.values.id,options.values.value,variants.id,variants.title,variants.sku,variants.inventory_quantity,variants.manage_inventory,variants.allow_backorder,variants.options.id,variants.options.option_id,variants.options.value"
 
 const TAG_FIELDS = "id,tags.id,tags.value"
 
@@ -245,7 +245,7 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
   }
 }
 
-/** Nav models for the mega menu — thumbnails from the live catalog. */
+/** Nav models for the mega menu — phone cases only (accessories excluded). */
 export async function getNavModels(): Promise<NavModel[]> {
   try {
     const { products } = await sdk.client.fetch<{
@@ -255,12 +255,17 @@ export async function getNavModels(): Promise<NavModel[]> {
       next: { revalidate: 3600 },
     })
     if (!products?.length) return FALLBACK_MODELS
-    return products.map((p) => ({
-      label: modelFromTitle(p.title),
-      handle: p.handle,
-      image: p.thumbnail ?? undefined,
-      brand: p.tags?.some((t) => t.value === "samsung") ? "samsung" : "apple",
-    }))
+    // ponytail: phone-case titles are the model source of truth — accessories
+    // ("Flowcase Alto Mini Speaker", "Flowcase for AirPods Pro 2") stay out
+    // of the model rail / mega menu and live under collections + search.
+    return products
+      .filter((p) => /^Flowcase for (iPhone|Galaxy)/i.test(p.title))
+      .map((p) => ({
+        label: modelFromTitle(p.title),
+        handle: p.handle,
+        image: p.thumbnail ?? undefined,
+        brand: p.tags?.some((t) => t.value === "samsung") ? "samsung" : "apple",
+      }))
   } catch {
     return FALLBACK_MODELS
   }

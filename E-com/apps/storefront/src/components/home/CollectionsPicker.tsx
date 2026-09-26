@@ -11,7 +11,6 @@ import type { Product } from "@/lib/types"
 interface BrandEntry {
   title: string
   href: string
-  thumb?: string
 }
 
 const GROUPS = [
@@ -19,9 +18,18 @@ const GROUPS = [
   { key: "samsung" as const, label: "Samsung" },
 ]
 
+function brandOf(p: Product): "apple" | "samsung" | "accessory" {
+  const tags = (p.tags ?? []).map((t) => t.value.toLowerCase())
+  if (tags.includes("samsung")) return "samsung"
+  if (tags.includes("apple")) return "apple"
+  if (/galaxy|samsung/i.test(p.title)) return "samsung"
+  if (/iphone/i.test(p.title)) return "apple"
+  return "accessory"
+}
+
 /**
- * Section 05: two dropdowns — iPhone and Samsung — each listing that
- * brand's models with a product image. Picking one shows its cases below.
+ * Section 06: minimal brand dropdowns — brand thumb + label + count,
+ * panel exactly matches trigger width.
  */
 export function CollectionsPicker({
   products,
@@ -42,9 +50,14 @@ export function CollectionsPicker({
     : []
   const active = brand === "apple" ? apple : samsung
 
+  const brandThumb = (key: "apple" | "samsung") =>
+    models.find((m) => m.brand === key && m.image)?.image ??
+    products.find((p) => brandOf(p) === key)?.thumbnail ??
+    undefined
+
   return (
     <>
-      <div className="mt-10 grid gap-4 sm:grid-cols-2">
+      <div className="mx-auto mt-8 grid w-full max-w-3xl gap-3 sm:grid-cols-2">
         {GROUPS.map(({ key, label }) => {
           const entry = key === "apple" ? apple : samsung
           const list = models
@@ -53,23 +66,39 @@ export function CollectionsPicker({
               a.label.localeCompare(b.label, undefined, { numeric: true })
             )
           const picked = brand === key ? model : ""
+          const thumb = brandThumb(key)
           return (
             <Dropdown
               key={key}
               ariaLabel={`${label} models`}
-              panelClass="min-w-72"
-              triggerClass={`w-full justify-between border bg-background px-5 py-4 text-left transition ${
+              panelClass="left-0 right-0 w-full min-w-0"
+              triggerClass={`w-full justify-between border bg-background px-4 py-3 text-left transition ${
                 picked
                   ? "border-foreground"
-                  : "border-border hover:border-muted-foreground"
+                  : "border-border hover:border-foreground"
               }`}
               trigger={
-                <span className="flex w-full items-center justify-between gap-3">
-                  <span className="flex min-w-0 flex-col">
-                    <span className="display-tight font-display text-xl font-bold">
+                <span className="flex w-full items-center gap-3">
+                  <span className="h-10 w-10 shrink-0 overflow-hidden border border-border bg-muted">
+                    {thumb ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={thumb}
+                        alt={`${label} cases`}
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="label grid h-full place-items-center text-muted-foreground">
+                        {label.slice(0, 1)}
+                      </span>
+                    )}
+                  </span>
+                  <span className="flex min-w-0 flex-1 flex-col">
+                    <span className="display-tight font-display text-base font-bold leading-none">
                       {label}
                     </span>
-                    <span className="label mt-1 truncate text-muted-foreground">
+                    <span className="label mt-1.5 truncate text-muted-foreground">
                       {picked || `${list.length} models`}
                     </span>
                   </span>
@@ -140,7 +169,7 @@ export function CollectionsPicker({
 
       {/* Results */}
       {model === "" ? (
-        <p className="mt-6 border border-dashed border-border bg-background p-8 text-center text-sm text-muted-foreground">
+        <p className="mx-auto mt-5 max-w-3xl border border-dashed border-border bg-background p-6 text-center text-sm text-muted-foreground">
           Pick a model from either dropdown — its cases show up right here.
         </p>
       ) : results.length > 0 ? (
@@ -165,7 +194,7 @@ export function CollectionsPicker({
           </div>
         </div>
       ) : (
-        <p className="mt-6 border border-dashed border-border bg-background p-8 text-center text-sm text-muted-foreground">
+        <p className="mx-auto mt-5 max-w-3xl border border-dashed border-border bg-background p-6 text-center text-sm text-muted-foreground">
           No cases stocked for {model} yet.{" "}
           {active && (
             <Link href={active.href} className="text-foreground underline underline-offset-4">

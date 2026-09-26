@@ -2,11 +2,18 @@
 
 import {
   Check,
+  Heart,
+  LayoutGrid,
   LogOut,
+  Mail,
   MapPin,
+  Package,
   Pencil,
+  Phone,
   Plus,
   Trash2,
+  Truck,
+  Wallet,
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
@@ -35,11 +42,11 @@ import { supabase } from "@/lib/supabase"
 
 type Tab = "overview" | "orders" | "wishlist" | "addresses"
 
-const TABS: { key: Tab; label: string }[] = [
-  { key: "overview", label: "Overview" },
-  { key: "orders", label: "Orders" },
-  { key: "wishlist", label: "Wishlist" },
-  { key: "addresses", label: "Addresses" },
+const TABS: { key: Tab; label: string; icon: typeof LayoutGrid }[] = [
+  { key: "overview", label: "Overview", icon: LayoutGrid },
+  { key: "orders", label: "Orders", icon: Package },
+  { key: "wishlist", label: "Wishlist", icon: Heart },
+  { key: "addresses", label: "Addresses", icon: MapPin },
 ]
 
 interface ProfileMeta {
@@ -181,13 +188,9 @@ export function AccountDashboard() {
 
   if (!user) {
     return (
-      <div className="border border-border p-8">
+      <div className="border border-border p-6">
         <p className="display-tight font-display text-xl font-semibold">
           You&apos;re browsing as a guest.
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Sign in or create an account to see orders, saved addresses, and your
-          profile — your wishlist stays on this device either way.
         </p>
         <div className="mt-7 max-w-md">
           <AuthForm />
@@ -344,7 +347,7 @@ export function AccountDashboard() {
       {/* Identity card */}
       <div className="flex flex-col gap-6 border border-border p-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-5">
-          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-border bg-muted">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border-2 border-foreground bg-muted">
             {meta.avatar_url ? (
               <Image
                 src={meta.avatar_url}
@@ -362,9 +365,18 @@ export function AccountDashboard() {
           </div>
           <div className="min-w-0">
             <p className="display-tight font-display text-2xl font-bold">{name}</p>
-            <p className="label mt-2 break-all text-muted-foreground">{user.email}</p>
-            {mobile && <p className="label mt-1 text-muted-foreground">{mobile}</p>}
-            <p className="label mt-1 text-muted-foreground">
+            <p className="label mt-2 flex items-start gap-1.5 break-all text-muted-foreground">
+              <Mail className="mt-px h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              {user.email}
+            </p>
+            {mobile && (
+              <p className="label mt-1 flex items-center gap-1.5 text-muted-foreground">
+                <Phone className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                {mobile}
+              </p>
+            )}
+            <p className="label mt-1 flex items-center gap-1.5 text-muted-foreground">
+              <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               Member since {formatDate(user.created_at)}
             </p>
           </div>
@@ -527,30 +539,40 @@ export function AccountDashboard() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <div className="border border-border p-5">
-          <p className="label text-muted-foreground">Orders</p>
-          <p className="display-tight mt-2 font-display text-2xl font-bold">
-            {orders === null ? "…" : orders.length}
-          </p>
-        </div>
-        <div className="border border-border p-5">
-          <p className="label text-muted-foreground">Total spent</p>
-          <p className="display-tight mt-2 font-display text-2xl font-bold">
-            {orders === null ? "…" : formatPrice(spent, currencyCode)}
-          </p>
-        </div>
-        <div className="border border-border p-5">
-          <p className="label text-muted-foreground">Wishlist</p>
-          <p className="display-tight mt-2 font-display text-2xl font-bold">
-            {wishlistItems.length}
-          </p>
-        </div>
-        <div className="border border-border p-5">
-          <p className="label text-muted-foreground">Saved addresses</p>
-          <p className="display-tight mt-2 font-display text-2xl font-bold">
-            {addresses === null ? "…" : addresses.length}
-          </p>
-        </div>
+        {[
+          {
+            icon: Package,
+            label: "Orders",
+            value: orders === null ? "…" : String(orders.length),
+          },
+          {
+            icon: Wallet,
+            label: "Total spent",
+            value: orders === null ? "…" : formatPrice(spent, currencyCode),
+          },
+          {
+            icon: Heart,
+            label: "Wishlist",
+            value: String(wishlistItems.length),
+          },
+          {
+            icon: MapPin,
+            label: "Saved addresses",
+            value: addresses === null ? "…" : String(addresses.length),
+          },
+        ].map(({ icon: Icon, label, value }) => (
+          <div key={label} className="border border-border p-5">
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-muted">
+                <Icon className="h-5 w-5" aria-hidden="true" />
+              </span>
+              <span className="display-tight min-w-0 truncate font-display text-2xl font-bold">
+                {value}
+              </span>
+            </div>
+            <p className="label mt-3 text-muted-foreground">{label}</p>
+          </div>
+        ))}
       </div>
 
       {/* Active order strip */}
@@ -559,13 +581,18 @@ export function AccountDashboard() {
           href={`/account/orders/${activeOrders[0].id}`}
           className="group flex flex-wrap items-center justify-between gap-3 border border-border p-5 transition hover:border-foreground"
         >
-          <span>
-            <span className="label block text-muted-foreground">
-              Latest order #{activeOrders[0].display_id ?? "—"} ·{" "}
-              {formatDate(activeOrders[0].created_at)}
+          <span className="flex items-center gap-4">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-border bg-muted">
+              <Package className="h-5 w-5" aria-hidden="true" />
             </span>
-            <span className="mt-1.5 block">
-              <OrderStatusRow order={activeOrders[0]} />
+            <span>
+              <span className="label block text-muted-foreground">
+                Latest order #{activeOrders[0].display_id ?? "—"} ·{" "}
+                {formatDate(activeOrders[0].created_at)}
+              </span>
+              <span className="mt-1.5 block">
+                <OrderStatusRow order={activeOrders[0]} />
+              </span>
             </span>
           </span>
           <span className="display-tight font-display font-bold">
@@ -584,30 +611,34 @@ export function AccountDashboard() {
           aria-label="Account sections"
           className="flex gap-1 overflow-x-auto border-b border-border"
         >
-          {TABS.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              role="tab"
-              id={`tab-${t.key}`}
-              aria-selected={tab === t.key}
-              aria-controls={`panel-${t.key}`}
-              onClick={() => setTab(t.key)}
-              className={`label -mb-px shrink-0 border-b-2 px-4 py-3 transition ${
-                tab === t.key
-                  ? "border-foreground text-foreground"
-                  : "border-transparent text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              {t.label}
-              {t.key === "wishlist" && wishlistItems.length > 0
-                ? ` (${wishlistItems.length})`
-                : ""}
-              {t.key === "addresses" && (addresses?.length ?? 0) > 0
-                ? ` (${addresses?.length})`
-                : ""}
-            </button>
-          ))}
+          {TABS.map((t) => {
+            const Icon = t.icon
+            return (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                id={`tab-${t.key}`}
+                aria-selected={tab === t.key}
+                aria-controls={`panel-${t.key}`}
+                onClick={() => setTab(t.key)}
+                className={`label -mb-px flex shrink-0 items-center gap-2 border-b-2 px-4 py-3 transition ${
+                  tab === t.key
+                    ? "border-foreground text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                {t.label}
+                {t.key === "wishlist" && wishlistItems.length > 0
+                  ? ` (${wishlistItems.length})`
+                  : ""}
+                {t.key === "addresses" && (addresses?.length ?? 0) > 0
+                  ? ` (${addresses?.length})`
+                  : ""}
+              </button>
+            )
+          })}
         </div>
 
         {/* Overview */}
@@ -624,35 +655,38 @@ export function AccountDashboard() {
                 onClick={() => setTab("orders")}
                 className="group border border-border p-5 text-left transition hover:border-foreground"
               >
-                <span className="label text-muted-foreground">Orders</span>
-                <span className="display-tight mt-2 block font-display text-lg font-semibold">
+                <Package className="h-6 w-6" aria-hidden="true" />
+                <span className="display-tight mt-4 block font-display text-lg font-semibold">
                   {orders === null
                     ? "Loading…"
                     : `${activeOrders.length} active · ${pastOrders.length} past`}
                 </span>
+                <span className="label mt-1 block text-muted-foreground">Orders</span>
               </button>
               <button
                 type="button"
                 onClick={() => setTab("addresses")}
                 className="group border border-border p-5 text-left transition hover:border-foreground"
               >
-                <span className="label text-muted-foreground">Addresses</span>
-                <span className="display-tight mt-2 block font-display text-lg font-semibold">
+                <MapPin className="h-6 w-6" aria-hidden="true" />
+                <span className="display-tight mt-4 block font-display text-lg font-semibold">
                   {addresses === null
                     ? "Loading…"
                     : addresses.length > 0
                       ? `${addresses.length} saved`
                       : "Add one →"}
                 </span>
+                <span className="label mt-1 block text-muted-foreground">Addresses</span>
               </button>
               <Link
                 href="/shipping-returns"
                 className="group border border-border p-5 transition hover:border-foreground"
               >
-                <span className="label text-muted-foreground">Help</span>
-                <span className="display-tight mt-2 block font-display text-lg font-semibold">
+                <Truck className="h-6 w-6" aria-hidden="true" />
+                <span className="display-tight mt-4 block font-display text-lg font-semibold">
                   Shipping &amp; returns →
                 </span>
+                <span className="label mt-1 block text-muted-foreground">Help</span>
               </Link>
             </nav>
           </div>
@@ -740,13 +774,12 @@ export function AccountDashboard() {
 
             {orders !== null && (orderScope === "active" ? activeOrders : pastOrders).length === 0 && (
               <div className="mt-5 border border-dashed border-border p-10 text-center">
-                <p className="display-tight font-display text-lg font-semibold">
+                <Package
+                  className="mx-auto h-8 w-8 text-muted-foreground"
+                  aria-hidden="true"
+                />
+                <p className="display-tight mt-4 font-display text-lg font-semibold">
                   {orderScope === "active" ? "No active orders." : "No past orders yet."}
-                </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {orderScope === "active"
-                    ? "Orders you place show up here with live status."
-                    : "Delivered and cancelled orders are kept here."}
                 </p>
                 <Link
                   href="/shop"
@@ -779,10 +812,7 @@ export function AccountDashboard() {
             aria-labelledby="tab-addresses"
             className="pt-6"
           >
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <p className="label text-muted-foreground">
-                Saved to your account — picked automatically at checkout.
-              </p>
+            <div className="flex flex-wrap items-center justify-end gap-4">
               <Button onClick={() => openAddressDialog()} className="gap-2">
                 <Plus className="h-4 w-4" aria-hidden="true" />
                 Add address
@@ -807,9 +837,13 @@ export function AccountDashboard() {
                 <p className="display-tight mt-4 font-display text-lg font-semibold">
                   No saved addresses yet.
                 </p>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Add one and checkout becomes a single tap.
-                </p>
+                <button
+                  type="button"
+                  onClick={() => openAddressDialog()}
+                  className="label mt-5 inline-flex rounded-full bg-primary px-7 py-3 text-primary-foreground transition hover:bg-primary/85"
+                >
+                  Add address
+                </button>
               </div>
             )}
 
@@ -818,7 +852,10 @@ export function AccountDashboard() {
                 {addresses.map((a) => (
                   <li key={a.id} className="border border-border p-5">
                     <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-border bg-muted">
+                          <MapPin className="h-4 w-4" aria-hidden="true" />
+                        </span>
                         <p className="text-sm font-semibold">{a.label || "Address"}</p>
                         {a.is_default && (
                           <span className="label border border-border px-2 py-0.5 text-muted-foreground">
