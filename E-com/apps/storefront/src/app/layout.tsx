@@ -36,7 +36,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL
 
 const SITE_TITLE = "Flowcase — Phone Cases, Speakers, Power Banks & Accessories"
 const SITE_DESCRIPTION =
-  "Shop drop-tested iPhone & Samsung cases, Bluetooth speakers, fast-charging power banks, braided USB-C cables, MagSafe & AirPods cases. Free shipping over ₹999."
+  "Shop drop-tested iPhone & Samsung cases, Bluetooth speakers, fast-charging power banks, braided USB-C cables, MagSafe & AirPods cases. Free shipping over ₹999 · COD available."
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
