@@ -837,13 +837,9 @@ export function AccountDashboard() {
                 <p className="display-tight mt-4 font-display text-lg font-semibold">
                   No saved addresses yet.
                 </p>
-                <button
-                  type="button"
-                  onClick={() => openAddressDialog()}
-                  className="label mt-5 inline-flex rounded-full bg-primary px-7 py-3 text-primary-foreground transition hover:bg-primary/85"
-                >
-                  Add address
-                </button>
+                <p className="label mt-2 text-muted-foreground">
+                  Use Add address above to save one.
+                </p>
               </div>
             )}
 

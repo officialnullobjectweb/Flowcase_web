@@ -325,11 +325,7 @@ export function AuthForm({
         onClick={switchChannel}
         className="label mx-auto block border-b border-foreground text-foreground"
       >
-        {channel === "email"
-          ? tab === "signup"
-            ? "Sign up with mobile number"
-            : "Sign in with mobile number"
-          : "Use email instead"}
+        {channel === "email" ? "Use mobile number instead" : "Use email instead"}
       </button>
     </div>
   )
