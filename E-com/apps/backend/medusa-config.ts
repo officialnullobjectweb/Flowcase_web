@@ -9,12 +9,23 @@ loadDotenv({ path: path.join(process.cwd(), ".env.local"), override: true })
 
 // Redis (Upstash) — activates cache / events / workflows / locking on Redis.
 // Without REDIS_URL the spread collapses to [] and Medusa uses its local defaults.
-const redisUrl = process.env.REDIS_URL
+// GATE (Sep-27 Render outage): only rediss:// TCP URLs activate Redis. A pasted
+// Upstash REST URL (https://) or a quota-exhausted endpoint made ioredis
+// retry-storm until the 512MB instance OOM'd — such values are now ignored with
+// a warning and the app runs on in-memory defaults instead of crashing.
+const rawRedis = (process.env.REDIS_URL ?? "").trim()
+const redisUrl = /^rediss?:\/\//.test(rawRedis) ? rawRedis : undefined
+if (process.env.REDIS_URL && !redisUrl) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    "[medusa-config] ignoring REDIS_URL (expected rediss://) — running without Redis"
+  )
+}
 
 export default defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
-    redisUrl: process.env.REDIS_URL,
+    redisUrl: redisUrl,
     http: {
       storeCors: process.env.STORE_CORS || "https://localhost:8000",
       adminCors: process.env.ADMIN_CORS || "https://localhost:7001",
