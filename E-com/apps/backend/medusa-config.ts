@@ -7,25 +7,16 @@ loadEnv(process.env.NODE_ENV || "development", process.cwd())
 // live in .env.local. No .env.local on Render → silent no-op.
 loadDotenv({ path: path.join(process.cwd(), ".env.local"), override: true })
 
-// Redis (Upstash) — activates cache / events / workflows / locking on Redis.
-// Without REDIS_URL the spread collapses to [] and Medusa uses its local defaults.
-// GATE (Sep-27 Render outage): only rediss:// TCP URLs activate Redis. A pasted
-// Upstash REST URL (https://) or a quota-exhausted endpoint made ioredis
-// retry-storm until the 512MB instance OOM'd — such values are now ignored with
-// a warning and the app runs on in-memory defaults instead of crashing.
-const rawRedis = (process.env.REDIS_URL ?? "").trim()
-const redisUrl = /^rediss?:\/\//.test(rawRedis) ? rawRedis : undefined
-if (process.env.REDIS_URL && !redisUrl) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    "[medusa-config] ignoring REDIS_URL (expected rediss://) — running without Redis"
-  )
-}
+// Redis is DISABLED: this stack is free-tier only — Upstash free = 500k
+// requests/month and it's exhausted, and a quota-dead endpoint makes ioredis
+// retry-storm until the 512MB Render instance OOMs. Medusa runs on its
+// in-memory cache/events/workflows defaults (single instance needs no Redis).
+// To re-enable later: paid Upstash/Redis → restore the cache-redis,
+// event-bus-redis, workflow-engine-redis and locking modules below.
 
 export default defineConfig({
   projectConfig: {
     databaseUrl: process.env.DATABASE_URL,
-    redisUrl: redisUrl,
     http: {
       storeCors: process.env.STORE_CORS || "https://localhost:8000",
       adminCors: process.env.ADMIN_CORS || "https://localhost:7001",
@@ -35,28 +26,6 @@ export default defineConfig({
     },
   },
   modules: [
-    ...(redisUrl
-      ? [
-          { resolve: "@medusajs/medusa/cache-redis", options: { redisUrl } },
-          { resolve: "@medusajs/medusa/event-bus-redis", options: { redisUrl } },
-          {
-            resolve: "@medusajs/medusa/workflow-engine-redis",
-            options: { redis: { redisUrl } },
-          },
-          {
-            resolve: "@medusajs/medusa/locking",
-            options: {
-              providers: [
-                {
-                  resolve: "@medusajs/medusa/locking-redis",
-                  id: "redis",
-                  options: { redisUrl },
-                },
-              ],
-            },
-          },
-        ]
-      : []),
     {
       resolve: "@medusajs/medusa/file",
       options: {

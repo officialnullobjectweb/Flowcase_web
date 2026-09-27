@@ -122,6 +122,11 @@ Open each site, sign up (most support “Sign up with GitHub”):
 > in-memory cache/events/workflows — verified locally (production boot, health 200,
 > peak RAM 304MB). If you ever need Redis again: upgrade Upstash (paid) and re-add
 > `REDIS_URL` in Render → Environment. Steps below kept for reference only.
+> Belt-and-braces in code: `medusa-config.ts` now ignores `REDIS_URL` completely —
+> no Redis modules are configured no matter what sits in the Render environment
+> (verified with `REDIS_URL` still set: zero Redis errors, boot ready, peak 292MB).
+> To re-enable Redis later, restore the modules block in `medusa-config.ts` (see
+> the comment there).
 
 1. Go to https://upstash.com → **Sign in with GitHub**.
 2. Click **Create Database**:
