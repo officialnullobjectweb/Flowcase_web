@@ -30,9 +30,12 @@ async function dynamicRoutes(): Promise<MetadataRoute.Sitemap> {
       "http://localhost:9000"
     const key = process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? ""
     const headers: Record<string, string> = key ? { "x-publishable-api-key": key } : {}
+    // sitemap builds on Vercel while the free-tier backend may be asleep —
+    // cap each fetch so a cold start can't fail the deployment
+    const timeout = { signal: AbortSignal.timeout(10_000) }
     const [productsRes, collectionsRes] = await Promise.all([
-      fetch(`${base}/store/products?limit=100&fields=handle,updated_at,thumbnail`, { headers, next: { revalidate: 3600 } }),
-      fetch(`${base}/store/collections?limit=100`, { headers, next: { revalidate: 3600 } }),
+      fetch(`${base}/store/products?limit=100&fields=handle,updated_at,thumbnail`, { headers, ...timeout, next: { revalidate: 3600 } }),
+      fetch(`${base}/store/collections?limit=100`, { headers, ...timeout, next: { revalidate: 3600 } }),
     ])
     const out: MetadataRoute.Sitemap = []
     if (productsRes.ok) {

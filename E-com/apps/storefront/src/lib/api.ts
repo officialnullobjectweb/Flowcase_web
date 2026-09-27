@@ -3,6 +3,15 @@ import { fuzzyRank } from "./fuzzy"
 import { sdk } from "./sdk"
 import type { Collection, Product, ProductTag, Region } from "./types"
 
+/**
+ * Build-time guard: the backend sleeps on free-tier hosting (Render cold
+ * start) and hanging fetches used to stall `next build` past Vercel's 60s
+ * page timeout. Every store fetch aborts after 10s and falls through to the
+ * existing offline fallbacks — pages still pre-render, ISR refills them.
+ */
+const FETCH_TIMEOUT_MS = 10_000
+const withTimeout = () => ({ signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
+
 const PRODUCT_LIST_FIELDS =
   "*variants.calculated_price,id,title,handle,thumbnail,metadata,images.id,images.url,images.alt,tags.id,tags.value,variants.id,variants.title,variants.sku,variants.inventory_quantity,variants.manage_inventory,variants.allow_backorder"
 
@@ -27,7 +36,7 @@ let regionPromise: Promise<Region> | null = null
 export function getDefaultRegion(): Promise<Region> {
   regionPromise ??= sdk.client
     .fetch<{ regions: Region[] }>("/store/regions", {
-      query: { limit: 10 },
+      ...withTimeout(), query: { limit: 10 },
       next: { revalidate: 3600 },
     })
     .then(({ regions }) => {
@@ -65,7 +74,7 @@ export async function listProducts(
   // store API rejects `tags` and >2-level price accessors — filter in JS
   const res = await sdk.client.fetch<{ products: Product[]; count: number }>(
     "/store/products",
-    { query, next: { revalidate } }
+    { ...withTimeout(), query, next: { revalidate } }
   )
 
   let products = res.products
@@ -107,7 +116,7 @@ export async function getProductByHandle(
   const { products } = await sdk.client.fetch<{ products: Product[] }>(
     "/store/products",
     {
-      query: { handle, region_id: region.id, fields: PRODUCT_DETAIL_FIELDS },
+      ...withTimeout(), query: { handle, region_id: region.id, fields: PRODUCT_DETAIL_FIELDS },
       next: { revalidate },
     }
   )
@@ -119,7 +128,7 @@ export function listCollections(revalidate = 3600): Promise<{
   count: number
 }> {
   return sdk.client.fetch("/store/collections", {
-    query: { limit: 100 },
+    ...withTimeout(), query: { limit: 100 },
     next: { revalidate },
   })
 }
@@ -130,7 +139,7 @@ export async function getCollectionByHandle(
 ): Promise<Collection | null> {
   const { collections } = await sdk.client.fetch<{ collections: Collection[] }>(
     "/store/collections",
-    { query: { handle, limit: 1 }, next: { revalidate } }
+    { ...withTimeout(), query: { handle, limit: 1 }, next: { revalidate } }
   )
   return collections?.[0] ?? null
 }
@@ -138,7 +147,7 @@ export async function getCollectionByHandle(
 export async function listTagFacets(revalidate = 3600): Promise<ProductTag[]> {
   const { products } = await sdk.client.fetch<{ products: { tags: ProductTag[] }[] }>(
     "/store/products",
-    { query: { limit: 100, fields: TAG_FIELDS }, next: { revalidate } }
+    { ...withTimeout(), query: { limit: 100, fields: TAG_FIELDS }, next: { revalidate } }
   )
   const seen = new Map<string, string>()
   for (const product of products ?? []) {
@@ -251,7 +260,7 @@ export async function getNavModels(): Promise<NavModel[]> {
     const { products } = await sdk.client.fetch<{
       products: { title: string; handle: string; thumbnail: string | null; tags?: { value: string }[] }[]
     }>("/store/products", {
-      query: { limit: 100, fields: "title,handle,thumbnail,tags.value" },
+      ...withTimeout(), query: { limit: 100, fields: "title,handle,thumbnail,tags.value" },
       next: { revalidate: 3600 },
     })
     if (!products?.length) return FALLBACK_MODELS

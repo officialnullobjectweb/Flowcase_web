@@ -156,6 +156,8 @@ export async function getCms(): Promise<CmsConfig> {
         "x-publishable-api-key":
           process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? "",
       },
+      // free-tier backend may be asleep — never stall the build on CMS copy
+      signal: AbortSignal.timeout(10_000),
       next: { revalidate: 5 },
     })
     if (!res.ok) throw new Error(`cms ${res.status}`)
