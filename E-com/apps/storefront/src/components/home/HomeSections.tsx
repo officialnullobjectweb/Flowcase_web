@@ -16,6 +16,11 @@ import type { Collection, Product } from "@/lib/types"
 
 export type Brand = "all" | "apple" | "samsung"
 
+/** Phone cases only — accessories (speakers, banks, cables…) never qualify. */
+export function isPhoneCase(p: Product): boolean {
+  return /^Flowcase for (iPhone|Galaxy)/i.test(p.title)
+}
+
 export function brandOf(p: Product): "apple" | "samsung" | "accessory" {
   const tags = (p.tags ?? []).map((t) => t.value.toLowerCase())
   if (tags.includes("samsung")) return "samsung"
@@ -156,10 +161,13 @@ export function HomeSections({
     [models, brand]
   )
   const bestSellers = useMemo(() => {
-    const tagged = filtered.filter((p) =>
+    // best sellers are phone cases only — both brands under All,
+    // strictly the tab's brand once Apple/Samsung is picked
+    const cases = filtered.filter(isPhoneCase)
+    const tagged = cases.filter((p) =>
       String(p.metadata?.badges ?? "").toLowerCase().includes("bestseller")
     )
-    const pool = tagged.length ? tagged : [...filtered].sort(
+    const pool = tagged.length ? tagged : [...cases].sort(
       (a, b) => Number(b.metadata?.rating ?? 0) - Number(a.metadata?.rating ?? 0)
     )
     return pool.slice(0, 8)
@@ -201,8 +209,8 @@ export function HomeSections({
       </section>
 
       {/* 03 — shop by category */}
-      <section className="border-y border-border bg-muted">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
+      <section className="border-y border-border bg-muted py-12 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <SectionHeader
             index="03"
             label="Shop by category"
@@ -210,41 +218,52 @@ export function HomeSections({
             description="Six shelves, one standard — drop-tested, pocket-friendly, and shipped plastic-free."
             link={{ href: "/shop", label: "Shop everything" }}
           />
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-            {CATEGORY_TILES.map((tile) => {
-              const count = products.filter(tile.match).length
-              return (
-                <Link key={tile.name} href={tile.href} className="group block border border-border bg-background">
-                  <div className="relative aspect-[4/3] overflow-hidden border-b border-border bg-muted">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={tile.img}
-                      alt={`${tile.name} — Flowcase`}
-                      loading="lazy"
-                      className="h-full w-full object-cover grayscale transition duration-500 group-hover:scale-105 group-hover:grayscale-0"
-                    />
-                    <span className="label absolute left-0 top-0 bg-background/90 px-2 py-1.5 text-foreground backdrop-blur">
+        </div>
+        {/* edge-to-edge snap carousel: first card aligns with the container,
+            the row bleeds off the right so the cut-off card invites a swipe */}
+        <div
+          role="region"
+          aria-label="Shop by category"
+          tabIndex={0}
+          className="mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pl-4 pr-0 [scrollbar-width:none] sm:gap-4 sm:pl-6 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] [&::-webkit-scrollbar]:hidden"
+        >
+          {CATEGORY_TILES.map((tile) => {
+            const count = products.filter(tile.match).length
+            return (
+              <Link
+                key={tile.name}
+                href={tile.href}
+                className="group w-40 shrink-0 snap-start overflow-hidden rounded-2xl border border-border bg-background transition-transform duration-300 ease-out hover:-translate-y-1 sm:w-52 lg:w-60"
+              >
+                <div className="relative aspect-[3/4] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={tile.img}
+                    alt={`${tile.name} — Flowcase`}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition duration-500 ease-out group-hover:scale-105"
+                  />
+                  <div
+                    aria-hidden="true"
+                    className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4">
+                    <p className="display-tight font-display text-base font-bold leading-tight text-white sm:text-lg">
+                      {tile.name}
+                    </p>
+                    <p className="label mt-1 text-white/70">
                       {count} {count === 1 ? "product" : "products"}
-                    </span>
+                    </p>
                   </div>
-                  <div className="flex items-center justify-between gap-2 p-4">
-                    <span className="min-w-0">
-                      <span className="display-tight block truncate font-display text-base font-bold group-hover:underline">
-                        {tile.name}
-                      </span>
-                      <span className="label mt-1 block truncate text-muted-foreground">
-                        {tile.blurb}
-                      </span>
-                    </span>
-                    <ArrowRight
-                      className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground"
-                      aria-hidden="true"
-                    />
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
+                </div>
+                <p className="label truncate px-3 py-2.5 text-muted-foreground">
+                  {tile.blurb}
+                </p>
+              </Link>
+            )
+          })}
+          {/* end spacer so the last card can snap fully into view */}
+          <div aria-hidden="true" className="w-1 shrink-0 sm:w-2" />
         </div>
       </section>
 

@@ -18,6 +18,13 @@ const GROUPS = [
   { key: "samsung" as const, label: "Samsung" },
 ]
 
+const LOGOS: Record<"apple" | "samsung", string> = {
+  apple:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOlDllipbzBYdmBgtudhNXWTEjJ--DvlUYNWGMf-g_qA&s=10",
+  samsung:
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8B1TcHuGgrDXF8o__I_LqtKyJXIHAANU9gK3x9qtHyg&s=10",
+}
+
 function brandOf(p: Product): "apple" | "samsung" | "accessory" {
   const tags = (p.tags ?? []).map((t) => t.value.toLowerCase())
   if (tags.includes("samsung")) return "samsung"
@@ -44,6 +51,8 @@ export function CollectionsPicker({
 }) {
   const [brand, setBrand] = useState<"apple" | "samsung">("apple")
   const [model, setModel] = useState("")
+  // brand-logo hotlinks can 403 — fall back to a case photo, never a hole
+  const [logoOk, setLogoOk] = useState({ apple: true, samsung: true })
 
   const results = model
     ? products.filter((p) => modelFromTitle(p.title) === model)
@@ -68,8 +77,33 @@ export function CollectionsPicker({
           const picked = brand === key ? model : ""
           const thumb = brandThumb(key)
           return (
-            <Dropdown
-              key={key}
+            <div key={key} className="min-w-0">
+              {/* brand mark — logo up top so the dropdown below reads instantly */}
+              <div className="flex h-20 items-center justify-center border border-b-0 border-border bg-white px-6">
+                {logoOk[key] ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={LOGOS[key]}
+                    alt={`${label} logo`}
+                    loading="lazy"
+                    onError={() => setLogoOk((s) => ({ ...s, [key]: false }))}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : thumb ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={thumb}
+                    alt={`${label} cases`}
+                    loading="lazy"
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : (
+                  <span className="display-tight font-display text-xl font-bold">
+                    {label}
+                  </span>
+                )}
+              </div>
+              <Dropdown
               ariaLabel={`${label} models`}
               panelClass="left-0 right-0 w-full min-w-0"
               triggerClass={`w-full justify-between border bg-background px-4 py-3 text-left transition ${
@@ -163,6 +197,7 @@ export function CollectionsPicker({
                 </div>
               )}
             </Dropdown>
+            </div>
           )
         })}
       </div>

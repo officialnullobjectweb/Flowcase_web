@@ -4,7 +4,9 @@ import { getNavModels, listProducts, listCollections } from "@/lib/api"
 import { getCms } from "@/lib/cms"
 import type { Product } from "@/lib/types"
 
-export const revalidate = 3600
+  // Short window on purpose: free-tier backends sleep through builds, and a
+// fast revalidate refills real products minutes after a cold deploy.
+export const revalidate = 600
 
 export default async function HomePage() {
   let products: Product[] = []
@@ -13,7 +15,9 @@ export default async function HomePage() {
 
   try {
     const [productRes, collectionRes, navModels] = await Promise.all([
-      listProducts({ limit: 15, order: "-created_at" }),
+      // full catalog pool: brand tabs + phone-only best sellers need every
+      // product (limit 15 would return only the newest — all accessories)
+      listProducts({ limit: 100, order: "-created_at" }),
       listCollections(),
       getNavModels(),
     ])
