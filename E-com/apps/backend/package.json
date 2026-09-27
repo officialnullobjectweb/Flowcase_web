@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "medusa build && node scripts/brand-admin.mjs",
-    "start": "medusa start",
+    "start": "NODE_OPTIONS=--max-old-space-size=384 medusa start",
     "dev": "medusa develop",
     "keepalive": "node scripts/keepalive.mjs"
   },

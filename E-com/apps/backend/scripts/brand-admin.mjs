@@ -172,4 +172,13 @@ if (fs.existsSync(bundler)) {
   }
 }
 
+// Production `medusa start` serves the admin from `{cwd}/public/admin`,
+// but `medusa build` writes it to `.medusa/server/public/admin` — copy it
+// over so the production boot finds index.html (Render would die on it).
+const prodAdminSrc = path.join(root, ".medusa/server/public/admin")
+if (fs.existsSync(path.join(prodAdminSrc, "index.html"))) {
+  fs.cpSync(prodAdminSrc, path.join(root, "public/admin"), { recursive: true })
+  console.log("[brand-admin] synced public/admin (production serve path)")
+}
+
 console.log(`[brand-admin] done (${patched} html file(s))`)

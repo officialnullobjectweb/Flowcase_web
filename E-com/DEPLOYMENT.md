@@ -512,6 +512,7 @@ Everything checked? **You are live. 🎉**
 | Render deploy: `bash: line 1: >: command not found` + `Exited with status 127` | Start Command has backticks around it → retype it exactly `npm start` (plain) → Save |
 | Render deploy: `relation "currency" does not exist` / `relation "payment_provider" does not exist` | The database is connected but **empty** — tables were never created. Run the 3 one-time commands in Step 8.5 (Shell tab — or from your own computer if you are on the free plan, see the note in 8.5), `npx medusa db:migrate` first, then let the service restart |
 | Render build fails: “JavaScript heap out of memory” | Render → Environment → add `NODE_OPTIONS` = `--max-old-space-size=450` → Save (redeploys) |
+| Render deploy: `==> Out of memory (used over 512Mi)` while starting | The running server exceeded the free plan's 512MB during boot → already fixed in the repo (start script caps the heap at 384MB) → pull the latest code and redeploy. Peak usage with the fix: ~330MB |
 | Storefront shows **no products** | Seed did not run — redo Step 8.5. Check admin → Products. |
 | Browser console: **CORS error** (`blocked by CORS policy`) | Fix the three CORS values exactly (Step 8.2) → Save → wait for redeploy → hard-refresh |
 | Admin login **wrong email/password** | Run in Render Shell: `npx medusa user -e admin@flowcase.dev -p "YOUR_ADMIN_PASSWORD"` |
