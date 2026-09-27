@@ -19,7 +19,7 @@ Time needed: about 2–3 hours (most of it is waiting for builds).
 | Backend (Medusa v2) | **Render** | `https://flowcase-backend.onrender.com` |
 | Admin panel | Same Render service | `https://admin.flowcase.in/app` |
 | Database | **Supabase** | — |
-| Cache (Redis) | **Upstash** | — |
+| Cache (Redis) | **not used** (in-memory) | single instance — see §4 |
 | Videos | **Cloudinary** | — |
 | Payments | **Razorpay** | — |
 | Uptime pings | **UptimeRobot** | — |
@@ -54,7 +54,7 @@ Open each site, sign up (most support “Sign up with GitHub”):
 |---|---|---|---|
 | 1 | GitHub | https://github.com | code already here |
 | 2 | Supabase | https://supabase.com | database (free = 2 projects, 500 MB) |
-| 3 | Upstash | https://upstash.com | Redis cache (free = 10k commands/day) |
+| 3 | Upstash | https://upstash.com | not used anymore — free = 500k requests/month and it's exhausted (see §4) |
 | 4 | Cloudinary | https://cloudinary.com | videos (your videos are already on cloud `dvekceihu` — just keep the keys from .env) |
 | 5 | Razorpay | https://razorpay.com | payments (test mode is free) |
 | 6 | Render | https://render.com | backend + admin hosting |
@@ -113,6 +113,15 @@ Open each site, sign up (most support “Sign up with GitHub”):
 ---
 
 ## 4. Upstash — Redis (free)
+
+> **UPDATE (Sep 27): Redis is OFF — do not set `REDIS_URL` anywhere.** Upstash free
+> is **500,000 requests per MONTH** (not per day) and local dev + deploy testing spent
+> the whole quota, which made every Redis command fail (`ERR max requests limit
+> exceeded`) and helped crash the Render boot. A single-instance Medusa does not need
+> Redis: with `REDIS_URL` unset, `medusa-config.ts` automatically switches to
+> in-memory cache/events/workflows — verified locally (production boot, health 200,
+> peak RAM 304MB). If you ever need Redis again: upgrade Upstash (paid) and re-add
+> `REDIS_URL` in Render → Environment. Steps below kept for reference only.
 
 1. Go to https://upstash.com → **Sign in with GitHub**.
 2. Click **Create Database**:
@@ -236,7 +245,6 @@ Vercel and Render **auto-redeploy** when they see the push.
 |---|---|
 | `NODE_ENV` | `production` |
 | `DATABASE_URL` | copy from .env (your Supabase pooler URL) |
-| `REDIS_URL` | copy from .env (Upstash `rediss://…`) |
 | `JWT_SECRET` | copy from .env |
 | `COOKIE_SECRET` | copy from .env |
 | `STORE_CORS` | `https://flowcase.in,https://www.flowcase.in` |
@@ -256,8 +264,6 @@ Vercel and Render **auto-redeploy** when they see the push.
 | `SUPABASE_SERVICE_ROLE_KEY` | copy from .env |
 | `SUPABASE_DB_URL` | copy from .env |
 | `SUPABASE_DB_POOLER_URL` | copy from .env |
-| `UPSTASH_REDIS_REST_URL` | copy from .env |
-| `UPSTASH_REDIS_REST_TOKEN` | copy from .env |
 
 (Copy every other key you find in `.env` too if any — but never add `PORT`.)
 
@@ -496,7 +502,7 @@ Everything checked? **You are live. 🎉**
 | Render | 750 h/month, sleeps after 15 min idle | first open after sleep takes 30–60 s (UptimeRobot prevents this) |
 | Vercel (Hobby) | 100 GB bandwidth/month | plenty for a small shop |
 | Supabase | 500 MB DB, **pauses after 7 idle days** | keepalive workflow (Step 12.2) prevents it |
-| Upstash | 10,000 commands/day, 256 MB | fine for a small shop |
+| Upstash | 500,000 requests/month, 256 MB | **not used** — quota spent, app runs in-memory (§4) |
 | UptimeRobot | 50 monitors, 5 min interval | you use 2 |
 | Cloudinary | 25 credits/month | videos are transformed once and cached |
 | Razorpay | free setup, 2% per transaction | only when you take real money |
@@ -513,6 +519,7 @@ Everything checked? **You are live. 🎉**
 | Render deploy: `relation "currency" does not exist` / `relation "payment_provider" does not exist` | The database is connected but **empty** — tables were never created. Run the 3 one-time commands in Step 8.5 (Shell tab — or from your own computer if you are on the free plan, see the note in 8.5), `npx medusa db:migrate` first, then let the service restart |
 | Render build fails: “JavaScript heap out of memory” | Render → Environment → add `NODE_OPTIONS` = `--max-old-space-size=450` → Save (redeploys) |
 | Render deploy: `==> Out of memory (used over 512Mi)` while starting | The running server exceeded the free plan's 512MB during boot → already fixed in the repo (start script caps the heap at 384MB) → pull the latest code and redeploy. Peak usage with the fix: ~330MB |
+| Render log: `ERR max requests limit exceeded` (Upstash) | Upstash free = **500k requests/month**, already spent → delete `REDIS_URL`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` from Render → Environment → Save. The app runs fine without Redis (in-memory, verified 304MB peak) |
 | Storefront shows **no products** | Seed did not run — redo Step 8.5. Check admin → Products. |
 | Browser console: **CORS error** (`blocked by CORS policy`) | Fix the three CORS values exactly (Step 8.2) → Save → wait for redeploy → hard-refresh |
 | Admin login **wrong email/password** | Run in Render Shell: `npx medusa user -e admin@flowcase.dev -p "YOUR_ADMIN_PASSWORD"` |
