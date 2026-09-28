@@ -93,7 +93,7 @@ const ORG_JSONLD = {
       sameAs: ["https://instagram.com"],
       contactPoint: {
         "@type": "ContactPoint",
-        email: "support@flowcase.example",
+        email: "support@flowcase.in",
         contactType: "customer service",
         areaServed: "IN",
         availableLanguage: "en",

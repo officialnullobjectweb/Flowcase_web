@@ -432,18 +432,33 @@ export function HomeSections({
           />
           {/* desktop / tablet cards */}
           <div className="mt-8 hidden gap-4 sm:grid sm:grid-cols-3">
-            {REUSE.map((s) => {
+            {REUSE.map((s, i) => {
               const Scene = s.Scene
               return (
-                <div key={s.n} className="group border border-border bg-background">
+                <div key={s.n} className="group relative border border-border bg-background">
+                  <div className="flex items-baseline justify-between border-b border-border px-5 pb-3 pt-4">
+                    <span className="display-tight font-display text-4xl font-bold leading-none">
+                      {s.n}
+                    </span>
+                    <span className="label text-muted-foreground">
+                      Step {i + 1} / {REUSE.length}
+                    </span>
+                  </div>
                   <div className="scene-bg relative overflow-hidden border-b border-border bg-muted/60">
                     <Scene />
-                    <span className="label absolute left-3 top-3 text-muted-foreground">{s.n}</span>
                   </div>
                   <div className="p-5">
-                    <p className="display-tight font-display text-lg font-semibold">{s.t}</p>
+                    <p className="display-tight font-display text-xl font-semibold">{s.t}</p>
                     <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.b}</p>
                   </div>
+                  {i < REUSE.length - 1 && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute -right-[22px] top-1/2 z-10 hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background lg:flex"
+                    >
+                      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                    </span>
+                  )}
                 </div>
               )
             })}
@@ -461,10 +476,14 @@ export function HomeSections({
                     step === i ? "border-foreground bg-background" : "border-border bg-background/60"
                   }`}
                 >
-                  <span className={`label block ${step === i ? "text-foreground" : "text-muted-foreground"}`}>
-                    Step {i + 1}
+                  <span
+                    className={`display-tight block font-display text-2xl font-bold leading-none ${
+                      step === i ? "text-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    {s.n}
                   </span>
-                  <span className="mt-1 block text-xs font-semibold leading-tight">{s.t}</span>
+                  <span className="mt-1.5 block text-xs font-semibold leading-tight">{s.t}</span>
                 </button>
               ))}
             </div>

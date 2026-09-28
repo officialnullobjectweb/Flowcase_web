@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 const CHANNELS = [
   {
     label: "Email",
-    value: "support@flowcase.example",
-    href: "mailto:support@flowcase.example",
+    value: "support@flowcase.in",
+    href: "mailto:support@flowcase.in",
     note: "We reply within one business day.",
   },
   {

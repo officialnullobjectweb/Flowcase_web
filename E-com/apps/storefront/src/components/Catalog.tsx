@@ -6,13 +6,13 @@ import { Fragment, useEffect, useRef, useState } from "react"
 import { ArrowRight } from "lucide-react"
 import { FilterSortBar, type CatalogState } from "./FilterSortBar"
 import { ProductCard } from "./ProductCard"
-import type { Product, ProductTag } from "@/lib/types"
+import type { Product, ProductCategory } from "@/lib/types"
 
 interface CatalogProps {
   basePath: string
   state: CatalogState
   products: Product[]
-  tags: ProductTag[]
+  categories: ProductCategory[]
 }
 
 /** Products revealed per bunch — scroll past the grid and the next bunch mounts. */
@@ -66,7 +66,7 @@ export function Catalog({
   basePath,
   state,
   products,
-  tags,
+  categories,
 }: CatalogProps) {
   // ponytail: batches revealed client-side from one payload — switch to a
   // route handler fetching /store/products per batch past ~200 products
@@ -96,7 +96,7 @@ export function Catalog({
 
   return (
     <div className="space-y-8">
-      <FilterSortBar basePath={basePath} state={state} tags={tags} />
+      <FilterSortBar basePath={basePath} state={state} categories={categories} />
 
       {products.length === 0 ? (
         <div className="border border-dashed border-border p-12 text-center">

@@ -151,12 +151,12 @@ export default async function ProductPage({
           </div>
         </div>
 
-        <FeatureBanners />
+        <FeatureBanners product={product} />
         <DetailsTabs product={product} pdp={cms.pdp} />
 
         <ReviewsSection product={product} pdp={cms.pdp} />
 
-        <PdpFaq />
+        <PdpFaq product={product} />
 
         {related.length > 0 && (
           <section className="mt-20">

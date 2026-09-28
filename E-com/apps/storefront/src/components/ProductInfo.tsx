@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { useCart } from "@/context/CartContext"
 import { useSelection } from "@/context/SelectionContext"
 import { SWATCHES } from "@/components/FilterSortBar"
+import { productBadges } from "@/lib/badges"
 import { formatPrice } from "@/lib/format"
 import type { Product, ProductVariant } from "@/lib/types"
 import { Button } from "./ui/button"
@@ -141,6 +142,24 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <h1 className="display-tight mt-3 font-display text-3xl font-bold leading-[1.05] sm:text-4xl">
           {product.title}
         </h1>
+        {(() => {
+          const badges = productBadges(product, discountPercent)
+          if (!badges.length) return null
+          const toneCls: Record<string, string> = {
+            signal: "bg-primary text-primary-foreground",
+            ink: "bg-foreground text-background",
+            outline: "border border-border text-muted-foreground",
+          }
+          return (
+            <ul className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
+              {badges.map((b) => (
+                <li key={b.label} className={`label px-2 py-1 ${toneCls[b.tone]}`}>
+                  {b.label}
+                </li>
+              ))}
+            </ul>
+          )
+        })()}
         <p aria-live="polite" className="label mt-4">
           {inStock ? (
             <span className="text-success">● In stock — dispatches in 48h</span>

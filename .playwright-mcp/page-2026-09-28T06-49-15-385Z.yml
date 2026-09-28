@@ -1,0 +1,1601 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - paragraph [ref=e6]: Free shipping over ₹999 · 7-day returns · 10% off with reuse10
+    - generic [ref=e8]:
+      - link "Flowcase home" [ref=e10] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e11]: Flowcase.
+      - navigation "Primary" [ref=e12]:
+        - link "Shop" [ref=e13] [cursor=pointer]:
+          - /url: /shop
+        - link "Samsung" [ref=e14] [cursor=pointer]:
+          - /url: /shop?tags=samsung
+        - link "Apple" [ref=e15] [cursor=pointer]:
+          - /url: /shop?tags=apple
+        - link "Accessories" [ref=e16] [cursor=pointer]:
+          - /url: /collections/accessories
+        - link "Limited edition" [ref=e17] [cursor=pointer]:
+          - /url: /shop?badge=limited
+      - generic [ref=e18]:
+        - button "Search" [ref=e19]
+        - button "Open cart, 0 items" [ref=e23]
+        - link "Account" [ref=e27] [cursor=pointer]:
+          - /url: /account
+  - main [ref=e31]:
+    - generic [ref=e32]:
+      - group "Hero slides" [ref=e37]:
+        - button "Show slide 1" [ref=e38]
+        - button "Show slide 2" [ref=e40]
+      - generic [ref=e42]:
+        - generic [ref=e43]:
+          - paragraph [ref=e44]: Go With Flow
+          - heading "Cases that move at your pace." [level=1] [ref=e46]: Cases that moveat your pace.
+          - paragraph [ref=e47]: Premium protection for iPhone 15 through 17 and Samsung Galaxy A & S series. Slim profiles, drop-tested corners, zero bulk.
+          - generic [ref=e48]:
+            - link "Shop all cases" [ref=e49] [cursor=pointer]:
+              - /url: /shop
+            - link "iPhone cases" [ref=e50] [cursor=pointer]:
+              - /url: /collections/iphone
+        - generic [ref=e51]:
+          - generic [ref=e52]: 2.5 m drop-tested
+          - generic [ref=e53]: Free shipping over ₹999
+          - generic [ref=e54]: REUSE10 — 10% back
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - generic [ref=e59]:
+          - paragraph [ref=e60]:
+            - generic [ref=e61]: 02 —
+            - text: Best sellers
+          - heading "Most re-ordered cases." [level=2] [ref=e62]
+        - tablist "Filter by brand" [ref=e63]:
+          - tab "All" [selected] [ref=e64]
+          - tab "Apple" [ref=e65]
+          - tab "Samsung" [ref=e66]
+      - generic [ref=e68]:
+        - region "Best sellers" [ref=e69]:
+          - generic [ref=e71]:
+            - link "Flowcase for Galaxy S25 Best seller samsung Flowcase for Galaxy S25 4.6 out of 5 stars 4.6 · 352 reviews ₹1,599.00" [ref=e72] [cursor=pointer]:
+              - /url: /products/flowcase-galaxy-s25
+              - generic [ref=e73]:
+                - img "Flowcase for Galaxy S25" [ref=e74]
+                - generic [ref=e76]: Best seller
+              - generic [ref=e78]:
+                - paragraph [ref=e79]: samsung
+                - paragraph [ref=e80]: Flowcase for Galaxy S25
+                - paragraph [ref=e81]:
+                  - img "4.6 out of 5 stars" [ref=e82]
+                  - generic [ref=e113]: 4.6 · 352 reviews
+                - paragraph [ref=e114]: ₹1,599.00
+            - button "Save Flowcase for Galaxy S25 to wishlist" [ref=e115]
+          - generic [ref=e119]:
+            - link "Flowcase for iPhone 15 Pro Max Best seller apple Flowcase for iPhone 15 Pro Max 4.8 out of 5 stars 4.8 · 242 reviews ₹1,599.00" [ref=e120] [cursor=pointer]:
+              - /url: /products/flowcase-iphone-15-pro-max
+              - generic [ref=e121]:
+                - img "Flowcase for iPhone 15 Pro Max" [ref=e122]
+                - generic [ref=e124]: Best seller
+              - generic [ref=e126]:
+                - paragraph [ref=e127]: apple
+                - paragraph [ref=e128]: Flowcase for iPhone 15 Pro Max
+                - paragraph [ref=e129]:
+                  - img "4.8 out of 5 stars" [ref=e130]
+                  - generic [ref=e161]: 4.8 · 242 reviews
+                - paragraph [ref=e162]: ₹1,599.00
+            - button "Save Flowcase for iPhone 15 Pro Max to wishlist" [ref=e163]
+        - generic:
+          - button "Scroll back" [ref=e166]
+          - button "Scroll forward" [ref=e169]
+    - generic [ref=e172]:
+      - generic [ref=e175]:
+        - generic [ref=e176]:
+          - paragraph [ref=e177]:
+            - generic [ref=e178]: 03 —
+            - text: Shop by category
+          - heading "Cases, audio, and charging." [level=2] [ref=e179]
+          - paragraph [ref=e180]: Six shelves, one standard — drop-tested, pocket-friendly, and shipped plastic-free.
+        - link "Shop everything →" [ref=e181] [cursor=pointer]:
+          - /url: /shop
+      - region "Shop by category" [ref=e182]:
+        - link [ref=e183] [cursor=pointer]:
+          - /url: /shop
+          - generic [ref=e184]:
+            - img "Phone Cases — Flowcase" [ref=e185]
+            - generic [ref=e187]:
+              - paragraph [ref=e188]: Phone Cases
+              - paragraph [ref=e189]: 15 products
+          - paragraph [ref=e190]: iPhone 15–17 & Galaxy A/S
+        - link [ref=e191] [cursor=pointer]:
+          - /url: /shop?tag=speaker
+          - generic [ref=e192]:
+            - img "Speakers — Flowcase" [ref=e193]
+            - generic [ref=e195]:
+              - paragraph [ref=e196]: Speakers
+              - paragraph [ref=e197]: 10 products
+          - paragraph [ref=e198]: Bluetooth, 12–24 hr playtime
+        - link [ref=e199] [cursor=pointer]:
+          - /url: /shop?tag=powerbank
+          - generic [ref=e200]:
+            - img "Power Banks — Flowcase" [ref=e201]
+            - generic [ref=e203]:
+              - paragraph [ref=e204]: Power Banks
+              - paragraph [ref=e205]: 10 products
+          - paragraph [ref=e206]: 5000–27000mAh fast charge
+        - link [ref=e207] [cursor=pointer]:
+          - /url: /shop?tag=cable
+          - generic [ref=e208]:
+            - img "Cables — Flowcase" [ref=e209]
+            - generic [ref=e211]:
+              - paragraph [ref=e212]: Cables
+              - paragraph [ref=e213]: 10 products
+          - paragraph [ref=e214]: Braided USB-C up to 240W
+        - link [ref=e215] [cursor=pointer]:
+          - /url: /shop?tag=magsafe
+          - generic [ref=e216]:
+            - img "MagSafe Cases — Flowcase" [ref=e217]
+            - generic [ref=e219]:
+              - paragraph [ref=e220]: MagSafe Cases
+              - paragraph [ref=e221]: 10 products
+          - paragraph [ref=e222]: Magnetic snap-on armor
+        - link [ref=e223] [cursor=pointer]:
+          - /url: /shop?tag=airpods
+          - generic [ref=e224]:
+            - img "AirPods Cases — Flowcase" [ref=e225]
+            - generic [ref=e227]:
+              - paragraph [ref=e228]: AirPods Cases
+              - paragraph [ref=e229]: 10 products
+          - paragraph [ref=e230]: Pro, 4, 3, 2 & Max
+    - generic [ref=e233]:
+      - generic [ref=e235]:
+        - generic [ref=e236]:
+          - paragraph [ref=e237]:
+            - generic [ref=e238]: 04 —
+            - text: Shop by model
+          - heading "Find your exact fit." [level=2] [ref=e239]
+          - paragraph [ref=e240]: Every case is moulded to one phone — no shared shells, no loose buttons.
+        - link "View all →" [ref=e241] [cursor=pointer]:
+          - /url: /shop
+      - generic [ref=e243]:
+        - region "Shop by model" [ref=e244]:
+          - link "Galaxy A26 Galaxy Galaxy A26 Case" [ref=e246] [cursor=pointer]:
+            - /url: /products/flowcase-galaxy-a26
+            - generic [ref=e247]:
+              - img "Galaxy A26" [ref=e248]
+              - generic [ref=e249]: Galaxy
+            - generic [ref=e250]: Galaxy A26
+            - paragraph [ref=e254]: Case
+          - link "Galaxy A56 Galaxy Galaxy A56 Case" [ref=e256] [cursor=pointer]:
+            - /url: /products/flowcase-galaxy-a56
+            - generic [ref=e257]:
+              - img "Galaxy A56" [ref=e258]
+              - generic [ref=e259]: Galaxy
+            - generic [ref=e260]: Galaxy A56
+            - paragraph [ref=e264]: Case
+          - link "iPhone 16 iPhone iPhone 16 Case" [ref=e266] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-16
+            - generic [ref=e267]:
+              - img "iPhone 16" [ref=e268]
+              - generic [ref=e269]: iPhone
+            - generic [ref=e270]: iPhone 16
+            - paragraph [ref=e274]: Case
+          - link "iPhone 15 iPhone iPhone 15 Case" [ref=e276] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-15
+            - generic [ref=e277]:
+              - img "iPhone 15" [ref=e278]
+              - generic [ref=e279]: iPhone
+            - generic [ref=e280]: iPhone 15
+            - paragraph [ref=e284]: Case
+          - link "Galaxy S25 Galaxy Galaxy S25 Case" [ref=e286] [cursor=pointer]:
+            - /url: /products/flowcase-galaxy-s25
+            - generic [ref=e287]:
+              - img "Galaxy S25" [ref=e288]
+              - generic [ref=e289]: Galaxy
+            - generic [ref=e290]: Galaxy S25
+            - paragraph [ref=e294]: Case
+          - link "iPhone 15 Pro Max iPhone iPhone 15 Pro Max Case" [ref=e296] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-15-pro-max
+            - generic [ref=e297]:
+              - img "iPhone 15 Pro Max" [ref=e298]
+              - generic [ref=e299]: iPhone
+            - generic [ref=e300]: iPhone 15 Pro Max
+            - paragraph [ref=e304]: Case
+          - link "Galaxy S25+ Galaxy Galaxy S25+ Case" [ref=e306] [cursor=pointer]:
+            - /url: /products/flowcase-galaxy-s25-plus
+            - generic [ref=e307]:
+              - img "Galaxy S25+" [ref=e308]
+              - generic [ref=e309]: Galaxy
+            - generic [ref=e310]: Galaxy S25+
+            - paragraph [ref=e314]: Case
+          - link "Galaxy S25 Ultra Galaxy Galaxy S25 Ultra Case" [ref=e316] [cursor=pointer]:
+            - /url: /products/flowcase-galaxy-s25-ultra
+            - generic [ref=e317]:
+              - img "Galaxy S25 Ultra" [ref=e318]
+              - generic [ref=e319]: Galaxy
+            - generic [ref=e320]: Galaxy S25 Ultra
+            - paragraph [ref=e324]: Case
+          - link "iPhone 15 Pro iPhone iPhone 15 Pro Case" [ref=e326] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-15-pro
+            - generic [ref=e327]:
+              - img "iPhone 15 Pro" [ref=e328]
+              - generic [ref=e329]: iPhone
+            - generic [ref=e330]: iPhone 15 Pro
+            - paragraph [ref=e334]: Case
+          - link "iPhone 17 iPhone iPhone 17 Case" [ref=e336] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-17
+            - generic [ref=e337]:
+              - img "iPhone 17" [ref=e338]
+              - generic [ref=e339]: iPhone
+            - generic [ref=e340]: iPhone 17
+            - paragraph [ref=e344]: Case
+          - link "iPhone 17 Pro Max iPhone iPhone 17 Pro Max Case" [ref=e346] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-17-pro-max
+            - generic [ref=e347]:
+              - img "iPhone 17 Pro Max" [ref=e348]
+              - generic [ref=e349]: iPhone
+            - generic [ref=e350]: iPhone 17 Pro Max
+            - paragraph [ref=e354]: Case
+          - link "iPhone 17 Pro iPhone iPhone 17 Pro Case" [ref=e356] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-17-pro
+            - generic [ref=e357]:
+              - img "iPhone 17 Pro" [ref=e358]
+              - generic [ref=e359]: iPhone
+            - generic [ref=e360]: iPhone 17 Pro
+            - paragraph [ref=e364]: Case
+          - link "iPhone 16 Pro Max iPhone iPhone 16 Pro Max Case" [ref=e366] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-16-pro-max
+            - generic [ref=e367]:
+              - img "iPhone 16 Pro Max" [ref=e368]
+              - generic [ref=e369]: iPhone
+            - generic [ref=e370]: iPhone 16 Pro Max
+            - paragraph [ref=e374]: Case
+          - link "iPhone 16 Pro iPhone iPhone 16 Pro Case" [ref=e376] [cursor=pointer]:
+            - /url: /products/flowcase-iphone-16-pro
+            - generic [ref=e377]:
+              - img "iPhone 16 Pro" [ref=e378]
+              - generic [ref=e379]: iPhone
+            - generic [ref=e380]: iPhone 16 Pro
+            - paragraph [ref=e384]: Case
+          - link "Galaxy A36 Galaxy Galaxy A36 Case" [ref=e386] [cursor=pointer]:
+            - /url: /products/flowcase-galaxy-a36
+            - generic [ref=e387]:
+              - img "Galaxy A36" [ref=e388]
+              - generic [ref=e389]: Galaxy
+            - generic [ref=e390]: Galaxy A36
+            - paragraph [ref=e394]: Case
+        - generic:
+          - button "Scroll back" [ref=e395]
+          - button "Scroll forward" [ref=e398]
+    - generic [ref=e401]:
+      - generic [ref=e403]:
+        - generic [ref=e404]:
+          - paragraph [ref=e405]:
+            - generic [ref=e406]: 05 —
+            - text: Just landed
+          - heading "Latest drops" [level=2] [ref=e407]
+        - link "View all →" [ref=e408] [cursor=pointer]:
+          - /url: /shop
+      - generic [ref=e410]:
+        - region "Latest products" [ref=e411]:
+          - generic [ref=e413]:
+            - link "Flowcase for AirPods Max Cover Case Trending accessories Flowcase for AirPods Max Cover Case 4.5 out of 5 stars 4.5 · 311 reviews ₹1,399.00" [ref=e414] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-max-cover
+              - generic [ref=e415]:
+                - img "Flowcase for AirPods Max Cover Case" [ref=e416]
+                - generic [ref=e418]: Trending
+              - generic [ref=e420]:
+                - paragraph [ref=e421]: accessories
+                - paragraph [ref=e422]: Flowcase for AirPods Max Cover Case
+                - paragraph [ref=e423]:
+                  - img "4.5 out of 5 stars" [ref=e424]
+                  - generic [ref=e455]: 4.5 · 311 reviews
+                - paragraph [ref=e456]: ₹1,399.00
+            - button "Save Flowcase for AirPods Max Cover Case to wishlist" [ref=e457]
+          - generic [ref=e461]:
+            - link "Flowcase for AirPods Max Shield Case Trending accessories Flowcase for AirPods Max Shield Case 4.8 out of 5 stars 4.8 · 450 reviews ₹1,499.00" [ref=e462] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-max-shield
+              - generic [ref=e463]:
+                - img "Flowcase for AirPods Max Shield Case" [ref=e464]
+                - generic [ref=e466]: Trending
+              - generic [ref=e468]:
+                - paragraph [ref=e469]: accessories
+                - paragraph [ref=e470]: Flowcase for AirPods Max Shield Case
+                - paragraph [ref=e471]:
+                  - img "4.8 out of 5 stars" [ref=e472]
+                  - generic [ref=e503]: 4.8 · 450 reviews
+                - paragraph [ref=e504]: ₹1,499.00
+            - button "Save Flowcase for AirPods Max Shield Case to wishlist" [ref=e505]
+          - generic [ref=e509]:
+            - link "Flowcase for AirPods 4 Rugged Case accessories Flowcase for AirPods 4 Rugged Case 4.6 out of 5 stars 4.6 · 214 reviews ₹1,199.00" [ref=e510] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-4-rugged
+              - img "Flowcase for AirPods 4 Rugged Case" [ref=e512]
+              - generic [ref=e514]:
+                - paragraph [ref=e515]: accessories
+                - paragraph [ref=e516]: Flowcase for AirPods 4 Rugged Case
+                - paragraph [ref=e517]:
+                  - img "4.6 out of 5 stars" [ref=e518]
+                  - generic [ref=e549]: 4.6 · 214 reviews
+                - paragraph [ref=e550]: ₹1,199.00
+            - button "Save Flowcase for AirPods 4 Rugged Case to wishlist" [ref=e551]
+          - generic [ref=e555]:
+            - link "Flowcase for AirPods 2 Case Trending accessories Flowcase for AirPods 2 Case 4.9 out of 5 stars 4.9 · 353 reviews ₹899.00" [ref=e556] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-2
+              - generic [ref=e557]:
+                - img "Flowcase for AirPods 2 Case" [ref=e558]
+                - generic [ref=e560]: Trending
+              - generic [ref=e562]:
+                - paragraph [ref=e563]: accessories
+                - paragraph [ref=e564]: Flowcase for AirPods 2 Case
+                - paragraph [ref=e565]:
+                  - img "4.9 out of 5 stars" [ref=e566]
+                  - generic [ref=e597]: 4.9 · 353 reviews
+                - paragraph [ref=e598]: ₹899.00
+            - button "Save Flowcase for AirPods 2 Case to wishlist" [ref=e599]
+          - generic [ref=e603]:
+            - link "Flowcase for AirPods Pro 2 Rugged Case accessories Flowcase for AirPods Pro 2 Rugged Case 4.7 out of 5 stars 4.7 · 117 reviews ₹1,299.00" [ref=e604] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-pro-2-rugged
+              - img "Flowcase for AirPods Pro 2 Rugged Case" [ref=e606]
+              - generic [ref=e608]:
+                - paragraph [ref=e609]: accessories
+                - paragraph [ref=e610]: Flowcase for AirPods Pro 2 Rugged Case
+                - paragraph [ref=e611]:
+                  - img "4.7 out of 5 stars" [ref=e612]
+                  - generic [ref=e643]: 4.7 · 117 reviews
+                - paragraph [ref=e644]: ₹1,299.00
+            - button "Save Flowcase for AirPods Pro 2 Rugged Case to wishlist" [ref=e645]
+          - generic [ref=e649]:
+            - link "Flowcase for AirPods 4 Case New accessories Flowcase for AirPods 4 Case 4.4 out of 5 stars 4.4 · 62 reviews ₹999.00" [ref=e650] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-4
+              - generic [ref=e651]:
+                - img "Flowcase for AirPods 4 Case" [ref=e652]
+                - generic [ref=e654]: New
+              - generic [ref=e656]:
+                - paragraph [ref=e657]: accessories
+                - paragraph [ref=e658]: Flowcase for AirPods 4 Case
+                - paragraph [ref=e659]:
+                  - img "4.4 out of 5 stars" [ref=e660]
+                  - generic [ref=e691]: 4.4 · 62 reviews
+                - paragraph [ref=e692]: ₹999.00
+            - button "Save Flowcase for AirPods 4 Case to wishlist" [ref=e693]
+          - generic [ref=e697]:
+            - link "Flowcase for AirPods 3 Case accessories Flowcase for AirPods 3 Case 4.2 out of 5 stars 4.2 · 256 reviews ₹899.00" [ref=e698] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-3
+              - img "Flowcase for AirPods 3 Case" [ref=e700]
+              - generic [ref=e702]:
+                - paragraph [ref=e703]: accessories
+                - paragraph [ref=e704]: Flowcase for AirPods 3 Case
+                - paragraph [ref=e705]:
+                  - img "4.2 out of 5 stars" [ref=e706]
+                  - generic [ref=e737]: 4.2 · 256 reviews
+                - paragraph [ref=e738]: ₹899.00
+            - button "Save Flowcase for AirPods 3 Case to wishlist" [ref=e739]
+          - generic [ref=e743]:
+            - link "Flowcase for AirPods 4 ANC Case accessories Flowcase for AirPods 4 ANC Case 4.3 out of 5 stars 4.3 · 159 reviews ₹1,099.00" [ref=e744] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-4-anc
+              - img "Flowcase for AirPods 4 ANC Case" [ref=e746]
+              - generic [ref=e748]:
+                - paragraph [ref=e749]: accessories
+                - paragraph [ref=e750]: Flowcase for AirPods 4 ANC Case
+                - paragraph [ref=e751]:
+                  - img "4.3 out of 5 stars" [ref=e752]
+                  - generic [ref=e783]: 4.3 · 159 reviews
+                - paragraph [ref=e784]: ₹1,099.00
+            - button "Save Flowcase for AirPods 4 ANC Case to wishlist" [ref=e785]
+        - generic:
+          - button "Scroll back" [ref=e788]
+          - button "Scroll forward" [ref=e791]
+    - generic [ref=e794]:
+      - generic [ref=e797]:
+        - paragraph [ref=e798]:
+          - generic [ref=e799]: 06 —
+          - text: This month
+        - heading "Offers worth opening." [level=2] [ref=e800]
+        - paragraph [ref=e801]: Stackable with free shipping — codes land in your inbox, not in fine print.
+      - generic [ref=e803]:
+        - generic [ref=e804]:
+          - generic [ref=e805]:
+            - paragraph [ref=e806]: Offer of the month
+            - paragraph [ref=e808]: FLAT 10% OFF
+            - paragraph [ref=e809]: Send back your old case — any brand — in the prepaid envelope that ships with every order. We email the code, you keep 10% forever.
+          - generic [ref=e810]:
+            - button "Copy code REUSE10" [ref=e811]:
+              - generic [ref=e812]: REUSE10
+            - link "How it works" [ref=e816] [cursor=pointer]:
+              - /url: /sustainability
+        - link [ref=e819] [cursor=pointer]:
+          - /url: /shipping-returns
+          - generic [ref=e825]:
+            - paragraph [ref=e826]: Free shipping
+            - paragraph [ref=e827]: On orders over ₹999, pan-India.
+            - paragraph [ref=e828]: Details
+        - link [ref=e831] [cursor=pointer]:
+          - /url: /shop
+          - generic [ref=e835]:
+            - paragraph [ref=e836]: Just landed
+            - paragraph [ref=e837]: iPhone 17 & Galaxy S25 — early-fit cases in stock.
+            - paragraph [ref=e838]: Shop new
+    - generic [ref=e842]:
+      - generic [ref=e848]:
+        - paragraph [ref=e849]: 07 — Sustainability
+        - heading "Plastic-free box. Reused cases." [level=2] [ref=e850]
+        - paragraph [ref=e851]: Every order ships plastic-free, and every old case you send back stays out of landfill.
+      - link "Our mission" [ref=e852] [cursor=pointer]:
+        - /url: /sustainability
+    - generic [ref=e860]:
+      - generic [ref=e863]:
+        - paragraph [ref=e864]:
+          - generic [ref=e865]: 08 —
+          - text: Collections
+        - heading "Two ecosystems. One standard." [level=2] [ref=e866]
+        - paragraph [ref=e867]: Exact cutouts for camera bars, buttons, and MagSafe — from the iPhone line to Galaxy A and S.
+      - generic [ref=e868]:
+        - generic [ref=e869]:
+          - generic [ref=e870]:
+            - img "iPhone logo"
+          - button "iPhone models" [ref=e872]:
+            - generic [ref=e873]:
+              - img "iPhone cases" [ref=e875]
+              - generic [ref=e876]:
+                - generic [ref=e877]: iPhone
+                - generic [ref=e878]: 9 models
+        - generic [ref=e881]:
+          - generic [ref=e882]:
+            - img "Samsung logo"
+          - button "Samsung models" [ref=e884]:
+            - generic [ref=e885]:
+              - img "Samsung cases" [ref=e887]
+              - generic [ref=e888]:
+                - generic [ref=e889]: Samsung
+                - generic [ref=e890]: 6 models
+      - paragraph [ref=e893]: Pick a model from either dropdown — its cases show up right here.
+    - region [ref=e895]:
+      - generic [ref=e896]:
+        - generic [ref=e899]:
+          - paragraph [ref=e900]:
+            - generic [ref=e901]: 09 —
+            - text: Reviews
+          - heading "Stories from the drop test." [level=2] [ref=e902]
+        - button "Write a review" [ref=e903] [cursor=pointer]
+      - generic "Customer reviews" [ref=e906]:
+        - article [ref=e907]:
+          - generic [ref=e908]:
+            - img "Lena K." [ref=e909]
+            - generic [ref=e910]:
+              - paragraph [ref=e911]: Lena K.
+              - paragraph [ref=e912]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e913]
+          - paragraph [ref=e943]: Looks better in person
+          - paragraph [ref=e944]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e945]:
+            - img "Galaxy S25 Ultra case — buyer photo" [ref=e946]
+            - paragraph [ref=e947]: Fits Galaxy S25 Ultra
+        - article [ref=e950]:
+          - generic [ref=e951]:
+            - img "Joseph M." [ref=e952]
+            - generic [ref=e953]:
+              - paragraph [ref=e954]: Joseph M.
+              - paragraph [ref=e955]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e956]
+          - paragraph [ref=e986]: Grip ribs actually grip
+          - paragraph [ref=e987]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+          - generic [ref=e988]:
+            - img "Galaxy S25 Ultra case — buyer photo" [ref=e989]
+            - paragraph [ref=e990]: Fits Galaxy S25 Ultra
+        - article [ref=e993]:
+          - generic [ref=e994]:
+            - img "Priyanka D." [ref=e995]
+            - generic [ref=e996]:
+              - paragraph [ref=e997]: Priyanka D.
+              - paragraph [ref=e998]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e999]
+          - paragraph [ref=e1029]: Arrived in 48 hours
+          - paragraph [ref=e1030]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+          - generic [ref=e1031]:
+            - img "Galaxy S25 Ultra case — buyer photo" [ref=e1032]
+            - paragraph [ref=e1033]: Fits Galaxy S25 Ultra
+        - article [ref=e1036]:
+          - generic [ref=e1037]:
+            - img "Harsh V." [ref=e1038]
+            - generic [ref=e1039]:
+              - paragraph [ref=e1040]: Harsh V.
+              - paragraph [ref=e1041]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1042]
+          - paragraph [ref=e1073]: Worth the premium
+          - paragraph [ref=e1074]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+          - generic [ref=e1075]:
+            - img "Galaxy A36 case — buyer photo" [ref=e1076]
+            - paragraph [ref=e1077]: Fits Galaxy A36
+        - article [ref=e1080]:
+          - generic [ref=e1081]:
+            - img "Lena K." [ref=e1082]
+            - generic [ref=e1083]:
+              - paragraph [ref=e1084]: Lena K.
+              - paragraph [ref=e1085]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1086]
+          - paragraph [ref=e1117]: Looks better in person
+          - paragraph [ref=e1118]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e1119]:
+            - img "Galaxy A36 case — buyer photo" [ref=e1120]
+            - paragraph [ref=e1121]: Fits Galaxy A36
+        - article [ref=e1124]:
+          - generic [ref=e1125]:
+            - img "Joseph M." [ref=e1126]
+            - generic [ref=e1127]:
+              - paragraph [ref=e1128]: Joseph M.
+              - paragraph [ref=e1129]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1130]
+          - paragraph [ref=e1161]: Grip ribs actually grip
+          - paragraph [ref=e1162]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+          - generic [ref=e1163]:
+            - img "Galaxy A36 case — buyer photo" [ref=e1164]
+            - paragraph [ref=e1165]: Fits Galaxy A36
+        - article [ref=e1168]:
+          - generic [ref=e1169]:
+            - img "Ananya G." [ref=e1170]
+            - generic [ref=e1171]:
+              - paragraph [ref=e1172]: Ananya G.
+              - paragraph [ref=e1173]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1174]
+          - paragraph [ref=e1205]: Snug fit, zero rattle
+          - paragraph [ref=e1206]: The lip sits flush over the screen and the buttons don't mush. Feels like it shipped with the phone.
+          - generic [ref=e1207]:
+            - img "Galaxy A56 case — buyer photo" [ref=e1208]
+            - paragraph [ref=e1209]: Fits Galaxy A56
+        - article [ref=e1212]:
+          - generic [ref=e1213]:
+            - img "Harsh V." [ref=e1214]
+            - generic [ref=e1215]:
+              - paragraph [ref=e1216]: Harsh V.
+              - paragraph [ref=e1217]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1218]
+          - paragraph [ref=e1249]: Worth the premium
+          - paragraph [ref=e1250]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+          - generic [ref=e1251]:
+            - img "Galaxy A56 case — buyer photo" [ref=e1252]
+            - paragraph [ref=e1253]: Fits Galaxy A56
+        - article [ref=e1256]:
+          - generic [ref=e1257]:
+            - img "Lena K." [ref=e1258]
+            - generic [ref=e1259]:
+              - paragraph [ref=e1260]: Lena K.
+              - paragraph [ref=e1261]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1262]
+          - paragraph [ref=e1293]: Looks better in person
+          - paragraph [ref=e1294]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e1295]:
+            - img "Galaxy A56 case — buyer photo" [ref=e1296]
+            - paragraph [ref=e1297]: Fits Galaxy A56
+        - article [ref=e1300]:
+          - generic [ref=e1301]:
+            - img "Priyanka D." [ref=e1302]
+            - generic [ref=e1303]:
+              - paragraph [ref=e1304]: Priyanka D.
+              - paragraph [ref=e1305]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1306]
+          - paragraph [ref=e1337]: Arrived in 48 hours
+          - paragraph [ref=e1338]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+          - generic [ref=e1339]:
+            - img "Galaxy A26 case — buyer photo" [ref=e1340]
+            - paragraph [ref=e1341]: Fits Galaxy A26
+        - article [ref=e1344]:
+          - generic [ref=e1345]:
+            - img "Imran H." [ref=e1346]
+            - generic [ref=e1347]:
+              - paragraph [ref=e1348]: Imran H.
+              - paragraph [ref=e1349]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1350]
+          - paragraph [ref=e1381]: Camera ring is the detail
+          - paragraph [ref=e1382]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+          - generic [ref=e1383]:
+            - img "Galaxy A26 case — buyer photo" [ref=e1384]
+            - paragraph [ref=e1385]: Fits Galaxy A26
+        - article [ref=e1388]:
+          - generic [ref=e1389]:
+            - img "Sara L." [ref=e1390]
+            - generic [ref=e1391]:
+              - paragraph [ref=e1392]: Sara L.
+              - paragraph [ref=e1393]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1394]
+          - paragraph [ref=e1425]: Matte back beats glossy
+          - paragraph [ref=e1426]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+          - generic [ref=e1427]:
+            - img "Galaxy A26 case — buyer photo" [ref=e1428]
+            - paragraph [ref=e1429]: Fits Galaxy A26
+        - article [ref=e1432]:
+          - generic [ref=e1433]:
+            - img "Harsh V." [ref=e1434]
+            - generic [ref=e1435]:
+              - paragraph [ref=e1436]: Harsh V.
+              - paragraph [ref=e1437]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1438]
+          - paragraph [ref=e1469]: Worth the premium
+          - paragraph [ref=e1470]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+          - generic [ref=e1471]:
+            - img "Galaxy S25 case — buyer photo" [ref=e1472]
+            - paragraph [ref=e1473]: Fits Galaxy S25
+        - article [ref=e1476]:
+          - generic [ref=e1477]:
+            - img "Lena K." [ref=e1478]
+            - generic [ref=e1479]:
+              - paragraph [ref=e1480]: Lena K.
+              - paragraph [ref=e1481]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1482]
+          - paragraph [ref=e1513]: Looks better in person
+          - paragraph [ref=e1514]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e1515]:
+            - img "Galaxy S25 case — buyer photo" [ref=e1516]
+            - paragraph [ref=e1517]: Fits Galaxy S25
+        - article [ref=e1520]:
+          - generic [ref=e1521]:
+            - img "Joseph M." [ref=e1522]
+            - generic [ref=e1523]:
+              - paragraph [ref=e1524]: Joseph M.
+              - paragraph [ref=e1525]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1526]
+          - paragraph [ref=e1557]: Grip ribs actually grip
+          - paragraph [ref=e1558]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+          - generic [ref=e1559]:
+            - img "Galaxy S25 case — buyer photo" [ref=e1560]
+            - paragraph [ref=e1561]: Fits Galaxy S25
+        - article [ref=e1564]:
+          - generic [ref=e1565]:
+            - img "Harsh V." [ref=e1566]
+            - generic [ref=e1567]:
+              - paragraph [ref=e1568]: Harsh V.
+              - paragraph [ref=e1569]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1570]
+          - paragraph [ref=e1601]: Worth the premium
+          - paragraph [ref=e1602]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+          - generic [ref=e1603]:
+            - img "Galaxy S25+ case — buyer photo" [ref=e1604]
+            - paragraph [ref=e1605]: Fits Galaxy S25+
+        - article [ref=e1608]:
+          - generic [ref=e1609]:
+            - img "Lena K." [ref=e1610]
+            - generic [ref=e1611]:
+              - paragraph [ref=e1612]: Lena K.
+              - paragraph [ref=e1613]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1614]
+          - paragraph [ref=e1645]: Looks better in person
+          - paragraph [ref=e1646]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e1647]:
+            - img "Galaxy S25+ case — buyer photo" [ref=e1648]
+            - paragraph [ref=e1649]: Fits Galaxy S25+
+        - article [ref=e1652]:
+          - generic [ref=e1653]:
+            - img "Joseph M." [ref=e1654]
+            - generic [ref=e1655]:
+              - paragraph [ref=e1656]: Joseph M.
+              - paragraph [ref=e1657]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1658]
+          - paragraph [ref=e1689]: Grip ribs actually grip
+          - paragraph [ref=e1690]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+          - generic [ref=e1691]:
+            - img "Galaxy S25+ case — buyer photo" [ref=e1692]
+            - paragraph [ref=e1693]: Fits Galaxy S25+
+        - article [ref=e1696]:
+          - generic [ref=e1697]:
+            - img "Priyanka D." [ref=e1698]
+            - generic [ref=e1699]:
+              - paragraph [ref=e1700]: Priyanka D.
+              - paragraph [ref=e1701]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e1702]
+          - paragraph [ref=e1732]: Arrived in 48 hours
+          - paragraph [ref=e1733]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+          - generic [ref=e1734]:
+            - img "iPhone 17 Pro case — buyer photo" [ref=e1735]
+            - paragraph [ref=e1736]: Fits iPhone 17 Pro
+        - article [ref=e1739]:
+          - generic [ref=e1740]:
+            - img "Imran H." [ref=e1741]
+            - generic [ref=e1742]:
+              - paragraph [ref=e1743]: Imran H.
+              - paragraph [ref=e1744]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e1745]
+          - paragraph [ref=e1775]: Camera ring is the detail
+          - paragraph [ref=e1776]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+          - generic [ref=e1777]:
+            - img "iPhone 17 Pro case — buyer photo" [ref=e1778]
+            - paragraph [ref=e1779]: Fits iPhone 17 Pro
+        - article [ref=e1782]:
+          - generic [ref=e1783]:
+            - img "Sara L." [ref=e1784]
+            - generic [ref=e1785]:
+              - paragraph [ref=e1786]: Sara L.
+              - paragraph [ref=e1787]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e1788]
+          - paragraph [ref=e1818]: Matte back beats glossy
+          - paragraph [ref=e1819]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+          - generic [ref=e1820]:
+            - img "iPhone 17 Pro case — buyer photo" [ref=e1821]
+            - paragraph [ref=e1822]: Fits iPhone 17 Pro
+        - article [ref=e1825]:
+          - generic [ref=e1826]:
+            - img "Lena K." [ref=e1827]
+            - generic [ref=e1828]:
+              - paragraph [ref=e1829]: Lena K.
+              - paragraph [ref=e1830]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e1831]
+          - paragraph [ref=e1861]: Looks better in person
+          - paragraph [ref=e1862]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e1863]:
+            - img "iPhone 17 case — buyer photo" [ref=e1864]
+            - paragraph [ref=e1865]: Fits iPhone 17
+        - article [ref=e1868]:
+          - generic [ref=e1869]:
+            - img "Joseph M." [ref=e1870]
+            - generic [ref=e1871]:
+              - paragraph [ref=e1872]: Joseph M.
+              - paragraph [ref=e1873]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e1874]
+          - paragraph [ref=e1904]: Grip ribs actually grip
+          - paragraph [ref=e1905]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+          - generic [ref=e1906]:
+            - img "iPhone 17 case — buyer photo" [ref=e1907]
+            - paragraph [ref=e1908]: Fits iPhone 17
+        - article [ref=e1911]:
+          - generic [ref=e1912]:
+            - img "Priyanka D." [ref=e1913]
+            - generic [ref=e1914]:
+              - paragraph [ref=e1915]: Priyanka D.
+              - paragraph [ref=e1916]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e1917]
+          - paragraph [ref=e1947]: Arrived in 48 hours
+          - paragraph [ref=e1948]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+          - generic [ref=e1949]:
+            - img "iPhone 17 case — buyer photo" [ref=e1950]
+            - paragraph [ref=e1951]: Fits iPhone 17
+        - article [ref=e1954]:
+          - generic [ref=e1955]:
+            - img "Lena K." [ref=e1956]
+            - generic [ref=e1957]:
+              - paragraph [ref=e1958]: Lena K.
+              - paragraph [ref=e1959]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e1960]
+          - paragraph [ref=e1991]: Looks better in person
+          - paragraph [ref=e1992]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e1993]:
+            - img "iPhone 16 Pro Max case — buyer photo" [ref=e1994]
+            - paragraph [ref=e1995]: Fits iPhone 16 Pro Max
+        - article [ref=e1998]:
+          - generic [ref=e1999]:
+            - img "Joseph M." [ref=e2000]
+            - generic [ref=e2001]:
+              - paragraph [ref=e2002]: Joseph M.
+              - paragraph [ref=e2003]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2004]
+          - paragraph [ref=e2035]: Grip ribs actually grip
+          - paragraph [ref=e2036]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+          - generic [ref=e2037]:
+            - img "iPhone 16 Pro Max case — buyer photo" [ref=e2038]
+            - paragraph [ref=e2039]: Fits iPhone 16 Pro Max
+        - article [ref=e2042]:
+          - generic [ref=e2043]:
+            - img "Priyanka D." [ref=e2044]
+            - generic [ref=e2045]:
+              - paragraph [ref=e2046]: Priyanka D.
+              - paragraph [ref=e2047]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2048]
+          - paragraph [ref=e2079]: Arrived in 48 hours
+          - paragraph [ref=e2080]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+          - generic [ref=e2081]:
+            - img "iPhone 16 Pro Max case — buyer photo" [ref=e2082]
+            - paragraph [ref=e2083]: Fits iPhone 16 Pro Max
+        - article [ref=e2086]:
+          - generic [ref=e2087]:
+            - img "Imran H." [ref=e2088]
+            - generic [ref=e2089]:
+              - paragraph [ref=e2090]: Imran H.
+              - paragraph [ref=e2091]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e2092]
+          - paragraph [ref=e2122]: Camera ring is the detail
+          - paragraph [ref=e2123]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+          - generic [ref=e2124]:
+            - img "iPhone 15 case — buyer photo" [ref=e2125]
+            - paragraph [ref=e2126]: Fits iPhone 15
+        - article [ref=e2129]:
+          - generic [ref=e2130]:
+            - img "Sara L." [ref=e2131]
+            - generic [ref=e2132]:
+              - paragraph [ref=e2133]: Sara L.
+              - paragraph [ref=e2134]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e2135]
+          - paragraph [ref=e2165]: Matte back beats glossy
+          - paragraph [ref=e2166]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+          - generic [ref=e2167]:
+            - img "iPhone 15 case — buyer photo" [ref=e2168]
+            - paragraph [ref=e2169]: Fits iPhone 15
+        - article [ref=e2172]:
+          - generic [ref=e2173]:
+            - img "Vikram T." [ref=e2174]
+            - generic [ref=e2175]:
+              - paragraph [ref=e2176]: Vikram T.
+              - paragraph [ref=e2177]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e2178]
+          - paragraph [ref=e2208]: Dropped it twice already
+          - paragraph [ref=e2209]: Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for.
+          - generic [ref=e2210]:
+            - img "iPhone 15 case — buyer photo" [ref=e2211]
+            - paragraph [ref=e2212]: Fits iPhone 15
+        - article [ref=e2215]:
+          - generic [ref=e2216]:
+            - img "Imran H." [ref=e2217]
+            - generic [ref=e2218]:
+              - paragraph [ref=e2219]: Imran H.
+              - paragraph [ref=e2220]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2221]
+          - paragraph [ref=e2252]: Camera ring is the detail
+          - paragraph [ref=e2253]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+          - generic [ref=e2254]:
+            - img "iPhone 15 Pro case — buyer photo" [ref=e2255]
+            - paragraph [ref=e2256]: Fits iPhone 15 Pro
+        - article [ref=e2259]:
+          - generic [ref=e2260]:
+            - img "Sara L." [ref=e2261]
+            - generic [ref=e2262]:
+              - paragraph [ref=e2263]: Sara L.
+              - paragraph [ref=e2264]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2265]
+          - paragraph [ref=e2296]: Matte back beats glossy
+          - paragraph [ref=e2297]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+          - generic [ref=e2298]:
+            - img "iPhone 15 Pro case — buyer photo" [ref=e2299]
+            - paragraph [ref=e2300]: Fits iPhone 15 Pro
+        - article [ref=e2303]:
+          - generic [ref=e2304]:
+            - img "Vikram T." [ref=e2305]
+            - generic [ref=e2306]:
+              - paragraph [ref=e2307]: Vikram T.
+              - paragraph [ref=e2308]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2309]
+          - paragraph [ref=e2340]: Dropped it twice already
+          - paragraph [ref=e2341]: Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for.
+          - generic [ref=e2342]:
+            - img "iPhone 15 Pro case — buyer photo" [ref=e2343]
+            - paragraph [ref=e2344]: Fits iPhone 15 Pro
+        - article [ref=e2347]:
+          - generic [ref=e2348]:
+            - img "Lena K." [ref=e2349]
+            - generic [ref=e2350]:
+              - paragraph [ref=e2351]: Lena K.
+              - paragraph [ref=e2352]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e2353]
+          - paragraph [ref=e2383]: Looks better in person
+          - paragraph [ref=e2384]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e2385]:
+            - img "iPhone 17 Pro Max case — buyer photo" [ref=e2386]
+            - paragraph [ref=e2387]: Fits iPhone 17 Pro Max
+        - article [ref=e2390]:
+          - generic [ref=e2391]:
+            - img "Joseph M." [ref=e2392]
+            - generic [ref=e2393]:
+              - paragraph [ref=e2394]: Joseph M.
+              - paragraph [ref=e2395]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e2396]
+          - paragraph [ref=e2426]: Grip ribs actually grip
+          - paragraph [ref=e2427]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+          - generic [ref=e2428]:
+            - img "iPhone 17 Pro Max case — buyer photo" [ref=e2429]
+            - paragraph [ref=e2430]: Fits iPhone 17 Pro Max
+        - article [ref=e2433]:
+          - generic [ref=e2434]:
+            - img "Priyanka D." [ref=e2435]
+            - generic [ref=e2436]:
+              - paragraph [ref=e2437]: Priyanka D.
+              - paragraph [ref=e2438]: Verified buyer
+            - img "4.0 out of 5 stars" [ref=e2439]
+          - paragraph [ref=e2469]: Arrived in 48 hours
+          - paragraph [ref=e2470]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+          - generic [ref=e2471]:
+            - img "iPhone 17 Pro Max case — buyer photo" [ref=e2472]
+            - paragraph [ref=e2473]: Fits iPhone 17 Pro Max
+        - article [ref=e2476]:
+          - generic [ref=e2477]:
+            - img "Ananya G." [ref=e2478]
+            - generic [ref=e2479]:
+              - paragraph [ref=e2480]: Ananya G.
+              - paragraph [ref=e2481]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2482]
+          - paragraph [ref=e2513]: Snug fit, zero rattle
+          - paragraph [ref=e2514]: The lip sits flush over the screen and the buttons don't mush. Feels like it shipped with the phone.
+          - generic [ref=e2515]:
+            - img "iPhone 15 Pro Max case — buyer photo" [ref=e2516]
+            - paragraph [ref=e2517]: Fits iPhone 15 Pro Max
+        - article [ref=e2520]:
+          - generic [ref=e2521]:
+            - img "Harsh V." [ref=e2522]
+            - generic [ref=e2523]:
+              - paragraph [ref=e2524]: Harsh V.
+              - paragraph [ref=e2525]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2526]
+          - paragraph [ref=e2557]: Worth the premium
+          - paragraph [ref=e2558]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+          - generic [ref=e2559]:
+            - img "iPhone 15 Pro Max case — buyer photo" [ref=e2560]
+            - paragraph [ref=e2561]: Fits iPhone 15 Pro Max
+        - article [ref=e2564]:
+          - generic [ref=e2565]:
+            - img "Lena K." [ref=e2566]
+            - generic [ref=e2567]:
+              - paragraph [ref=e2568]: Lena K.
+              - paragraph [ref=e2569]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2570]
+          - paragraph [ref=e2601]: Looks better in person
+          - paragraph [ref=e2602]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+          - generic [ref=e2603]:
+            - img "iPhone 15 Pro Max case — buyer photo" [ref=e2604]
+            - paragraph [ref=e2605]: Fits iPhone 15 Pro Max
+        - article [ref=e2608]:
+          - generic [ref=e2609]:
+            - img "Imran H." [ref=e2610]
+            - generic [ref=e2611]:
+              - paragraph [ref=e2612]: Imran H.
+              - paragraph [ref=e2613]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2614]
+          - paragraph [ref=e2645]: Camera ring is the detail
+          - paragraph [ref=e2646]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+          - generic [ref=e2647]:
+            - img "iPhone 16 Pro case — buyer photo" [ref=e2648]
+            - paragraph [ref=e2649]: Fits iPhone 16 Pro
+        - article [ref=e2652]:
+          - generic [ref=e2653]:
+            - img "Sara L." [ref=e2654]
+            - generic [ref=e2655]:
+              - paragraph [ref=e2656]: Sara L.
+              - paragraph [ref=e2657]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2658]
+          - paragraph [ref=e2689]: Matte back beats glossy
+          - paragraph [ref=e2690]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+          - generic [ref=e2691]:
+            - img "iPhone 16 Pro case — buyer photo" [ref=e2692]
+            - paragraph [ref=e2693]: Fits iPhone 16 Pro
+        - article [ref=e2696]:
+          - generic [ref=e2697]:
+            - img "Vikram T." [ref=e2698]
+            - generic [ref=e2699]:
+              - paragraph [ref=e2700]: Vikram T.
+              - paragraph [ref=e2701]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2702]
+          - paragraph [ref=e2733]: Dropped it twice already
+          - paragraph [ref=e2734]: Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for.
+          - generic [ref=e2735]:
+            - img "iPhone 16 Pro case — buyer photo" [ref=e2736]
+            - paragraph [ref=e2737]: Fits iPhone 16 Pro
+        - article [ref=e2740]:
+          - generic [ref=e2741]:
+            - img "Vikram T." [ref=e2742]
+            - generic [ref=e2743]:
+              - paragraph [ref=e2744]: Vikram T.
+              - paragraph [ref=e2745]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2746]
+          - paragraph [ref=e2777]: Dropped it twice already
+          - paragraph [ref=e2778]: Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for.
+          - generic [ref=e2779]:
+            - img "iPhone 16 case — buyer photo" [ref=e2780]
+            - paragraph [ref=e2781]: Fits iPhone 16
+        - article [ref=e2784]:
+          - generic [ref=e2785]:
+            - img "Ananya G." [ref=e2786]
+            - generic [ref=e2787]:
+              - paragraph [ref=e2788]: Ananya G.
+              - paragraph [ref=e2789]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2790]
+          - paragraph [ref=e2821]: Snug fit, zero rattle
+          - paragraph [ref=e2822]: The lip sits flush over the screen and the buttons don't mush. Feels like it shipped with the phone.
+          - generic [ref=e2823]:
+            - img "iPhone 16 case — buyer photo" [ref=e2824]
+            - paragraph [ref=e2825]: Fits iPhone 16
+        - article [ref=e2828]:
+          - generic [ref=e2829]:
+            - img "Harsh V." [ref=e2830]
+            - generic [ref=e2831]:
+              - paragraph [ref=e2832]: Harsh V.
+              - paragraph [ref=e2833]: Verified buyer
+            - img "5.0 out of 5 stars" [ref=e2834]
+          - paragraph [ref=e2865]: Worth the premium
+          - paragraph [ref=e2866]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+          - generic [ref=e2867]:
+            - img "iPhone 16 case — buyer photo" [ref=e2868]
+            - paragraph [ref=e2869]: Fits iPhone 16
+        - generic [aria-hidden] [ref=e2872]:
+          - article [ref=e2873]:
+            - generic [ref=e2876]:
+              - paragraph [ref=e2877]: Lena K.
+              - paragraph [ref=e2878]: Verified buyer
+            - paragraph [ref=e2909]: Looks better in person
+            - paragraph [ref=e2910]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e2913]: Fits Galaxy S25 Ultra
+          - article [ref=e2916]:
+            - generic [ref=e2919]:
+              - paragraph [ref=e2920]: Joseph M.
+              - paragraph [ref=e2921]: Verified buyer
+            - paragraph [ref=e2952]: Grip ribs actually grip
+            - paragraph [ref=e2953]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+            - paragraph [ref=e2956]: Fits Galaxy S25 Ultra
+          - article [ref=e2959]:
+            - generic [ref=e2962]:
+              - paragraph [ref=e2963]: Priyanka D.
+              - paragraph [ref=e2964]: Verified buyer
+            - paragraph [ref=e2995]: Arrived in 48 hours
+            - paragraph [ref=e2996]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+            - paragraph [ref=e2999]: Fits Galaxy S25 Ultra
+          - article [ref=e3002]:
+            - generic [ref=e3005]:
+              - paragraph [ref=e3006]: Harsh V.
+              - paragraph [ref=e3007]: Verified buyer
+            - paragraph [ref=e3039]: Worth the premium
+            - paragraph [ref=e3040]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+            - paragraph [ref=e3043]: Fits Galaxy A36
+          - article [ref=e3046]:
+            - generic [ref=e3049]:
+              - paragraph [ref=e3050]: Lena K.
+              - paragraph [ref=e3051]: Verified buyer
+            - paragraph [ref=e3083]: Looks better in person
+            - paragraph [ref=e3084]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e3087]: Fits Galaxy A36
+          - article [ref=e3090]:
+            - generic [ref=e3093]:
+              - paragraph [ref=e3094]: Joseph M.
+              - paragraph [ref=e3095]: Verified buyer
+            - paragraph [ref=e3127]: Grip ribs actually grip
+            - paragraph [ref=e3128]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+            - paragraph [ref=e3131]: Fits Galaxy A36
+          - article [ref=e3134]:
+            - generic [ref=e3137]:
+              - paragraph [ref=e3138]: Ananya G.
+              - paragraph [ref=e3139]: Verified buyer
+            - paragraph [ref=e3171]: Snug fit, zero rattle
+            - paragraph [ref=e3172]: The lip sits flush over the screen and the buttons don't mush. Feels like it shipped with the phone.
+            - paragraph [ref=e3175]: Fits Galaxy A56
+          - article [ref=e3178]:
+            - generic [ref=e3181]:
+              - paragraph [ref=e3182]: Harsh V.
+              - paragraph [ref=e3183]: Verified buyer
+            - paragraph [ref=e3215]: Worth the premium
+            - paragraph [ref=e3216]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+            - paragraph [ref=e3219]: Fits Galaxy A56
+          - article [ref=e3222]:
+            - generic [ref=e3225]:
+              - paragraph [ref=e3226]: Lena K.
+              - paragraph [ref=e3227]: Verified buyer
+            - paragraph [ref=e3259]: Looks better in person
+            - paragraph [ref=e3260]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e3263]: Fits Galaxy A56
+          - article [ref=e3266]:
+            - generic [ref=e3269]:
+              - paragraph [ref=e3270]: Priyanka D.
+              - paragraph [ref=e3271]: Verified buyer
+            - paragraph [ref=e3303]: Arrived in 48 hours
+            - paragraph [ref=e3304]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+            - paragraph [ref=e3307]: Fits Galaxy A26
+          - article [ref=e3310]:
+            - generic [ref=e3313]:
+              - paragraph [ref=e3314]: Imran H.
+              - paragraph [ref=e3315]: Verified buyer
+            - paragraph [ref=e3347]: Camera ring is the detail
+            - paragraph [ref=e3348]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+            - paragraph [ref=e3351]: Fits Galaxy A26
+          - article [ref=e3354]:
+            - generic [ref=e3357]:
+              - paragraph [ref=e3358]: Sara L.
+              - paragraph [ref=e3359]: Verified buyer
+            - paragraph [ref=e3391]: Matte back beats glossy
+            - paragraph [ref=e3392]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+            - paragraph [ref=e3395]: Fits Galaxy A26
+          - article [ref=e3398]:
+            - generic [ref=e3401]:
+              - paragraph [ref=e3402]: Harsh V.
+              - paragraph [ref=e3403]: Verified buyer
+            - paragraph [ref=e3435]: Worth the premium
+            - paragraph [ref=e3436]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+            - paragraph [ref=e3439]: Fits Galaxy S25
+          - article [ref=e3442]:
+            - generic [ref=e3445]:
+              - paragraph [ref=e3446]: Lena K.
+              - paragraph [ref=e3447]: Verified buyer
+            - paragraph [ref=e3479]: Looks better in person
+            - paragraph [ref=e3480]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e3483]: Fits Galaxy S25
+          - article [ref=e3486]:
+            - generic [ref=e3489]:
+              - paragraph [ref=e3490]: Joseph M.
+              - paragraph [ref=e3491]: Verified buyer
+            - paragraph [ref=e3523]: Grip ribs actually grip
+            - paragraph [ref=e3524]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+            - paragraph [ref=e3527]: Fits Galaxy S25
+          - article [ref=e3530]:
+            - generic [ref=e3533]:
+              - paragraph [ref=e3534]: Harsh V.
+              - paragraph [ref=e3535]: Verified buyer
+            - paragraph [ref=e3567]: Worth the premium
+            - paragraph [ref=e3568]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+            - paragraph [ref=e3571]: Fits Galaxy S25+
+          - article [ref=e3574]:
+            - generic [ref=e3577]:
+              - paragraph [ref=e3578]: Lena K.
+              - paragraph [ref=e3579]: Verified buyer
+            - paragraph [ref=e3611]: Looks better in person
+            - paragraph [ref=e3612]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e3615]: Fits Galaxy S25+
+          - article [ref=e3618]:
+            - generic [ref=e3621]:
+              - paragraph [ref=e3622]: Joseph M.
+              - paragraph [ref=e3623]: Verified buyer
+            - paragraph [ref=e3655]: Grip ribs actually grip
+            - paragraph [ref=e3656]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+            - paragraph [ref=e3659]: Fits Galaxy S25+
+          - article [ref=e3662]:
+            - generic [ref=e3665]:
+              - paragraph [ref=e3666]: Priyanka D.
+              - paragraph [ref=e3667]: Verified buyer
+            - paragraph [ref=e3698]: Arrived in 48 hours
+            - paragraph [ref=e3699]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+            - paragraph [ref=e3702]: Fits iPhone 17 Pro
+          - article [ref=e3705]:
+            - generic [ref=e3708]:
+              - paragraph [ref=e3709]: Imran H.
+              - paragraph [ref=e3710]: Verified buyer
+            - paragraph [ref=e3741]: Camera ring is the detail
+            - paragraph [ref=e3742]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+            - paragraph [ref=e3745]: Fits iPhone 17 Pro
+          - article [ref=e3748]:
+            - generic [ref=e3751]:
+              - paragraph [ref=e3752]: Sara L.
+              - paragraph [ref=e3753]: Verified buyer
+            - paragraph [ref=e3784]: Matte back beats glossy
+            - paragraph [ref=e3785]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+            - paragraph [ref=e3788]: Fits iPhone 17 Pro
+          - article [ref=e3791]:
+            - generic [ref=e3794]:
+              - paragraph [ref=e3795]: Lena K.
+              - paragraph [ref=e3796]: Verified buyer
+            - paragraph [ref=e3827]: Looks better in person
+            - paragraph [ref=e3828]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e3831]: Fits iPhone 17
+          - article [ref=e3834]:
+            - generic [ref=e3837]:
+              - paragraph [ref=e3838]: Joseph M.
+              - paragraph [ref=e3839]: Verified buyer
+            - paragraph [ref=e3870]: Grip ribs actually grip
+            - paragraph [ref=e3871]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+            - paragraph [ref=e3874]: Fits iPhone 17
+          - article [ref=e3877]:
+            - generic [ref=e3880]:
+              - paragraph [ref=e3881]: Priyanka D.
+              - paragraph [ref=e3882]: Verified buyer
+            - paragraph [ref=e3913]: Arrived in 48 hours
+            - paragraph [ref=e3914]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+            - paragraph [ref=e3917]: Fits iPhone 17
+          - article [ref=e3920]:
+            - generic [ref=e3923]:
+              - paragraph [ref=e3924]: Lena K.
+              - paragraph [ref=e3925]: Verified buyer
+            - paragraph [ref=e3957]: Looks better in person
+            - paragraph [ref=e3958]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e3961]: Fits iPhone 16 Pro Max
+          - article [ref=e3964]:
+            - generic [ref=e3967]:
+              - paragraph [ref=e3968]: Joseph M.
+              - paragraph [ref=e3969]: Verified buyer
+            - paragraph [ref=e4001]: Grip ribs actually grip
+            - paragraph [ref=e4002]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+            - paragraph [ref=e4005]: Fits iPhone 16 Pro Max
+          - article [ref=e4008]:
+            - generic [ref=e4011]:
+              - paragraph [ref=e4012]: Priyanka D.
+              - paragraph [ref=e4013]: Verified buyer
+            - paragraph [ref=e4045]: Arrived in 48 hours
+            - paragraph [ref=e4046]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+            - paragraph [ref=e4049]: Fits iPhone 16 Pro Max
+          - article [ref=e4052]:
+            - generic [ref=e4055]:
+              - paragraph [ref=e4056]: Imran H.
+              - paragraph [ref=e4057]: Verified buyer
+            - paragraph [ref=e4088]: Camera ring is the detail
+            - paragraph [ref=e4089]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+            - paragraph [ref=e4092]: Fits iPhone 15
+          - article [ref=e4095]:
+            - generic [ref=e4098]:
+              - paragraph [ref=e4099]: Sara L.
+              - paragraph [ref=e4100]: Verified buyer
+            - paragraph [ref=e4131]: Matte back beats glossy
+            - paragraph [ref=e4132]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+            - paragraph [ref=e4135]: Fits iPhone 15
+          - article [ref=e4138]:
+            - generic [ref=e4141]:
+              - paragraph [ref=e4142]: Vikram T.
+              - paragraph [ref=e4143]: Verified buyer
+            - paragraph [ref=e4174]: Dropped it twice already
+            - paragraph [ref=e4175]: Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for.
+            - paragraph [ref=e4178]: Fits iPhone 15
+          - article [ref=e4181]:
+            - generic [ref=e4184]:
+              - paragraph [ref=e4185]: Imran H.
+              - paragraph [ref=e4186]: Verified buyer
+            - paragraph [ref=e4218]: Camera ring is the detail
+            - paragraph [ref=e4219]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+            - paragraph [ref=e4222]: Fits iPhone 15 Pro
+          - article [ref=e4225]:
+            - generic [ref=e4228]:
+              - paragraph [ref=e4229]: Sara L.
+              - paragraph [ref=e4230]: Verified buyer
+            - paragraph [ref=e4262]: Matte back beats glossy
+            - paragraph [ref=e4263]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+            - paragraph [ref=e4266]: Fits iPhone 15 Pro
+          - article [ref=e4269]:
+            - generic [ref=e4272]:
+              - paragraph [ref=e4273]: Vikram T.
+              - paragraph [ref=e4274]: Verified buyer
+            - paragraph [ref=e4306]: Dropped it twice already
+            - paragraph [ref=e4307]: Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for.
+            - paragraph [ref=e4310]: Fits iPhone 15 Pro
+          - article [ref=e4313]:
+            - generic [ref=e4316]:
+              - paragraph [ref=e4317]: Lena K.
+              - paragraph [ref=e4318]: Verified buyer
+            - paragraph [ref=e4349]: Looks better in person
+            - paragraph [ref=e4350]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e4353]: Fits iPhone 17 Pro Max
+          - article [ref=e4356]:
+            - generic [ref=e4359]:
+              - paragraph [ref=e4360]: Joseph M.
+              - paragraph [ref=e4361]: Verified buyer
+            - paragraph [ref=e4392]: Grip ribs actually grip
+            - paragraph [ref=e4393]: One-hand scroll on the metro without the death grip. Slight texture, not sticky.
+            - paragraph [ref=e4396]: Fits iPhone 17 Pro Max
+          - article [ref=e4399]:
+            - generic [ref=e4402]:
+              - paragraph [ref=e4403]: Priyanka D.
+              - paragraph [ref=e4404]: Verified buyer
+            - paragraph [ref=e4435]: Arrived in 48 hours
+            - paragraph [ref=e4436]: Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week.
+            - paragraph [ref=e4439]: Fits iPhone 17 Pro Max
+          - article [ref=e4442]:
+            - generic [ref=e4445]:
+              - paragraph [ref=e4446]: Ananya G.
+              - paragraph [ref=e4447]: Verified buyer
+            - paragraph [ref=e4479]: Snug fit, zero rattle
+            - paragraph [ref=e4480]: The lip sits flush over the screen and the buttons don't mush. Feels like it shipped with the phone.
+            - paragraph [ref=e4483]: Fits iPhone 15 Pro Max
+          - article [ref=e4486]:
+            - generic [ref=e4489]:
+              - paragraph [ref=e4490]: Harsh V.
+              - paragraph [ref=e4491]: Verified buyer
+            - paragraph [ref=e4523]: Worth the premium
+            - paragraph [ref=e4524]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+            - paragraph [ref=e4527]: Fits iPhone 15 Pro Max
+          - article [ref=e4530]:
+            - generic [ref=e4533]:
+              - paragraph [ref=e4534]: Lena K.
+              - paragraph [ref=e4535]: Verified buyer
+            - paragraph [ref=e4567]: Looks better in person
+            - paragraph [ref=e4568]: Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look.
+            - paragraph [ref=e4571]: Fits iPhone 15 Pro Max
+          - article [ref=e4574]:
+            - generic [ref=e4577]:
+              - paragraph [ref=e4578]: Imran H.
+              - paragraph [ref=e4579]: Verified buyer
+            - paragraph [ref=e4611]: Camera ring is the detail
+            - paragraph [ref=e4612]: Raised enough to protect the lens on a flat table, thin enough not to catch on pockets.
+            - paragraph [ref=e4615]: Fits iPhone 16 Pro
+          - article [ref=e4618]:
+            - generic [ref=e4621]:
+              - paragraph [ref=e4622]: Sara L.
+              - paragraph [ref=e4623]: Verified buyer
+            - paragraph [ref=e4655]: Matte back beats glossy
+            - paragraph [ref=e4656]: No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench.
+            - paragraph [ref=e4659]: Fits iPhone 16 Pro
+          - article [ref=e4662]:
+            - generic [ref=e4665]:
+              - paragraph [ref=e4666]: Vikram T.
+              - paragraph [ref=e4667]: Verified buyer
+            - paragraph [ref=e4699]: Dropped it twice already
+            - paragraph [ref=e4700]: Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for.
+            - paragraph [ref=e4703]: Fits iPhone 16 Pro
+          - article [ref=e4706]:
+            - generic [ref=e4709]:
+              - paragraph [ref=e4710]: Vikram T.
+              - paragraph [ref=e4711]: Verified buyer
+            - paragraph [ref=e4743]: Dropped it twice already
+            - paragraph [ref=e4744]: Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for.
+            - paragraph [ref=e4747]: Fits iPhone 16
+          - article [ref=e4750]:
+            - generic [ref=e4753]:
+              - paragraph [ref=e4754]: Ananya G.
+              - paragraph [ref=e4755]: Verified buyer
+            - paragraph [ref=e4787]: Snug fit, zero rattle
+            - paragraph [ref=e4788]: The lip sits flush over the screen and the buttons don't mush. Feels like it shipped with the phone.
+            - paragraph [ref=e4791]: Fits iPhone 16
+          - article [ref=e4794]:
+            - generic [ref=e4797]:
+              - paragraph [ref=e4798]: Harsh V.
+              - paragraph [ref=e4799]: Verified buyer
+            - paragraph [ref=e4831]: Worth the premium
+            - paragraph [ref=e4832]: Had a cheap TPU before this — buttons wore out in months. This still feels new after a year.
+            - paragraph [ref=e4835]: Fits iPhone 16
+    - generic [ref=e4838]:
+      - generic [ref=e4840]:
+        - generic [ref=e4841]:
+          - paragraph [ref=e4842]:
+            - generic [ref=e4843]: 10 —
+            - text: Best rated
+          - heading "What everyone keeps re-ordering." [level=2] [ref=e4844]
+          - paragraph [ref=e4845]: Ranked by verified buyer ratings — the same stars you see on each product page.
+        - link "All cases →" [ref=e4846] [cursor=pointer]:
+          - /url: /shop
+      - generic [ref=e4848]:
+        - region "Best rated products" [ref=e4849]:
+          - generic [ref=e4851]:
+            - link "Flowcase for AirPods 2 Case Trending accessories Flowcase for AirPods 2 Case 4.9 out of 5 stars 4.9 · 353 reviews ₹899.00" [ref=e4852] [cursor=pointer]:
+              - /url: /products/flowcase-airpods-2
+              - generic [ref=e4853]:
+                - img "Flowcase for AirPods 2 Case" [ref=e4854]
+                - generic [ref=e4856]: Trending
+              - generic [ref=e4858]:
+                - paragraph [ref=e4859]: accessories
+                - paragraph [ref=e4860]: Flowcase for AirPods 2 Case
+                - paragraph [ref=e4861]:
+                  - img "4.9 out of 5 stars" [ref=e4862]
+                  - generic [ref=e4893]: 4.9 · 353 reviews
+                - paragraph [ref=e4894]: ₹899.00
+            - button "Save Flowcase for AirPods 2 Case to wishlist" [ref=e4895]
+          - generic [ref=e4899]:
+            - link "Flowcase Braid USB-C 0.3m Mini Cable Best seller accessories Flowcase Braid USB-C 0.3m Mini Cable 4.9 out of 5 stars 4.9 · 91 reviews ₹449.00" [ref=e4900] [cursor=pointer]:
+              - /url: /products/flowcase-cable-braid-c-mini
+              - generic [ref=e4901]:
+                - img "Flowcase Braid USB-C 0.3m Mini Cable" [ref=e4902]
+                - generic [ref=e4904]: Best seller
+              - generic [ref=e4906]:
+                - paragraph [ref=e4907]: accessories
+                - paragraph [ref=e4908]: Flowcase Braid USB-C 0.3m Mini Cable
+                - paragraph [ref=e4909]:
+                  - img "4.9 out of 5 stars" [ref=e4910]
+                  - generic [ref=e4941]: 4.9 · 91 reviews
+                - paragraph [ref=e4942]: ₹449.00
+            - button "Save Flowcase Braid USB-C 0.3m Mini Cable to wishlist" [ref=e4943]
+          - generic [ref=e4947]:
+            - link "Flowcase Braid USB-C 2m 60W Cable Best seller accessories Flowcase Braid USB-C 2m 60W Cable 4.9 out of 5 stars 4.9 · 175 reviews ₹599.00" [ref=e4948] [cursor=pointer]:
+              - /url: /products/flowcase-cable-braid-c-2m
+              - generic [ref=e4949]:
+                - img "Flowcase Braid USB-C 2m 60W Cable" [ref=e4950]
+                - generic [ref=e4952]: Best seller
+              - generic [ref=e4954]:
+                - paragraph [ref=e4955]: accessories
+                - paragraph [ref=e4956]: Flowcase Braid USB-C 2m 60W Cable
+                - paragraph [ref=e4957]:
+                  - img "4.9 out of 5 stars" [ref=e4958]
+                  - generic [ref=e4989]: 4.9 · 175 reviews
+                - paragraph [ref=e4990]: ₹599.00
+            - button "Save Flowcase Braid USB-C 2m 60W Cable to wishlist" [ref=e4991]
+          - generic [ref=e4995]:
+            - link "Flowcase MagSafe for iPhone 17 Pro Trending accessories Flowcase MagSafe for iPhone 17 Pro 4.9 out of 5 stars 4.9 · 437 reviews ₹1,899.00" [ref=e4996] [cursor=pointer]:
+              - /url: /products/flowcase-magsafe-iphone-17-pro
+              - generic [ref=e4997]:
+                - img "Flowcase MagSafe for iPhone 17 Pro" [ref=e4998]
+                - generic [ref=e5000]: Trending
+              - generic [ref=e5002]:
+                - paragraph [ref=e5003]: accessories
+                - paragraph [ref=e5004]: Flowcase MagSafe for iPhone 17 Pro
+                - paragraph [ref=e5005]:
+                  - img "4.9 out of 5 stars" [ref=e5006]
+                  - generic [ref=e5037]: 4.9 · 437 reviews
+                - paragraph [ref=e5038]: ₹1,899.00
+            - button "Save Flowcase MagSafe for iPhone 17 Pro to wishlist" [ref=e5039]
+          - generic [ref=e5043]:
+            - link "Flowcase Volt 10000 MagSnap Power Bank Best seller accessories Flowcase Volt 10000 MagSnap Power Bank 4.9 out of 5 stars 4.9 · 259 reviews ₹2,299.00" [ref=e5044] [cursor=pointer]:
+              - /url: /products/flowcase-power-volt-10000-magsnap
+              - generic [ref=e5045]:
+                - img "Flowcase Volt 10000 MagSnap Power Bank" [ref=e5046]
+                - generic [ref=e5048]: Best seller
+              - generic [ref=e5050]:
+                - paragraph [ref=e5051]: accessories
+                - paragraph [ref=e5052]: Flowcase Volt 10000 MagSnap Power Bank
+                - paragraph [ref=e5053]:
+                  - img "4.9 out of 5 stars" [ref=e5054]
+                  - generic [ref=e5085]: 4.9 · 259 reviews
+                - paragraph [ref=e5086]: ₹2,299.00
+            - button "Save Flowcase Volt 10000 MagSnap Power Bank to wishlist" [ref=e5087]
+          - generic [ref=e5091]:
+            - link "Flowcase Drift Clip Speaker Trending accessories Flowcase Drift Clip Speaker 4.9 out of 5 stars 4.9 · 343 reviews ₹2,799.00" [ref=e5092] [cursor=pointer]:
+              - /url: /products/flowcase-speaker-drift-clip
+              - generic [ref=e5093]:
+                - img "Flowcase Drift Clip Speaker" [ref=e5094]
+                - generic [ref=e5096]: Trending
+              - generic [ref=e5098]:
+                - paragraph [ref=e5099]: accessories
+                - paragraph [ref=e5100]: Flowcase Drift Clip Speaker
+                - paragraph [ref=e5101]:
+                  - img "4.9 out of 5 stars" [ref=e5102]
+                  - generic [ref=e5133]: 4.9 · 343 reviews
+                - paragraph [ref=e5134]: ₹2,799.00
+            - button "Save Flowcase Drift Clip Speaker to wishlist" [ref=e5135]
+          - generic [ref=e5139]:
+            - link "Flowcase for Galaxy A56 Budget pick samsung Flowcase for Galaxy A56 4.9 out of 5 stars 4.9 · 61 reviews ₹1,099.00" [ref=e5140] [cursor=pointer]:
+              - /url: /products/flowcase-galaxy-a56
+              - generic [ref=e5141]:
+                - img "Flowcase for Galaxy A56" [ref=e5142]
+                - generic [ref=e5144]: Budget pick
+              - generic [ref=e5146]:
+                - paragraph [ref=e5147]: samsung
+                - paragraph [ref=e5148]: Flowcase for Galaxy A56
+                - paragraph [ref=e5149]:
+                  - img "4.9 out of 5 stars" [ref=e5150]
+                  - generic [ref=e5181]: 4.9 · 61 reviews
+                - paragraph [ref=e5182]: ₹1,099.00
+            - button "Save Flowcase for Galaxy A56 to wishlist" [ref=e5183]
+          - generic [ref=e5187]:
+            - link "Flowcase for iPhone 15 Pro Limited apple Flowcase for iPhone 15 Pro 4.9 out of 5 stars 4.9 · 145 reviews ₹1,499.00" [ref=e5188] [cursor=pointer]:
+              - /url: /products/flowcase-iphone-15-pro
+              - generic [ref=e5189]:
+                - img "Flowcase for iPhone 15 Pro" [ref=e5190]
+                - generic [ref=e5192]: Limited
+              - generic [ref=e5194]:
+                - paragraph [ref=e5195]: apple
+                - paragraph [ref=e5196]: Flowcase for iPhone 15 Pro
+                - paragraph [ref=e5197]:
+                  - img "4.9 out of 5 stars" [ref=e5198]
+                  - generic [ref=e5229]: 4.9 · 145 reviews
+                - paragraph [ref=e5230]: ₹1,499.00
+            - button "Save Flowcase for iPhone 15 Pro to wishlist" [ref=e5231]
+        - generic:
+          - button "Scroll back" [ref=e5234]
+          - button "Scroll forward" [ref=e5237]
+    - generic [ref=e5240]:
+      - generic [ref=e5243]:
+        - paragraph [ref=e5244]:
+          - generic [ref=e5245]: 11 —
+          - text: The standard
+        - heading "Built to disappear. Tested to survive." [level=2] [ref=e5246]
+      - generic [ref=e5247]:
+        - generic [ref=e5248]:
+          - term [ref=e5249]:
+            - generic [ref=e5253]: 2.5 m
+            - generic [ref=e5254]: Drop-tested
+          - definition [ref=e5255]: Corners rated for everyday falls — pocket height, desk height, pavement.
+        - generic [ref=e5256]:
+          - term [ref=e5257]:
+            - generic [ref=e5261]: 7 days
+            - generic [ref=e5262]: Easy returns
+          - definition [ref=e5263]: Changed your mind? Send it back within a week, no interrogation.
+        - generic [ref=e5264]:
+          - term [ref=e5265]:
+            - generic [ref=e5271]: 48 hrs
+            - generic [ref=e5272]: Fast dispatch
+          - definition [ref=e5273]: Orders leave our warehouse within two working days, pan-India.
+    - generic [ref=e5275]:
+      - generic [ref=e5278]:
+        - paragraph [ref=e5279]:
+          - generic [ref=e5280]: 12 —
+          - text: Reuse programme
+        - heading "Send your old case back. Keep 10% forever." [level=2] [ref=e5281]
+        - paragraph [ref=e5282]: Your old case took every drop with you — it shouldn't end up in a drawer. Send it back, we break it down and start again, and 10% off lands in your inbox for the next one.
+      - generic [ref=e5283]:
+        - generic [ref=e5284]:
+          - generic [ref=e5285]:
+            - img [aria-hidden] [ref=e5286]:
+              - generic [ref=e5290]:
+                - generic [ref=e5293]: ORDER PLACED
+                - generic [ref=e5294]: "#FC-2049 · 25 SEP"
+            - generic [ref=e5295]: "01"
+          - generic [ref=e5296]:
+            - paragraph [ref=e5297]: Order your case
+            - paragraph [ref=e5298]: A prepaid envelope rides along in the box — for the case you're done with.
+        - generic [ref=e5299]:
+          - generic [ref=e5300]: "02"
+          - generic [ref=e5315]:
+            - paragraph [ref=e5316]: Pack the old one
+            - paragraph [ref=e5317]: The cracked one, the faded one, any brand. Back in the loop instead of a drawer.
+        - generic [ref=e5318]:
+          - generic [ref=e5319]:
+            - img [aria-hidden] [ref=e5320]:
+              - generic [ref=e5322]: 10%
+              - generic [ref=e5323]: REUSE10
+              - generic [ref=e5324]: NEXT ORDER
+            - generic [ref=e5329]: "03"
+          - generic [ref=e5330]:
+            - paragraph [ref=e5331]: Get 10% off
+            - paragraph [ref=e5332]: We scan the envelope and email REUSE10. Your next case just costs less.
+      - link "See the full mission →" [ref=e5333] [cursor=pointer]:
+        - /url: /sustainability
+    - generic [ref=e5335]:
+      - generic [ref=e5336]:
+        - paragraph [ref=e5337]: 13 — Ready when you are · Go with flow
+        - heading "Protection you stop thinking about." [level=2] [ref=e5338]
+        - paragraph [ref=e5339]: Slim, drop-tested cases for iPhone 15–17 and Samsung Galaxy A & S — plus a reuse programme that keeps old cases out of landfill.
+        - link "Shop all cases →" [ref=e5340] [cursor=pointer]:
+          - /url: /shop
+      - generic [ref=e5341]:
+        - paragraph [ref=e5342]: Newsletter
+        - paragraph [ref=e5343]: New drops, restocks, and reuse discounts. No spam.
+        - generic [ref=e5344]:
+          - generic [ref=e5345]: Email address
+          - textbox "Email address" [ref=e5346]:
+            - /placeholder: YOU@EMAIL.COM
+          - button "Join" [ref=e5347]
+        - link "Our sustainability mission" [ref=e5348] [cursor=pointer]:
+          - /url: /sustainability
+  - contentinfo [ref=e5351]:
+    - generic [ref=e5352]:
+      - generic [ref=e5353]:
+        - link "Flowcase home" [ref=e5354] [cursor=pointer]:
+          - /url: /
+          - text: Flowcase.
+        - paragraph [ref=e5355]: Go with flow
+      - generic [ref=e5356]:
+        - generic [ref=e5357]:
+          - paragraph [ref=e5358]: Support — mon–fri, 10:00–18:00 ist
+          - link "support@flowcase.example" [ref=e5359] [cursor=pointer]:
+            - /url: mailto:support@flowcase.example
+          - link "Instagram" [ref=e5361] [cursor=pointer]:
+            - /url: https://instagram.com
+        - navigation "Shop" [ref=e5365]:
+          - button "Shop"
+          - list [ref=e5366]:
+            - listitem [ref=e5367]:
+              - link "All cases" [ref=e5368] [cursor=pointer]:
+                - /url: /shop
+            - listitem [ref=e5369]:
+              - link "iPhone cases" [ref=e5370] [cursor=pointer]:
+                - /url: /shop?tags=apple
+            - listitem [ref=e5371]:
+              - link "Samsung cases" [ref=e5372] [cursor=pointer]:
+                - /url: /shop?tags=samsung
+            - listitem [ref=e5373]:
+              - link "Accessories" [ref=e5374] [cursor=pointer]:
+                - /url: /collections/accessories
+            - listitem [ref=e5375]:
+              - link "Search" [ref=e5376] [cursor=pointer]:
+                - /url: /search
+            - listitem [ref=e5377]:
+              - link "Wishlist" [ref=e5378] [cursor=pointer]:
+                - /url: /wishlist
+        - navigation "Company" [ref=e5379]:
+          - button "Company"
+          - list [ref=e5380]:
+            - listitem [ref=e5381]:
+              - link "About" [ref=e5382] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e5383]:
+              - link "Sustainability" [ref=e5384] [cursor=pointer]:
+                - /url: /sustainability
+            - listitem [ref=e5385]:
+              - link "Contact" [ref=e5386] [cursor=pointer]:
+                - /url: /contact
+            - listitem [ref=e5387]:
+              - link "FAQ" [ref=e5388] [cursor=pointer]:
+                - /url: /faq
+        - navigation "Support" [ref=e5389]:
+          - button "Support"
+          - list [ref=e5390]:
+            - listitem [ref=e5391]:
+              - link "Shipping & returns" [ref=e5392] [cursor=pointer]:
+                - /url: /shipping-returns
+            - listitem [ref=e5393]:
+              - link "Return policy" [ref=e5394] [cursor=pointer]:
+                - /url: /returns
+            - listitem [ref=e5395]:
+              - link "Refund policy" [ref=e5396] [cursor=pointer]:
+                - /url: /refunds
+            - listitem [ref=e5397]:
+              - link "Your account" [ref=e5398] [cursor=pointer]:
+                - /url: /account
+            - listitem [ref=e5399]:
+              - link "Order history" [ref=e5400] [cursor=pointer]:
+                - /url: /account/orders
+        - navigation "Legal" [ref=e5401]:
+          - button "Legal"
+          - list [ref=e5402]:
+            - listitem [ref=e5403]:
+              - link "Terms & conditions" [ref=e5404] [cursor=pointer]:
+                - /url: /terms
+            - listitem [ref=e5405]:
+              - link "Privacy policy" [ref=e5406] [cursor=pointer]:
+                - /url: /privacy
+            - listitem [ref=e5407]:
+              - link "Data collection" [ref=e5408] [cursor=pointer]:
+                - /url: /data-collection
+      - generic [ref=e5409]:
+        - paragraph [ref=e5410]: © 2026 Flowcase · Go with flow
+        - generic [ref=e5411]:
+          - generic [ref=e5412]: UPI
+          - generic [ref=e5413]: Visa
+          - generic [ref=e5414]: Mastercard
+          - generic [ref=e5415]: COD
+  - alert [ref=e5416]

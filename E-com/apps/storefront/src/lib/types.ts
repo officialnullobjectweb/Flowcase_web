@@ -43,6 +43,12 @@ export interface ProductTag {
   value: string
 }
 
+export interface ProductCategory {
+  id: string
+  handle: string
+  name: string
+}
+
 export interface Product {
   id: string
   title: string

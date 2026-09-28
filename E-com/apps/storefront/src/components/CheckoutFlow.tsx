@@ -14,6 +14,7 @@ import {
   Wallet,
 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import { useCart } from "@/context/CartContext"
 import { formatPrice } from "@/lib/format"
@@ -894,10 +895,54 @@ export function CheckoutFlow() {
             >
               {(
                 [
-                  { id: "upi", icon: Smartphone, label: "UPI", note: "GPay · PhonePe · Paytm" },
-                  { id: "card", icon: CreditCard, label: "Credit & debit cards", note: "Visa · Mastercard · RuPay" },
-                  { id: "netbanking", icon: Landmark, label: "Netbanking", note: "All major Indian banks" },
-                  { id: "wallet", icon: Wallet, label: "Wallets", note: "Paytm · PhonePe wallets" },
+                  {
+                    id: "upi",
+                    icon: Smartphone,
+                    label: "UPI",
+                    note: "GPay · PhonePe · Paytm",
+                    logos: [
+                      {
+                        src: "https://i.pinimg.com/736x/e9/24/80/e924800c6f7f7fc7c3af9cf5beff78b8.jpg",
+                        alt: "UPI",
+                      },
+                    ],
+                  },
+                  {
+                    id: "card",
+                    icon: CreditCard,
+                    label: "Credit & debit cards",
+                    note: "Visa · Mastercard · RuPay",
+                    logos: [
+                      {
+                        src: "https://media.licdn.com/dms/image/v2/D5622AQF77-geLJjEtg/feedshare-shrink_800/feedshare-shrink_800/0/1722746368688?e=2147483647&v=beta&t=nxohUosJXxruUPIbS_Hll0CinyaL4zb3oU8KTv4fhoY",
+                        alt: "Visa, Mastercard and RuPay",
+                      },
+                    ],
+                  },
+                  {
+                    id: "netbanking",
+                    icon: Landmark,
+                    label: "Netbanking",
+                    note: "All major Indian banks",
+                    logos: [
+                      {
+                        src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfZwp-fxU0IKBKizCtizxut5PDK6Neb_r741LzCXd0rQ&s=10",
+                        alt: "Netbanking",
+                      },
+                    ],
+                  },
+                  {
+                    id: "wallet",
+                    icon: Wallet,
+                    label: "Wallets",
+                    note: "Paytm · PhonePe wallets",
+                    logos: [
+                      {
+                        src: "https://i.postimg.cc/PJ7Sqkvb/Screenshot-2026-09-28-at-11-33-25-AM.png",
+                        alt: "Wallets",
+                      },
+                    ],
+                  },
                 ] as const
               ).map((method) => (
                 <label
@@ -918,13 +963,28 @@ export function CheckoutFlow() {
                       setOnlineMethod(method.id)
                     }}
                   />
-                  <span className="text-sm">
-                    <span className="flex items-center gap-2 font-medium">
-                      <method.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                      {method.label}
+                  <span className="flex min-w-0 flex-1 items-start gap-3 text-sm">
+                    <span className="min-w-0 flex-1">
+                      <span className="flex items-center gap-2 font-medium">
+                        <method.icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                        {method.label}
+                      </span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {method.note}
+                      </span>
                     </span>
-                    <span className="mt-0.5 block text-xs text-muted-foreground">
-                      {method.note}
+                    <span className="flex shrink-0 items-center gap-1.5">
+                      {method.logos.map((logo) => (
+                        <Image
+                          key={logo.src}
+                          src={logo.src}
+                          alt={logo.alt}
+                          width={72}
+                          height={28}
+                          unoptimized
+                          className="h-7 w-auto max-w-[76px] object-contain"
+                        />
+                      ))}
                     </span>
                   </span>
                 </label>
@@ -943,13 +1003,33 @@ export function CheckoutFlow() {
                   checked={paymentMethod === "manual"}
                   onChange={() => setPaymentMethod("manual")}
                 />
-                <span className="text-sm">
-                  <span className="flex items-center gap-2 font-medium">
-                    <Banknote className="h-4 w-4 shrink-0" aria-hidden="true" />
-                    Cash on delivery
+                <span className="flex min-w-0 flex-1 items-start gap-3 text-sm">
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-2 font-medium">
+                      <Banknote className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      Cash on delivery
+                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                      Pay the courier when your order arrives
+                    </span>
                   </span>
-                  <span className="mt-0.5 block text-xs text-muted-foreground">
-                    Pay the courier when your order arrives
+                  <span className="flex shrink-0 items-center gap-1.5">
+                    <Image
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRlTisuK53DewaFwTzVg8yZqrp4qofqzPOWQCaSFtFZEDabvwYqy4C62gBj&s=10"
+                      alt="Cash on delivery"
+                      width={72}
+                      height={28}
+                      unoptimized
+                      className="h-7 w-auto max-w-[76px] object-contain"
+                    />
+                    <Image
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFukEF48LiE27V3w83wmdAYeYg1fzJ7StMV8uZhh1sdQ&s=10"
+                      alt="Pay on delivery"
+                      width={72}
+                      height={28}
+                      unoptimized
+                      className="h-7 w-auto max-w-[76px] object-contain"
+                    />
                   </span>
                 </span>
               </label>

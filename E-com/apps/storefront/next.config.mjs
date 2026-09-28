@@ -21,6 +21,13 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "i.pinimg.com" },
+      { protocol: "https", hostname: "media.licdn.com" },
+      { protocol: "https", hostname: "encrypted-tbn0.gstatic.com" },
+      { protocol: "https", hostname: "i.postimg.cc" },
+      { protocol: "https", hostname: "cdn.stocksnap.io" },
+      { protocol: "https", hostname: "images.rawpixel.com" },
+      { protocol: "https", hostname: "live.staticflickr.com" },
     ],
   },
   async headers() {

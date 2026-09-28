@@ -69,10 +69,10 @@ export function Footer() {
           <div className="hidden lg:block lg:col-span-1">
             <p className="label text-white/60">Support — mon–fri, 10:00–18:00 ist</p>
             <a
-              href="mailto:support@flowcase.example"
+              href="mailto:support@flowcase.in"
               className="mt-1 block break-all text-sm text-hero-muted transition hover:text-white"
             >
-              support@flowcase.example
+              support@flowcase.in
             </a>
             <div className="mt-4 flex gap-2">
               <a

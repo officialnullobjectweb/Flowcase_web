@@ -6,62 +6,11 @@ import { useState } from "react"
 import { Accordion } from "./ui/accordion"
 import { SectionHeader } from "./SectionHeader"
 import type { CmsPdp } from "@/lib/cms"
+import { pdpCopy } from "@/lib/pdp-copy"
 import type { Product } from "@/lib/types"
 
-const BANNERS = [
-  {
-    eyebrow: "Protection",
-    title: "Armour where it counts",
-    copy: "Air-cushioned corners absorb a 3m drop, and a raised lip keeps the camera glass off the table.",
-    image:
-      "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=1200&q=80&auto=format&fit=crop",
-    alt: "Close-up of a protective phone case corner",
-  },
-  {
-    eyebrow: "Everyday carry",
-    title: "Slim by design",
-    copy: "A 1.2mm profile that disappears in your pocket — wireless and MagSafe charging pass straight through.",
-    image:
-      "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=1200&q=80&auto=format&fit=crop",
-    alt: "Slim phone case held in hand",
-  },
-]
-
-function HIGHLIGHTS(title: string) {
-  const model = title.replace(/^Flowcase for\s+/i, "")
-  return [
-    { term: "Compatibility", detail: model },
-    { term: "Material", detail: "Polycarbonate shell + TPU core" },
-    { term: "Protection", detail: "3m drop-tested · raised camera lip" },
-    { term: "Charging", detail: "Wireless & MagSafe compatible" },
-    { term: "In the box", detail: "1 × Flowcase case" },
-  ]
-}
-
-const FAQ = [
-  {
-    title: "Does it work with wireless charging?",
-    content:
-      "Yes. The case is under 1.3mm thick with no metal in the shell, so Qi and MagSafe charging pass through without removing it.",
-  },
-  {
-    title: "How fast will my order arrive?",
-    content:
-      "Orders dispatch within 48 hours and deliver in 3–5 days across India. Shipping is free on orders over ₹999 — COD is available at checkout.",
-  },
-  {
-    title: "What if the case doesn't fit my phone?",
-    content:
-      "Every case is precision-cut for its exact model. If anything is off, return it within 7 days for a free replacement or full refund — prepaid returns included.",
-  },
-  {
-    title: "Will the case yellow over time?",
-    content:
-      "Clear shells use a UV-resistant coating that slows yellowing dramatically. If yours yellows within a year, we replace it free.",
-  },
-]
-
-export function FeatureBanners() {
+export function FeatureBanners({ product }: { product: Product }) {
+  const BANNERS = pdpCopy(product).banners
   return (
     <section aria-label="Product features" className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-6">
       {BANNERS.map((b, i) => (
@@ -122,12 +71,12 @@ export function FeatureBanners() {
  */
 export function DetailsTabs({ product, pdp }: { product: Product; pdp?: CmsPdp }) {
   const [tab, setTab] = useState<"highlights" | "details">("highlights")
+  const copy = pdpCopy(product)
   const rows = pdp?.highlights?.length
     ? pdp.highlights.filter((r) => r.term?.trim() || r.detail?.trim())
-    : HIGHLIGHTS(product.title)
+    : copy.highlights
   const full = pdp?.details?.trim() || product.description?.trim() || ""
-  const fallback =
-    "Built from a polycarbonate shell with a shock-absorbing TPU core. Precision-cut for your exact model with reinforced camera rings, raised screen lips, and full wireless / MagSafe charging pass-through."
+  const fallback = copy.detailsFallback
 
   const tabs = [
     { key: "highlights" as const, label: "Highlights" },
@@ -194,7 +143,8 @@ export function DetailsTabs({ product, pdp }: { product: Product; pdp?: CmsPdp }
   )
 }
 
-export function PdpFaq() {
+export function PdpFaq({ product }: { product: Product }) {
+  const FAQ = pdpCopy(product).faq
   return (
     <section aria-label="Frequently asked questions" className="mt-16">
       <SectionHeader label="Before you buy" title="Good questions" />

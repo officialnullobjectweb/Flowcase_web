@@ -42,7 +42,7 @@ const SECTIONS = [
     items: [
       "6-month warranty against manufacturing defects from delivery.",
       "Does not cover cosmetic wear, accidental damage beyond rated drop protection, or misuse.",
-      "Warranty claims: email support@flowcase.example with photos and your order number.",
+      "Warranty claims: email support@flowcase.in with photos and your order number.",
     ],
   },
 ]

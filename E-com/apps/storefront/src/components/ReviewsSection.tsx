@@ -12,6 +12,7 @@ import { Stars } from "@/components/ui/stars"
 import { useToast } from "@/components/ui/toast"
 import { useSelection } from "@/context/SelectionContext"
 import type { CmsPdp } from "@/lib/cms"
+import { pdpCopy } from "@/lib/pdp-copy"
 import { metadataReviews } from "@/lib/reviews"
 import type { Product } from "@/lib/types"
 
@@ -29,24 +30,6 @@ function seededPick<T>(seed: string, pool: T[], count: number): T[] {
   }
   return out
 }
-
-const REVIEW_IMAGES = [
-  "https://images.unsplash.com/photo-1580910051074-3eb694886505?w=1200&q=80&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=1200&q=80&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1541877944-ac82a091518a?w=1200&q=80&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1601593346740-925612772716?w=1200&q=80&auto=format&fit=crop",
-]
-
-const SNIPPETS = [
-  { name: "Ananya G.", title: "Snug fit, zero rattle", body: "The lip sits flush over the screen and the buttons don't mush. Feels like it shipped with the phone." },
-  { name: "Vikram T.", title: "Dropped it twice already", body: "Corner-first onto tile both times — no cracks, just a small scuff. That's exactly what I paid for." },
-  { name: "Sara L.", title: "Matte back beats glossy", body: "No fingerprint smear after a full day of messaging, and it doesn't slide off the gym bench." },
-  { name: "Imran H.", title: "Camera ring is the detail", body: "Raised enough to protect the lens on a flat table, thin enough not to catch on pockets." },
-  { name: "Priyanka D.", title: "Arrived in 48 hours", body: "Packed in cardboard with the REUSE10 return envelope. Exchanged my old case the same week." },
-  { name: "Joseph M.", title: "Grip ribs actually grip", body: "One-hand scroll on the metro without the death grip. Slight texture, not sticky." },
-  { name: "Lena K.", title: "Looks better in person", body: "Photos undersell the depth of the Onyx. Under sunlight it has a subtle brushed look." },
-  { name: "Harsh V.", title: "Worth the premium", body: "Had a cheap TPU before this — buttons wore out in months. This still feels new after a year." },
-]
 
 /** Counts up from 0 to target whenever `run` flips true; resets when false. */
 function useCountUp(target: number, run: boolean, decimals = 0): string {
@@ -165,10 +148,11 @@ export function ReviewsSection({ product, pdp }: { product: Product; pdp?: CmsPd
   const meta = product.metadata ?? {}
   const rating = Number(meta.rating ?? 4.6)
   const count = Number(meta.review_count ?? 240)
+  const copy = pdpCopy(product)
 
   const labels = pdp?.categories?.length
     ? pdp.categories.filter((c) => c.trim())
-    : ["Quality", "Pricing", "Grip", "Protection"]
+    : copy.ringLabels
   const offsets = [6, -8, 2, 8]
   const categories = labels.map((label, i) => ({
     label,
@@ -214,9 +198,11 @@ export function ReviewsSection({ product, pdp }: { product: Product; pdp?: CmsPd
   const countDisplay = useCountUp(count, inView, 0)
 
   // Reviews stamped on the product in Medusa admin (Products → Metadata);
-  // falls back to the seeded pool when none are configured.
+  // falls back to the seeded pool when none are configured. Photos are the
+  // product's own gallery shots — always on-topic, never shared with others.
   const fromAdmin = metadataReviews(meta)
-  const seeded = seededPick(product.id, SNIPPETS, 3)
+  const seeded = seededPick(product.id, copy.snippets, 3)
+  const gallery = (product.images ?? []).map((i) => i.url)
   const list: DisplayReview[] = [
     ...extra.map((e, i) => ({
       key: `you-${i}`,
@@ -235,7 +221,7 @@ export function ReviewsSection({ product, pdp }: { product: Product; pdp?: CmsPd
           rating: Math.round(rating),
           key: `s-${i}`,
           avatar: "",
-          image: REVIEW_IMAGES[i % REVIEW_IMAGES.length],
+          image: gallery[i % gallery.length] ?? "",
         }))),
   ]
 

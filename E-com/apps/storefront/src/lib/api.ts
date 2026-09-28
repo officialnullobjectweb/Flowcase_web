@@ -1,7 +1,7 @@
 import { FALLBACK_MODELS, modelFromTitle, type NavModel } from "./nav-models"
 import { fuzzyRank } from "./fuzzy"
 import { sdk } from "./sdk"
-import type { Collection, Product, ProductTag, Region } from "./types"
+import type { Collection, Product, ProductCategory, ProductTag, Region } from "./types"
 
 /**
  * Build-time guard: the backend sleeps on free-tier hosting (Render cold
@@ -23,6 +23,7 @@ const TAG_FIELDS = "id,tags.id,tags.value"
 export interface ProductFilters {
   q?: string
   collection_id?: string
+  category_id?: string
   tags?: string[]
   price_min?: string
   price_max?: string
@@ -71,6 +72,7 @@ export async function listProducts(
 
   if (filters.q) query.q = filters.q
   if (filters.collection_id) query.collection_id = filters.collection_id
+  if (filters.category_id) query.category_id = filters.category_id
   // store API rejects `tags` and >2-level price accessors — filter in JS
   const res = await sdk.client.fetch<{ products: Product[]; count: number }>(
     "/store/products",
@@ -160,6 +162,15 @@ export async function listTagFacets(revalidate = 3600): Promise<ProductTag[]> {
   return [...seen].map(([id, value]) => ({ id, value }))
 }
 
+export async function listCategories(revalidate = 3600): Promise<ProductCategory[]> {
+  const { product_categories } = await sdk.client.fetch<{
+    product_categories: ProductCategory[]
+  }>("/store/product-categories", {
+    ...withTimeout(), query: { limit: 50 }, next: { revalidate },
+  })
+  return product_categories ?? []
+}
+
 export function sortProducts(products: Product[], order?: string): Product[] {
   const priceOf = (p: Product) =>
     p.variants?.[0]?.calculated_price?.calculated_amount ?? Number.MAX_SAFE_INTEGER
@@ -179,6 +190,7 @@ export function sortProducts(products: Product[], order?: string): Product[] {
 export interface CatalogQuery {
   q?: string
   tag?: string
+  cat?: string
   sort?: string
   min?: string
   max?: string
@@ -201,14 +213,18 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
   products: Product[]
   count: number
   tags: ProductTag[]
+  categories: ProductCategory[]
 }> {
   try {
     // Medusa's `q` is a plain substring ("apple 15" → no hits), so search
     // queries fetch the pool and get fuzzy-ranked in JS instead.
+    const categories = await listCategories().catch(() => [] as ProductCategory[])
+    const cat = query.cat ? categories.find((c) => c.handle === query.cat)?.id : undefined
     const [res, tags] = await Promise.all([
       listProducts({
         limit: 100,
         ...(query.collection_id ? { collection_id: query.collection_id } : {}),
+        ...(cat ? { category_id: cat } : {}),
         ...(query.tag ? { tags: [query.tag] } : {}),
         ...(query.min ? { price_min: query.min } : {}),
         ...(query.max ? { price_max: query.max } : {}),
@@ -248,9 +264,14 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
     const sorted = sortProducts(items, query.sort)
     const offset = query.offset ?? 0
     const limit = query.limit ?? 48
-    return { products: sorted.slice(offset, offset + limit), count: items.length, tags }
+    return {
+      products: sorted.slice(offset, offset + limit),
+      count: items.length,
+      tags,
+      categories,
+    }
   } catch {
-    return { products: [], count: 0, tags: [] }
+    return { products: [], count: 0, tags: [], categories: [] }
   }
 }
 

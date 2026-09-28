@@ -17,6 +17,7 @@ export default async function SearchPage({
   searchParams: Promise<{
     q?: string
     tag?: string
+    cat?: string
     sort?: string
     min?: string
     max?: string
@@ -27,9 +28,10 @@ export default async function SearchPage({
 }) {
   const p = await searchParams
 
-  const { products, count, tags } = await loadCatalog({
+  const { products, count, categories } = await loadCatalog({
     q: p.q,
     tag: p.tag,
+    cat: p.cat,
     sort: p.sort,
     min: p.min,
     max: p.max,
@@ -76,9 +78,9 @@ export default async function SearchPage({
         )}
         <Catalog
           basePath="/search"
-          state={{ q: p.q, tag: p.tag, sort: p.sort, min: p.min, max: p.max, color: p.color, rating: p.rating, reviews: p.reviews }}
+          state={{ q: p.q, tag: p.tag, cat: p.cat, sort: p.sort, min: p.min, max: p.max, color: p.color, rating: p.rating, reviews: p.reviews }}
           products={products}
-          tags={tags}
+          categories={categories}
         />
       </section>
     </>

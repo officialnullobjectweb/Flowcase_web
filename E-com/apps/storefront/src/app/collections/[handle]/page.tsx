@@ -11,6 +11,7 @@ interface PageProps {
   searchParams: Promise<{
     q?: string
     tag?: string
+    cat?: string
     sort?: string
     min?: string
     max?: string
@@ -96,10 +97,11 @@ export default async function CollectionPage({ params, searchParams }: PageProps
   const collection = await getCollectionByHandle(handle).catch(() => null)
   if (!collection) notFound()
 
-  const { products, tags } = await loadCatalog({
+  const { products, categories } = await loadCatalog({
     collection_id: collection.id,
     q: p.q,
     tag: p.tag,
+    cat: p.cat,
     sort: p.sort,
     min: p.min,
     max: p.max,
@@ -135,9 +137,9 @@ export default async function CollectionPage({ params, searchParams }: PageProps
       <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14">
         <Catalog
           basePath={`/collections/${handle}`}
-          state={{ q: p.q, tag: p.tag, sort: p.sort, min: p.min, max: p.max, color: p.color, rating: p.rating, reviews: p.reviews }}
+          state={{ q: p.q, tag: p.tag, cat: p.cat, sort: p.sort, min: p.min, max: p.max, color: p.color, rating: p.rating, reviews: p.reviews }}
           products={products}
-          tags={tags}
+          categories={categories}
         />
         {/* indexable buying-guide copy + internal links */}
         <div className="mx-auto mt-14 max-w-3xl border-t border-border pt-8 text-center">

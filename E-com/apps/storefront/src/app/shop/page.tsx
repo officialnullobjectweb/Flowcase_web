@@ -19,6 +19,7 @@ export default async function ShopPage({
     q?: string
     tag?: string
     tags?: string
+    cat?: string
     sort?: string
     min?: string
     max?: string
@@ -32,9 +33,10 @@ export default async function ShopPage({
   const cms = await getCms()
   const tag = p.tag ?? (p.tags && !p.tags.includes(",") ? p.tags : undefined)
 
-  const { products, tags } = await loadCatalog({
+  const { products, categories } = await loadCatalog({
     q: p.q,
     tag,
+    cat: p.cat,
     sort: p.sort,
     min: p.min,
     max: p.max,
@@ -70,6 +72,7 @@ export default async function ShopPage({
           state={{
             q: p.q,
             tag,
+            cat: p.cat,
             sort: p.sort,
             min: p.min,
             max: p.max,
@@ -79,7 +82,7 @@ export default async function ShopPage({
             badge: p.badge,
           }}
           products={products}
-          tags={tags}
+          categories={categories}
         />
         {/* indexable category copy + internal links */}
         <div className="mx-auto mt-14 max-w-3xl border-t border-border pt-8 text-center">

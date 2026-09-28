@@ -23,13 +23,9 @@ export function ImageGallery({ images, thumbnail, alt, product }: ImageGalleryPr
     : thumbnail
       ? [{ id: "thumb", url: thumbnail, alt }]
       : []
-  // Show the images that belong to the selected colour: image i belongs to
-  // colour i % colorCount (round-robin keeps every colour populated).
-  const { colorIndex, colorCount } = useSelection()
-  const all =
-    colorCount > 1 && colorIndex != null && base.length >= colorCount
-      ? base.filter((_, i) => i % colorCount === colorIndex)
-      : base
+  // All 4 shots always — gallery images are product-specific, not colour-keyed.
+  const { colorIndex } = useSelection()
+  const all = base
   const [active, setActive] = useState(0)
   const { has, toggle } = useWishlist()
   const { toast } = useToast()
@@ -107,21 +103,21 @@ export function ImageGallery({ images, thumbnail, alt, product }: ImageGalleryPr
           </motion.div>
         </AnimatePresence>
         {product && (
-          <div className="absolute right-0 top-0 z-10 flex">
+          <div className="absolute right-2 top-2 z-10 flex gap-2">
             <button
               type="button"
               onClick={toggleWishlist}
               aria-label={saved ? "Remove from wishlist" : "Save to wishlist"}
               aria-pressed={saved}
-              className="flex h-11 w-11 items-center justify-center border border-border border-l-0 border-t-0 bg-background/90 text-foreground backdrop-blur transition hover:bg-background"
+              className="flex h-11 w-11 items-center justify-center bg-transparent text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
-              <Heart className={`h-5 w-5 ${saved ? "fill-foreground" : ""}`} aria-hidden="true" />
+              <Heart className={`h-5 w-5 ${saved ? "fill-white" : ""}`} aria-hidden="true" />
             </button>
             <button
               type="button"
               onClick={share}
               aria-label="Share this product"
-              className="flex h-11 w-11 items-center justify-center border border-border border-r-0 border-t-0 bg-background/90 text-foreground backdrop-blur transition hover:bg-background"
+              className="flex h-11 w-11 items-center justify-center bg-transparent text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.8)] transition hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               <Share2 className="h-5 w-5" aria-hidden="true" />
             </button>

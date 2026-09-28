@@ -44,7 +44,7 @@ export default function RefundsPage() {
         {
           title: "Delays & help",
           items: [
-            "Past 7 business days with no credit? Email support@flowcase.example.",
+            "Past 7 business days with no credit? Email support@flowcase.in.",
             "Include your order number and bank's last-4 for fastest tracing.",
             "Chargebacks freeze a case — contact us first and we resolve in 48 hours.",
           ],

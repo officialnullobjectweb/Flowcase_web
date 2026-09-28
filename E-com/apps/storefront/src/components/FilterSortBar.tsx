@@ -3,7 +3,7 @@
 import { SlidersHorizontal } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
-import type { ProductTag } from "@/lib/types"
+import type { ProductCategory } from "@/lib/types"
 import { Dialog } from "./ui/dialog"
 import { Dropdown, DropdownItem, SelectTrigger } from "./ui/dropdown"
 import { RangeSlider } from "./ui/slider"
@@ -12,6 +12,7 @@ export interface CatalogState {
   q?: string
   sort?: string
   tag?: string
+  cat?: string
   min?: string
   max?: string
   color?: string
@@ -59,6 +60,7 @@ function buildHref(base: string, state: CatalogState, patch: Partial<CatalogStat
   const params = new URLSearchParams()
   if (next.q) params.set("q", next.q)
   if (next.tag) params.set("tag", next.tag)
+  if (next.cat) params.set("cat", next.cat)
   if (next.sort && next.sort !== "-created_at") params.set("sort", next.sort)
   if (next.min) params.set("min", next.min)
   if (next.max) params.set("max", next.max)
@@ -272,21 +274,18 @@ function useRevealOnScroll(): boolean {
 export function FilterSortBar({
   basePath,
   state,
-  tags,
+  categories,
 }: {
   basePath: string
   state: CatalogState
-  tags: ProductTag[]
+  categories: ProductCategory[]
 }) {
   const router = useRouter()
   const [sheetOpen, setSheetOpen] = useState(false)
   const showFloating = useRevealOnScroll()
-  const categoryTags = tags.filter((t) =>
-    /iphone|samsung|galaxy|apple|a-series|s-series/i.test(t.value)
-  )
   const pills = [
     { value: "", label: "All" },
-    ...categoryTags.map((t) => ({ value: t.value, label: t.value })),
+    ...categories.map((c) => ({ value: c.handle, label: c.name })),
   ]
   const activeCount = activeFilterCount(state)
   const sortLabel =
@@ -313,12 +312,12 @@ export function FilterSortBar({
     <div className="flex items-center gap-3 border-y border-border py-3">
       {/* Category pills — horizontal snap carousel */}
       <nav
-        aria-label="Filter by device"
+        aria-label="Filter by category"
         className="-mx-4 flex min-w-0 flex-1 snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:mx-0 lg:px-0"
       >
         {pills.map((pill) => {
-          const active = pill.value ? state.tag === pill.value : !state.tag
-          const href = buildHref(basePath, state, { tag: pill.value })
+          const active = pill.value ? state.cat === pill.value : !state.cat
+          const href = buildHref(basePath, state, { cat: pill.value })
           return (
             <a
               key={pill.label}
