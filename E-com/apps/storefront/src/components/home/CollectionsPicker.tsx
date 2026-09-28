@@ -22,7 +22,7 @@ const LOGOS: Record<"apple" | "samsung", string> = {
   apple:
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOlDllipbzBYdmBgtudhNXWTEjJ--DvlUYNWGMf-g_qA&s=10",
   samsung:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8B1TcHuGgrDXF8o__I_LqtKyJXIHAANU9gK3x9qtHyg&s=10",
+    "https://images.seeklogo.com/logo-png/37/2/samsung-logo-png_seeklogo-370356.png",
 }
 
 function brandOf(p: Product): "apple" | "samsung" | "accessory" {
