@@ -13,3 +13,4 @@ out/
 .medusa/
 .pgdata/
 *.tsbuildinfo
+.dev.vars

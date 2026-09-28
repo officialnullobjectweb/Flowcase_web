@@ -22,3 +22,12 @@ export const supabase = createClient(
 /** True when the phone-OTP gate is enforced (default on; set NEXT_PUBLIC_PHONE_VERIFY=off to skip locally). */
 export const phoneGateEnabled = () =>
   process.env.NEXT_PUBLIC_PHONE_VERIFY !== "off"
+
+/** Anon-key client for server-side reads (RLS: public SELECT only). */
+export function supabaseAnon() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  )
+}

@@ -1,0 +1,8 @@
+name = "flowcase-api"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+# Production secrets (set via `wrangler secret put` — never in this file):
+#   SUPABASE_URL, SUPABASE_SERVICE_KEY, ADMIN_API_TOKEN
+[vars]
+# none — everything sensitive is a secret
