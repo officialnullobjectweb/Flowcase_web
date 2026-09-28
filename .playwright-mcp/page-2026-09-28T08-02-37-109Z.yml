@@ -1,0 +1,12 @@
+- generic [ref=f7e2]:
+  - heading "powerbank (10)" [level=2] [ref=f7e3]
+  - generic [ref=f7e4]: flowcase-power-volt-10000-cable
+  - generic [ref=f7e10]: flowcase-power-volt-10000-clear
+  - generic [ref=f7e16]: flowcase-power-volt-10000-magsnap
+  - generic [ref=f7e22]: flowcase-power-volt-10000-slim
+  - generic [ref=f7e28]: flowcase-power-volt-15000-travel
+  - generic [ref=f7e34]: flowcase-power-volt-20000-core
+  - generic [ref=f7e40]: flowcase-power-volt-20000-rugged
+  - generic [ref=f7e46]: flowcase-power-volt-27000-laptop
+  - generic [ref=f7e52]: flowcase-power-volt-5000-card
+  - generic [ref=f7e58]: flowcase-power-volt-5000-mini

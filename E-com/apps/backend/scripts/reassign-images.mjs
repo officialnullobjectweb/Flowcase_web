@@ -89,10 +89,13 @@ const QUEUES = {
   speakers: ["speaker"],
 }
 
+// weak keyword matches (score below bar) never fill slots
+const MIN_SCORE = { case: 2, earbuds: 3, powerbank: 5, cable: 1, speaker: 2 }
+
 const byCat = { case: [], speaker: [], powerbank: [], cable: [], earbuds: [] }
 for (const [url, m] of Object.entries(pool)) {
   const s = scoreOf(m.cat, m.title ?? "")
-  if (s >= 0) byCat[m.cat]?.push({ url, s })
+  if (s >= (MIN_SCORE[m.cat] ?? 0)) byCat[m.cat]?.push({ url, s })
 }
 for (const c of Object.keys(byCat)) {
   byCat[c].sort((a, b) => b.s - a.s)
