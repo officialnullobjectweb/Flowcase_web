@@ -37,6 +37,19 @@ const JUNK = [
   /warmer|ribs?\b|cablecar|headband|\bwires\b|^cables? lines?$/i,
   /simbiosc|nanodelarosa|#.*#.*#|ravpower/i,
   /patent|fig\.?\s*\d|comic|cartoon|toddler|child|infant|statue|helmet|crochet|gdgt|senior|\busing\b/i,
+  /got charge|new portable charger|fuel ?rod|busch gardens|magic kingdom|\bsign out\b/i,
+  /\brena\b|siao|bday|birthday|present voor|global sourcing|sourcing fair|\blight kit\b/i,
+  /bike update|\bdiy\b|\bpcb\b|ncix|\bopinion\b|wireless\/usb\/lightning/i,
+  /^power bank$|^charging cables$/i,
+  /electric vehicle|\btesla\b|charging station/i,
+  /apple store|solio|zenfone|liewcf|in the boot|back up battery/i,
+  /new replacement|jumble|EV charging|sold:|\$2 each/i,
+  /jambox by jawbone|is a cool|tesco|\byou can place\b/i,
+  /XR-001|SAHC|\bXRadio\b|instructions for/i,
+  /^usb cable connected apple$|leather lightning|on-the-go charge kit|gravity|laptop computer/i,
+  /creative d100|R\.O\.GNT|0601/i,
+  /are out\.|dismantled|great airpod rescue/i,
+  /Jambia|biggest cell phone case|nine west|drinkerthinker|danceparty|Buying Smart/i,
 ]
 
 const SCORE = {
@@ -93,15 +106,30 @@ const QUEUES = {
 const MIN_SCORE = { case: 2, earbuds: 3, powerbank: 5, cable: 2, speaker: 2 }
 
 const byCat = { case: [], speaker: [], powerbank: [], cable: [], earbuds: [] }
+const titleCount = {} // cap repeats of one title so one album can't flood slots
 for (const [url, m] of Object.entries(pool)) {
   const s = scoreOf(m.cat, m.title ?? "")
-  if (s >= (MIN_SCORE[m.cat] ?? 0)) byCat[m.cat]?.push({ url, s })
+  if (s < (MIN_SCORE[m.cat] ?? 0)) continue
+  const key = `${m.cat}|${(m.title ?? "").toLowerCase().trim() || url}`
+  if ((titleCount[key] ?? 0) >= 4) continue
+  titleCount[key] = (titleCount[key] ?? 0) + 1
+  byCat[m.cat]?.push({ url, s })
 }
 for (const c of Object.keys(byCat)) {
   byCat[c].sort((a, b) => b.s - a.s)
   console.log(`${c}: ${byCat[c].length} usable`)
 }
-if (process.env.DRY) process.exit(0)
+if (process.env.DRY) {
+  const src = {}
+  for (const [url, m] of Object.entries(pool)) {
+    if (scoreOf(m.cat, m.title ?? "") >= (MIN_SCORE[m.cat] ?? 0)) {
+      const k = `${m.cat}/${m.source ?? "?"}`
+      src[k] = (src[k] ?? 0) + 1
+    }
+  }
+  console.log("sources:", src)
+  process.exit(0)
+}
 
 const base = process.env.DATABASE_URL
   ? { connectionString: process.env.DATABASE_URL }

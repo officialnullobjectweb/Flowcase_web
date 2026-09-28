@@ -673,7 +673,7 @@ export function SiteHeader({
                           <img
                             src={activeModel.image}
                             alt={activeModel.label}
-                            className="h-full w-full object-cover grayscale"
+                            className="h-full w-full object-cover"
                           />
                         </motion.div>
                       )}

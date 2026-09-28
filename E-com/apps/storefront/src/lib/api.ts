@@ -1,4 +1,4 @@
-import { FALLBACK_MODELS, modelFromTitle, type NavModel } from "./nav-models"
+import { FALLBACK_MODELS, NAV_IMAGES, modelFromTitle, type NavModel } from "./nav-models"
 import { fuzzyRank } from "./fuzzy"
 import { sdk } from "./sdk"
 import type { Collection, Product, ProductCategory, ProductTag, Region } from "./types"
@@ -293,7 +293,7 @@ export async function getNavModels(): Promise<NavModel[]> {
       .map((p) => ({
         label: modelFromTitle(p.title),
         handle: p.handle,
-        image: p.thumbnail ?? undefined,
+        image: NAV_IMAGES[p.handle] ?? p.thumbnail ?? undefined,
         brand: p.tags?.some((t) => t.value === "samsung") ? "samsung" : "apple",
       }))
   } catch {
