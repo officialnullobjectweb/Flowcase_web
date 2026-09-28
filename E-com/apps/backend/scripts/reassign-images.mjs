@@ -90,7 +90,7 @@ const QUEUES = {
 }
 
 // weak keyword matches (score below bar) never fill slots
-const MIN_SCORE = { case: 2, earbuds: 3, powerbank: 5, cable: 1, speaker: 2 }
+const MIN_SCORE = { case: 2, earbuds: 3, powerbank: 5, cable: 2, speaker: 2 }
 
 const byCat = { case: [], speaker: [], powerbank: [], cable: [], earbuds: [] }
 for (const [url, m] of Object.entries(pool)) {
