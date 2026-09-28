@@ -269,7 +269,7 @@ function ModelRow({
             src={model.image}
             alt=""
             loading="lazy"
-            className="h-full w-full object-cover grayscale transition group-hover:grayscale-0"
+            className="h-full w-full object-contain p-1 grayscale transition group-hover:grayscale-0"
           />
         ) : null}
       </span>
@@ -387,6 +387,7 @@ export function SiteHeader({
     index: 0,
   })
   const [mobileMenu, setMobileMenu] = useState(false)
+  const preloaded = useRef(false)
   const [mobileBrand, setMobileBrand] = useState<"apple" | "samsung">("apple")
   const [searchOpen, setSearchOpen] = useState(false)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -450,6 +451,13 @@ export function SiteHeader({
     } else {
       setMega(m)
       setActive({ brand: m, index: 0 })
+      // fetch all hover images once, on first open — later swaps are instant
+      if (!preloaded.current) {
+        preloaded.current = true
+        list.forEach((x) => {
+          if (x.image) new Image().src = x.image
+        })
+      }
     }
   }
 
@@ -659,7 +667,7 @@ export function SiteHeader({
                 {/* Left: hovered model visual */}
                 <div className="relative overflow-hidden border-b border-border lg:border-b-0 lg:border-r">
                   <div className="relative h-full bg-muted">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence>
                       {activeModel?.image && (
                         <motion.div
                           key={activeModel.handle}
@@ -667,13 +675,13 @@ export function SiteHeader({
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.28 }}
-                          className="absolute inset-0"
+                          className="absolute inset-0 p-6"
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={activeModel.image}
                             alt={activeModel.label}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-contain"
                           />
                         </motion.div>
                       )}
