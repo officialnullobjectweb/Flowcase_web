@@ -360,7 +360,9 @@ export function SiteHeader({
   const samsung = list.filter((m) => m.brand === "samsung")
 
   const { itemCount, openCart, ready } = useCart()
-  const pathname = usePathname()
+  // Vercel serves the ISR-revalidated root route as "/index" server-side (next.js#95648)
+  const rawPathname = usePathname()
+  const pathname = rawPathname === "/index" ? "/" : rawPathname
   const overlayRoute = pathname === "/" || pathname === "/shop" || pathname === "/sustainability"
 
   const annPageKey =
