@@ -14,6 +14,7 @@ import {
 
 interface LastOrder {
   display_id: number | null
+  orderId?: string | null
   email: string
   items: { title: string; variantTitle?: string | null; quantity: number; unitPrice: number; currency: string }[]
   total: number
@@ -33,7 +34,7 @@ function readLastOrder(): LastOrder | null {
   }
 }
 
-export function OrderConfirmation({ displayId }: { displayId: string | null }) {
+export function OrderConfirmation({ displayId, orderId }: { displayId: string | null; orderId?: string | null }) {
   const [order, setOrder] = useState<LastOrder | null>(null)
   const [ready, setReady] = useState(false)
 
@@ -42,7 +43,7 @@ export function OrderConfirmation({ displayId }: { displayId: string | null }) {
     setReady(true)
   }, [])
 
-  const id = displayId ?? (order?.display_id ? String(order.display_id) : null)
+  const id = displayId ?? (order?.display_id ? String(order.display_id) : null) ?? (orderId ? `#${orderId.slice(0, 8).toUpperCase()}` : null)
 
   return (
     <>

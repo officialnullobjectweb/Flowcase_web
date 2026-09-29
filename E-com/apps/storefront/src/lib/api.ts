@@ -1,29 +1,18 @@
-import { FALLBACK_MODELS, NAV_IMAGES, modelFromTitle, type NavModel } from "./nav-models"
+import { FALLBACK_MODELS, modelFromTitle, type NavModel } from "./nav-models"
 import { fuzzyRank } from "./fuzzy"
-import { sdk } from "./sdk"
+import { supabaseAnon } from "./supabase"
 import type { Collection, Product, ProductCategory, ProductTag, Region } from "./types"
 
 /**
- * Build-time guard: the backend sleeps on free-tier hosting (Render cold
- * start) and hanging fetches used to stall `next build` past Vercel's 60s
- * page timeout. Every store fetch aborts after 10s and falls through to the
- * existing offline fallbacks — pages still pre-render, ISR refills them.
+ * Catalog data layer — Supabase edition (post-Medusa cutover).
+ * Same exports + return shapes as the old Medusa implementation, so every
+ * page, rail, and card works untouched. Reads use the anon key (RLS:
+ * public SELECT on catalog tables); all writes go through the Worker.
  */
-const FETCH_TIMEOUT_MS = 10_000
-const withTimeout = () => ({ signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) })
-
-const PRODUCT_LIST_FIELDS =
-  "*variants.calculated_price,id,title,handle,thumbnail,metadata,images.id,images.url,images.alt,tags.id,tags.value,variants.id,variants.title,variants.sku,variants.inventory_quantity,variants.manage_inventory,variants.allow_backorder"
-
-const PRODUCT_DETAIL_FIELDS =
-  "*variants.calculated_price,id,title,handle,description,thumbnail,collection_id,metadata,images.id,images.url,images.alt,tags.id,tags.value,options.id,options.title,options.values.id,options.values.value,variants.id,variants.title,variants.sku,variants.inventory_quantity,variants.manage_inventory,variants.allow_backorder,variants.options.id,variants.options.option_id,variants.options.value"
-
-const TAG_FIELDS = "id,tags.id,tags.value"
 
 export interface ProductFilters {
   q?: string
   collection_id?: string
-  category_id?: string
   tags?: string[]
   price_min?: string
   price_max?: string
@@ -32,143 +21,174 @@ export interface ProductFilters {
   limit?: number
 }
 
-let regionPromise: Promise<Region> | null = null
+const COLLECTIONS: (Collection & { key: string })[] = [
+  { id: "col-iphone", title: "iPhone", handle: "iphone", key: "iphone" },
+  { id: "col-samsung", title: "Samsung Galaxy", handle: "samsung-galaxy", key: "samsung" },
+  { id: "col-accessories", title: "Accessories", handle: "accessories", key: "accessories" },
+]
 
-export function getDefaultRegion(): Promise<Region> {
-  regionPromise ??= sdk.client
-    .fetch<{ regions: Region[] }>("/store/regions", {
-      ...withTimeout(), query: { limit: 10 },
-      next: { revalidate: 3600 },
-    })
-    .then(({ regions }) => {
-      if (!regions?.length) {
-        throw new Error(
-          "No store region configured. Create one in the Medusa Admin."
-        )
-      }
-      // Store copy, price sliders, and Razorpay are all INR-first.
-      return regions.find((r) => r.currency_code === "inr") ?? regions[0]
-    })
-    .catch((err) => {
-      regionPromise = null
-      throw err
-    })
-  return regionPromise
+const colKeyToId = (key: string) =>
+  COLLECTIONS.find((c) => c.key === key)?.id ?? key
+const colIdToKey = (id: string) =>
+  COLLECTIONS.find((c) => c.id === id)?.key ?? id
+
+interface Row {
+  id: string
+  title: string
+  handle: string
+  description: string | null
+  thumbnail_webp: string | null
+  collection: string
+  brand: string
+  tags: string[]
+  colors: string[]
+  badges: string | null
+  rating: number | string | null
+  review_count: number | string | null
+  product_images: { url: string; position: number }[]
+  variants: {
+    id: string
+    title: string
+    sku: string
+    price_inr: number
+    price_usd: number
+    inventory_qty: number
+  }[]
+}
+
+const slug = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "default"
+
+function adapt(row: Row): Product {
+  const colors =
+    row.colors?.length
+      ? row.colors
+      : [...new Set(row.variants.map((v) => v.title))]
+  const values = colors.map((c) => ({ id: `c-${row.id.slice(0, 8)}-${slug(c)}`, value: c }))
+  const byColor = new Map(values.map((v) => [v.value, v.id]))
+  const gallery = [...(row.product_images ?? [])].sort((a, b) => a.position - b.position)
+  const thumbnail = row.thumbnail_webp ?? gallery[0]?.url ?? null
+  return {
+    id: row.id,
+    title: row.title,
+    handle: row.handle,
+    description: row.description ?? "",
+    thumbnail,
+    collection_id: colKeyToId(row.collection),
+    images: gallery.map((g, i) => ({ id: `${row.id}-img-${i}`, url: g.url })),
+    tags: (row.tags ?? []).map((value) => ({ value })),
+    options: [{ id: "color", title: "Color", values }],
+    metadata: {
+      rating: String(row.rating ?? 0),
+      review_count: String(row.review_count ?? 0),
+      colors: colors.join(","),
+      ...(row.badges ? { badges: row.badges } : {}),
+    },
+    variants: row.variants.map((v) => ({
+      id: v.id,
+      title: v.title,
+      sku: v.sku,
+      inventory_quantity: v.inventory_qty,
+      manage_inventory: true,
+      allow_backorder: false,
+      calculated_price: {
+        calculated_amount: v.price_inr,
+        original_amount: null,
+        currency_code: "inr",
+      },
+      options: [{ id: byColor.get(v.title) ?? values[0]?.id ?? "c-default", option_id: "color", value: v.title }],
+    })),
+  }
+}
+
+const POOL_SELECT = "*, product_images(url,position), variants(id,title,sku,price_inr,price_usd,inventory_qty)"
+
+async function pool(): Promise<Product[]> {
+  const sb = supabaseAnon()
+  const { data, error } = await sb
+    .from("products")
+    .select(POOL_SELECT)
+    .order("created_at", { ascending: false })
+    .limit(200)
+  if (error) throw new Error(error.message)
+  return ((data ?? []) as unknown as Row[]).map(adapt)
+}
+
+export async function getDefaultRegion(): Promise<Region> {
+  return { id: "in", currency_code: "inr" }
 }
 
 export async function listProducts(
-  filters: ProductFilters,
-  revalidate = 3600
+  filters: ProductFilters
 ): Promise<{ products: Product[]; count: number }> {
-  const region = await getDefaultRegion()
-
-  const query: Record<string, unknown> = {
-    region_id: region.id,
-    limit: filters.limit ?? 12,
-    offset: filters.offset ?? 0,
-    order: filters.order ?? "-created_at",
-    fields: PRODUCT_LIST_FIELDS,
+  let items = await pool()
+  if (filters.collection_id) {
+    const key = colIdToKey(filters.collection_id)
+    items = items.filter((p) => {
+      const k = colIdToKey(p.collection_id ?? "")
+      return k === key || (p.tags ?? []).some((t) => t.value.toLowerCase() === key);
+    })
   }
-
-  if (filters.q) query.q = filters.q
-  if (filters.collection_id) query.collection_id = filters.collection_id
-  if (filters.category_id) query.category_id = filters.category_id
-  // store API rejects `tags` and >2-level price accessors — filter in JS
-  const res = await sdk.client.fetch<{ products: Product[]; count: number }>(
-    "/store/products",
-    { ...withTimeout(), query, next: { revalidate } }
-  )
-
-  let products = res.products
   if (filters.tags?.length) {
     const wanted = filters.tags.map((t) => t.toLowerCase())
-    products = products.filter((p) =>
-      wanted.every((tv) =>
-        (p.tags ?? []).some((t) => t.value.toLowerCase() === tv)
-      )
+    items = items.filter((p) =>
+      wanted.every((tv) => (p.tags ?? []).some((t) => t.value.toLowerCase() === tv))
     )
   }
   const priceOf = (p: Product) =>
-    p.variants?.[0]?.calculated_price?.calculated_amount ??
-    p.variants?.[0]?.calculated_price?.original_amount ??
-    null
+    p.variants?.[0]?.calculated_price?.calculated_amount ?? null
   if (filters.price_min) {
     const min = Number(filters.price_min)
-    products = products.filter((p) => {
+    items = items.filter((p) => {
       const price = priceOf(p)
       return price == null || price >= min
     })
   }
   if (filters.price_max) {
     const max = Number(filters.price_max)
-    products = products.filter((p) => {
+    items = items.filter((p) => {
       const price = priceOf(p)
       return price == null || price <= max
     })
   }
-
-  return { products, count: products.length }
+  const offset = filters.offset ?? 0
+  const limit = filters.limit ?? 12
+  return { products: items.slice(offset, offset + limit), count: items.length }
 }
 
-export async function getProductByHandle(
-  handle: string,
-  revalidate = 3600
-): Promise<Product | null> {
-  const region = await getDefaultRegion()
-  const { products } = await sdk.client.fetch<{ products: Product[] }>(
-    "/store/products",
-    {
-      ...withTimeout(), query: { handle, region_id: region.id, fields: PRODUCT_DETAIL_FIELDS },
-      next: { revalidate },
-    }
-  )
-  return products?.[0] ?? null
+export async function getProductByHandle(handle: string): Promise<Product | null> {
+  const sb = supabaseAnon()
+  const { data, error } = await sb
+    .from("products")
+    .select(POOL_SELECT)
+    .eq("handle", handle)
+    .limit(1)
+    .maybeSingle()
+  if (error) throw new Error(error.message)
+  return data ? adapt(data as unknown as Row) : null
 }
 
-export function listCollections(revalidate = 3600): Promise<{
+export async function listCollections(): Promise<{
   collections: Collection[]
   count: number
 }> {
-  return sdk.client.fetch("/store/collections", {
-    ...withTimeout(), query: { limit: 100 },
-    next: { revalidate },
-  })
+  const collections = COLLECTIONS.map(({ id, title, handle }) => ({ id, title, handle }))
+  return { collections, count: collections.length }
 }
 
-export async function getCollectionByHandle(
-  handle: string,
-  revalidate = 3600
-): Promise<Collection | null> {
-  const { collections } = await sdk.client.fetch<{ collections: Collection[] }>(
-    "/store/collections",
-    { ...withTimeout(), query: { handle, limit: 1 }, next: { revalidate } }
+export async function getCollectionByHandle(handle: string): Promise<Collection | null> {
+  return (
+    COLLECTIONS.find((c) => c.handle === handle) ?? null
   )
-  return collections?.[0] ?? null
 }
 
-export async function listTagFacets(revalidate = 3600): Promise<ProductTag[]> {
-  const { products } = await sdk.client.fetch<{ products: { tags: ProductTag[] }[] }>(
-    "/store/products",
-    { ...withTimeout(), query: { limit: 100, fields: TAG_FIELDS }, next: { revalidate } }
-  )
-  const seen = new Map<string, string>()
-  for (const product of products ?? []) {
-    for (const tag of product.tags ?? []) {
-      if (tag?.id && !seen.has(tag.id)) seen.set(tag.id, tag.value)
-    }
-  }
-  // ponytail: facets derived from first 100 products — Meilisearch when the
-  // tag set outgrows a single page
-  return [...seen].map(([id, value]) => ({ id, value }))
-}
-
-export async function listCategories(revalidate = 3600): Promise<ProductCategory[]> {
-  const { product_categories } = await sdk.client.fetch<{
-    product_categories: ProductCategory[]
-  }>("/store/product-categories", {
-    ...withTimeout(), query: { limit: 50 }, next: { revalidate },
-  })
-  return product_categories ?? []
+export async function listTagFacets(): Promise<ProductTag[]> {
+  const items = await pool()
+  const seen = new Set<string>()
+  for (const p of items) for (const t of p.tags ?? []) seen.add(t.value)
+  // ponytail: facets derived from the catalog pool — server-side distinct
+  // values when the catalogue outgrows one page
+  return [...seen].sort().map((value) => ({ value }))
 }
 
 export function sortProducts(products: Product[], order?: string): Product[] {
@@ -203,36 +223,59 @@ export interface CatalogQuery {
   limit?: number
 }
 
-/**
- * One loader for shop / search / collections: API-side filters + tag facets,
- * JS-side sort + offset slice.
- * ponytail: sorts the first 100 matches in JS — move `order` to the API when
- * the catalogue outgrows one page.
- */
+/** Category facets with live counts (for the Catalog category filter). */
+async function listCategoryFacets(items: Product[]): Promise<ProductCategory[]> {
+  const sb = supabaseAnon()
+  const { data } = await sb.from("categories").select("id,handle,name").order("name")
+  const counts = new Map<string, number>()
+  for (const p of items) {
+    const key = (p as Product & { category_handle?: string }).category_handle
+    if (key) counts.set(key, (counts.get(key) ?? 0) + 1)
+  }
+  return ((data ?? []) as ProductCategory[]).filter((c) => (counts.get(c.handle) ?? 0) > 0)
+}
+
+/** One loader for shop / search / collections — pool once, filter in JS. */
 export async function loadCatalog(query: CatalogQuery): Promise<{
   products: Product[]
   count: number
   tags: ProductTag[]
   categories: ProductCategory[]
 }> {
+  const emptyCats: ProductCategory[] = []
   try {
-    // Medusa's `q` is a plain substring ("apple 15" → no hits), so search
-    // queries fetch the pool and get fuzzy-ranked in JS instead.
-    const categories = await listCategories().catch(() => [] as ProductCategory[])
-    const cat = query.cat ? categories.find((c) => c.handle === query.cat)?.id : undefined
-    const [res, tags] = await Promise.all([
-      listProducts({
-        limit: 100,
-        ...(query.collection_id ? { collection_id: query.collection_id } : {}),
-        ...(cat ? { category_id: cat } : {}),
-        ...(query.tag ? { tags: [query.tag] } : {}),
-        ...(query.min ? { price_min: query.min } : {}),
-        ...(query.max ? { price_max: query.max } : {}),
-      }),
+    const [all, tags] = await Promise.all([
+      pool(),
       listTagFacets().catch(() => [] as ProductTag[]),
     ])
-    // color/rating/reviews live in product metadata — API can't filter them
-    let items = res.products
+    // attach category handles for faceting (single extra indexed query)
+    const sb = supabaseAnon()
+    const { data: prodCats } = await sb.from("products").select("handle,categories!inner(handle)").limit(200)
+    const catByHandle = new Map(
+      (((prodCats ?? []) as unknown as { handle: string; categories: { handle: string } | null }[])).map((r) => [r.handle, r.categories?.handle ?? ""])
+    )
+    for (const p of all) (p as Product & { category_handle?: string }).category_handle = catByHandle.get(p.handle) ?? ""
+    const categories = await listCategoryFacets(all).catch(() => emptyCats)
+    let items = all
+    if (query.cat) {
+      const wanted = query.cat.toLowerCase()
+      items = items.filter(
+        (p) => ((p as Product & { category_handle?: string }).category_handle ?? "").toLowerCase() === wanted
+      )
+    }
+    if (query.collection_id) {
+      const key = colIdToKey(query.collection_id)
+      items = items.filter((p) => {
+        const k = colIdToKey(p.collection_id ?? "")
+        return k === key || (p.tags ?? []).some((t) => t.value.toLowerCase() === key)
+      })
+    }
+    if (query.tag) {
+      const wanted = query.tag.toLowerCase()
+      items = items.filter((p) =>
+        (p.tags ?? []).some((t) => t.value.toLowerCase() === wanted)
+      )
+    }
     if (query.q) items = fuzzyRank(query.q, items, 100)
     if (query.color) {
       const wanted = query.color.toLowerCase()
@@ -251,7 +294,6 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
       const min = Number(query.reviews)
       items = items.filter((p) => Number(p.metadata?.review_count ?? 0) >= min)
     }
-    // badge chips live in metadata.badges as a CSV ("limited,bestseller")
     if (query.badge) {
       const wanted = query.badge.toLowerCase()
       items = items.filter((p) =>
@@ -261,41 +303,43 @@ export async function loadCatalog(query: CatalogQuery): Promise<{
           .includes(wanted)
       )
     }
+    const priceOf = (p: Product) =>
+      p.variants?.[0]?.calculated_price?.calculated_amount ?? null
+    if (query.min) {
+      const min = Number(query.min)
+      items = items.filter((p) => {
+        const price = priceOf(p)
+        return price == null || price >= min
+      })
+    }
+    if (query.max) {
+      const max = Number(query.max)
+      items = items.filter((p) => {
+        const price = priceOf(p)
+        return price == null || price <= max
+      })
+    }
     const sorted = sortProducts(items, query.sort)
     const offset = query.offset ?? 0
     const limit = query.limit ?? 48
-    return {
-      products: sorted.slice(offset, offset + limit),
-      count: items.length,
-      tags,
-      categories,
-    }
+    return { products: sorted.slice(offset, offset + limit), count: items.length, tags, categories }
   } catch {
     return { products: [], count: 0, tags: [], categories: [] }
   }
 }
 
-/** Nav models for the mega menu — phone cases only (accessories excluded). */
+/** Nav models for the mega menu — phone cases only, thumbnails from Supabase. */
 export async function getNavModels(): Promise<NavModel[]> {
   try {
-    const { products } = await sdk.client.fetch<{
-      products: { title: string; handle: string; thumbnail: string | null; tags?: { value: string }[] }[]
-    }>("/store/products", {
-      ...withTimeout(), query: { limit: 100, fields: "title,handle,thumbnail,tags.value" },
-      next: { revalidate: 3600 },
-    })
-    if (!products?.length) return FALLBACK_MODELS
-    // ponytail: phone-case titles are the model source of truth — accessories
-    // ("Flowcase Alto Mini Speaker", "Flowcase for AirPods Pro 2") stay out
-    // of the model rail / mega menu and live under collections + search.
-    return products
-      .filter((p) => /^Flowcase for (iPhone|Galaxy)/i.test(p.title))
-      .map((p) => ({
-        label: modelFromTitle(p.title),
-        handle: p.handle,
-        image: NAV_IMAGES[p.handle] ?? p.thumbnail ?? undefined,
-        brand: p.tags?.some((t) => t.value === "samsung") ? "samsung" : "apple",
-      }))
+    const items = await pool()
+    const phones = items.filter((p) => /^Flowcase for (iPhone|Galaxy)/i.test(p.title))
+    if (!phones.length) return FALLBACK_MODELS
+    return phones.map((p) => ({
+      label: modelFromTitle(p.title),
+      handle: p.handle,
+      image: p.thumbnail ?? undefined,
+      brand: (p.tags ?? []).some((t) => t.value === "samsung") ? "samsung" : "apple",
+    }))
   } catch {
     return FALLBACK_MODELS
   }

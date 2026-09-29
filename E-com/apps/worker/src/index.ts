@@ -105,7 +105,10 @@ function evalCoupon(cp: CouponRow, ctx: EvalCtx = {}) {
     discount = unitPrices.slice(0, free).reduce((s, p) => s + p, 0)
   }
   if (cp.max_discount > 0) discount = Math.min(discount, cp.max_discount)
-  if (discount <= 0 && cp.type !== "percent") return fail("no_benefit")
+  // bogo without cart units (validate endpoint) = structural check only; the
+  // client previews the amount and order-create re-checks with real lines.
+  if (discount <= 0 && cp.type !== "percent" && !(cp.type === "bogo" && ctx.unitPrices === undefined))
+    return fail("no_benefit")
   return { valid: true, reason: "ok", discount: Math.max(0, Math.min(discount, subtotal + shipping)) }
 }
 
@@ -120,13 +123,21 @@ app.get("/v1/coupons/validate", async (c) => {
   const hit = rows[0]
   if (!hit) return c.json({ valid: false, reason: "not_found" })
   const subQ = Number(c.req.query("subtotal"))
-  const ev = evalCoupon(hit, Number.isFinite(subQ) && subQ > 0 ? { subtotal: subQ } : {})
+  const shipQ = Number(c.req.query("shipping"))
+  const ev = evalCoupon(hit, {
+    ...(Number.isFinite(subQ) && subQ > 0 ? { subtotal: subQ } : {}),
+    ...(Number.isFinite(shipQ) && shipQ > 0 ? { shipping: shipQ } : {}),
+  })
   return c.json({
     valid: ev.valid,
     reason: ev.reason,
     percent: hit.type === "percent" ? hit.percent : 0,
     type: hit.type,
     amount: hit.type === "fixed" ? hit.amount : 0,
+    max_discount: hit.max_discount,
+    min_subtotal: hit.min_subtotal,
+    bogo_buy_qty: hit.bogo_buy_qty,
+    bogo_get_qty: hit.bogo_get_qty,
   })
 })
 

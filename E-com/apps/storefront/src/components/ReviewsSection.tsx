@@ -390,6 +390,18 @@ export function ReviewsSection({ product, pdp }: { product: Product; pdp?: CmsPd
         onSubmit={(draft) => {
           setExtra((prev) => [{ ...draft, color: draft.color ?? colorName ?? undefined }, ...prev])
           setOpen(false)
+          // persist server-side (best-effort — the local card shows instantly)
+          fetch("/api/reviews", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              product_id: product.id,
+              name: draft.name,
+              rating: draft.rating,
+              title: draft.title,
+              body: draft.body,
+            }),
+          }).catch(() => {})
           toast({ title: "Review published", detail: `Thanks for reviewing ${product.title}.` })
         }}
       />

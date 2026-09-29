@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { useCart } from "@/context/CartContext"
 import { fuzzyRank, type FuzzyItem } from "@/lib/fuzzy"
-import { sdk } from "@/lib/sdk"
+import { supabaseAnon } from "@/lib/supabase"
 import { FALLBACK_MODELS, modelFromTitle, type NavModel } from "@/lib/nav-models"
 import type { CmsAnnouncement } from "@/lib/cms"
 
@@ -55,12 +55,14 @@ function SearchField({
   const ensurePool = async (): Promise<FuzzyItem[]> => {
     if (pool.current) return pool.current
     try {
-      const res = await sdk.client.fetch<{
-        products: { id: string; title: string; handle: string; thumbnail?: string | null }[]
-      }>("/store/products", {
-        query: { limit: 100, fields: "id,title,handle,thumbnail" },
-      })
-      pool.current = res.products ?? []
+      const sb = supabaseAnon()
+      const { data } = await sb.from("products").select("id,title,handle,thumbnail_webp").limit(100)
+      pool.current = (data ?? []).map((p: { id: string; title: string; handle: string; thumbnail_webp?: string | null }) => ({
+        id: p.id,
+        title: p.title,
+        handle: p.handle,
+        thumbnail: p.thumbnail_webp ?? null,
+      }))
     } catch {
       pool.current = []
     }

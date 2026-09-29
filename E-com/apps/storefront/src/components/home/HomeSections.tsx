@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useMemo, useState, type FormEvent } from "react"
+import { Fragment, useMemo, useState, type FormEvent, type ReactNode } from "react"
 import { ArrowRight, Check, Leaf, Recycle, RotateCcw, ShieldCheck, Truck } from "lucide-react"
 import { ProductCard } from "@/components/ProductCard"
 import { SectionHeader } from "@/components/SectionHeader"
@@ -11,6 +11,7 @@ import { OfferBanners } from "@/components/home/OfferBanners"
 import { ReviewsMarquee } from "@/components/home/ReviewsMarquee"
 import { Rail } from "@/components/ui/rail"
 import { DiscountScene, PackScene, StampScene } from "@/components/ReuseSteps"
+import { DEFAULT_HOME_SECTIONS, type HomeSectionCfg } from "@/lib/cms"
 import type { NavModel } from "@/lib/nav-models"
 import type { Collection, Product } from "@/lib/types"
 
@@ -142,15 +143,29 @@ export function HomeSections({
   products,
   collections,
   models,
+  sections = DEFAULT_HOME_SECTIONS,
 }: {
   products: Product[]
   collections: Collection[]
   models: NavModel[]
+  sections?: HomeSectionCfg[]
 }) {
   const [brand, setBrand] = useState<Brand>("all")
   const [step, setStep] = useState(0)
   const [email, setEmail] = useState("")
   const [subscribed, setSubscribed] = useState(false)
+
+  // admin-driven config: order, enable/disable, labels, rail limits
+  const cfg = new Map(sections.map((s) => [s.key, s]))
+  const on = (key: string) => cfg.get(key)?.enabled ?? true
+  const posOf = (key: string, fallback: number) => cfg.get(key)?.position ?? fallback
+  const lbl = (key: string, fallback: string) => cfg.get(key)?.title || fallback
+  const idxOf = (key: string, fallback: number) => String(posOf(key, fallback) + 1).padStart(2, "0")
+  const limitOf = (key: string, fallback: number) => cfg.get(key)?.limitCount ?? fallback
+
+  const bsLimit = limitOf("best_sellers", 10)
+  const latestLimit = limitOf("just_landed", 8)
+  const ratedLimit = limitOf("best_rated", 8)
 
   const filtered = useMemo(
     () => (brand === "all" ? products : products.filter((p) => brandOf(p) === brand)),
@@ -162,23 +177,25 @@ export function HomeSections({
   )
   const bestSellers = useMemo(() => {
     // best sellers are phone cases only — both brands under All,
-    // strictly the tab's brand once Apple/Samsung is picked
+    // strictly the tab's brand once Apple/Samsung is picked.
+    // Badged bestsellers lead, top-rated cases backfill to a full ten.
     const cases = filtered.filter(isPhoneCase)
+    const byRating = [...cases].sort(
+      (a, b) => Number(b.metadata?.rating ?? 0) - Number(a.metadata?.rating ?? 0)
+    )
     const tagged = cases.filter((p) =>
       String(p.metadata?.badges ?? "").toLowerCase().includes("bestseller")
     )
-    const pool = tagged.length ? tagged : [...cases].sort(
-      (a, b) => Number(b.metadata?.rating ?? 0) - Number(a.metadata?.rating ?? 0)
-    )
-    return pool.slice(0, 8)
-  }, [filtered])
-  const latest = useMemo(() => filtered.slice(0, 8), [filtered])
+    const seen = new Set(tagged.map((p) => p.id))
+    return [...tagged, ...byRating.filter((p) => !seen.has(p.id))].slice(0, bsLimit)
+  }, [filtered, bsLimit])
+  const latest = useMemo(() => filtered.slice(0, latestLimit), [filtered, latestLimit])
   const bestRated = useMemo(
     () =>
       [...filtered]
         .sort((a, b) => Number(b.metadata?.rating ?? 0) - Number(a.metadata?.rating ?? 0))
-        .slice(0, 8),
-    [filtered]
+        .slice(0, ratedLimit),
+    [filtered, ratedLimit]
   )
 
   const iphone = collections.find((c) => /iphone/i.test(c.title))
@@ -192,14 +209,15 @@ export function HomeSections({
 
   const ActiveScene = REUSE[step].Scene
 
-  return (
-    <>
-      {/* 02 — best sellers + brand tabs (filters every rail on this page) */}
+  // Each section is a renderable part; admin position/enabled drive order.
+  const parts: { key: string; render: () => ReactNode }[] = [
+    // 02 — best sellers + brand tabs (filters every rail on this page)
+    { key: "best_sellers", render: () => (
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <SectionHeader
-            index="02"
-            label="Best sellers"
+            index={idxOf("best_sellers", 1)}
+            label={lbl("best_sellers", "Best sellers")}
             title="Most re-ordered cases."
             className="flex-1 border-t-0 pt-0"
           />
@@ -207,13 +225,14 @@ export function HomeSections({
         </div>
         <RailSection items={bestSellers} label="Best sellers" />
       </section>
-
-      {/* 03 — shop by category */}
+    ) },
+    // 03 — shop by category
+    { key: "categories", render: () => (
       <section className="border-y border-border bg-muted py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <SectionHeader
-            index="03"
-            label="Shop by category"
+            index={idxOf("categories", 2)}
+            label={lbl("categories", "Shop by category")}
             title="Cases, audio, and charging."
             description="Six shelves, one standard — drop-tested, pocket-friendly, and shipped plastic-free."
             link={{ href: "/shop", label: "Shop everything" }}
@@ -227,7 +246,7 @@ export function HomeSections({
           tabIndex={0}
           className="mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 pl-4 pr-0 [scrollbar-width:none] sm:gap-4 sm:pl-6 lg:pl-[max(1.5rem,calc((100vw-80rem)/2+1.5rem))] [&::-webkit-scrollbar]:hidden"
         >
-          {CATEGORY_TILES.map((tile) => {
+          {CATEGORY_TILES.slice(0, limitOf("categories", 6)).map((tile) => {
             const count = products.filter(tile.match).length
             return (
               <Link
@@ -266,41 +285,44 @@ export function HomeSections({
           <div aria-hidden="true" className="w-1 shrink-0 sm:w-2" />
         </div>
       </section>
-
-      {/* 04 — shop by model */}
-      {filteredModels.length > 0 && (
+    ) },
+    // 04 — shop by model
+    { key: "models", render: () => (
+      filteredModels.length > 0 ? (
         <section className="border-y border-border bg-muted">
           <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
             <SectionHeader
-              index="04"
-              label="Shop by model"
+              index={idxOf("models", 3)}
+              label={lbl("models", "Shop by model")}
               title="Find your exact fit."
               description="Every case is moulded to one phone — no shared shells, no loose buttons."
               link={{ href: "/shop", label: "View all" }}
             />
             <div className="mt-8">
-              <CategoryRail models={filteredModels} />
+              <CategoryRail models={filteredModels.slice(0, limitOf("models", 12))} />
             </div>
           </div>
         </section>
-      )}
-
-      {/* 05 — just landed */}
+      ) : null
+    ) },
+    // 05 — just landed
+    { key: "just_landed", render: () => (
       <section className="mx-auto max-w-7xl scroll-mt-20 px-4 py-12 sm:px-6 sm:py-16">
         <SectionHeader
-          index="05"
-          label="Just landed"
+          index={idxOf("just_landed", 4)}
+          label={lbl("just_landed", "Just landed")}
           title="Latest drops"
           link={{ href: "/shop", label: "View all" }}
         />
         <RailSection items={latest} label="Latest products" />
       </section>
-
-      {/* offers */}
+    ) },
+    // offers
+    { key: "this_month", render: () => (
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 sm:pb-16">
         <SectionHeader
-          index="06"
-          label="This month"
+          index={idxOf("this_month", 5)}
+          label={lbl("this_month", "This month")}
           title="Offers worth opening."
           description="Stackable with free shipping — codes land in your inbox, not in fine print."
         />
@@ -308,8 +330,9 @@ export function HomeSections({
           <OfferBanners />
         </div>
       </section>
-
-      {/* 05b — sustainability teaser */}
+    ) },
+    // sustainability teaser
+    { key: "sustainability", render: () => (
       <section className="border-y border-border bg-muted">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-12 sm:px-6 sm:py-16 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex items-start gap-4">
@@ -317,7 +340,9 @@ export function HomeSections({
               <Leaf className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
-              <p className="label text-muted-foreground">07 — Sustainability</p>
+              <p className="label text-muted-foreground">
+                {idxOf("sustainability", 6)} — {lbl("sustainability", "Sustainability")}
+              </p>
               <h2 className="display-tight mt-2 font-display text-2xl font-bold sm:text-3xl">
                 Plastic-free box. Reused cases.
               </h2>
@@ -334,13 +359,14 @@ export function HomeSections({
           </Link>
         </div>
       </section>
-
-      {/* 08 — collections */}
-      {(iphone || samsung) && (
+    ) },
+    // 08 — collections
+    { key: "collections", render: () => (
+      (iphone || samsung) ? (
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
           <SectionHeader
-            index="08"
-            label="Collections"
+            index={idxOf("collections", 7)}
+            label={lbl("collections", "Collections")}
             title="Two ecosystems. One standard."
             description="Exact cutouts for camera bars, buttons, and MagSafe — from the iPhone line to Galaxy A and S."
           />
@@ -351,28 +377,39 @@ export function HomeSections({
             samsung={samsung ? { title: samsung.title, href: `/collections/${samsung.handle ?? samsung.id}` } : undefined}
           />
         </section>
-      )}
-
-      {/* 09 — reviews */}
+      ) : null
+    ) },
+    // 09 — reviews
+    { key: "reviews", render: () => (
       <section className="border-y border-border bg-muted py-12 sm:py-16">
-        <ReviewsMarquee products={filtered} />
+        <ReviewsMarquee
+          products={filtered}
+          index={idxOf("reviews", 8)}
+          label={lbl("reviews", "Reviews")}
+        />
       </section>
-
-      {/* 10 — best rated */}
+    ) },
+    // 10 — best rated
+    { key: "best_rated", render: () => (
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
         <SectionHeader
-          index="10"
-          label="Best rated"
+          index={idxOf("best_rated", 9)}
+          label={lbl("best_rated", "Best rated")}
           title="What everyone keeps re-ordering."
           description="Ranked by verified buyer ratings — the same stars you see on each product page."
           link={{ href: "/shop", label: "All cases" }}
         />
         <RailSection items={bestRated} label="Best rated products" />
       </section>
-
-      {/* 11 — the standard: icon-first, desc desktop-only, minimal on mobile/tablet */}
+    ) },
+    // 11 — the standard: icon-first, desc desktop-only, minimal on mobile/tablet
+    { key: "the_standard", render: () => (
       <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 sm:pb-16">
-        <SectionHeader index="11" label="The standard" title="Built to disappear. Tested to survive." />
+        <SectionHeader
+          index={idxOf("the_standard", 10)}
+          label={lbl("the_standard", "The standard")}
+          title="Built to disappear. Tested to survive."
+        />
         {/* desktop + full grid (hidden on small, compact on tablet) */}
         <dl className="mt-8 hidden grid-cols-3 border-t border-border md:grid">
           {STANDARD.map((item) => (
@@ -420,13 +457,14 @@ export function HomeSections({
           </div>
         </div>
       </section>
-
-      {/* 12 — reuse programme: desktop cards, mobile step buttons */}
+    ) },
+    // 12 — reuse programme: desktop cards, mobile step buttons
+    { key: "reuse", render: () => (
       <section className="border-y border-border bg-muted">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
           <SectionHeader
-            index="12"
-            label="Reuse programme"
+            index={idxOf("reuse", 11)}
+            label={lbl("reuse", "Reuse programme")}
             title="Send your old case back. Keep 10% forever."
             description="Your old case took every drop with you — it shouldn't end up in a drawer. Send it back, we break it down and start again, and 10% off lands in your inbox for the next one."
           />
@@ -518,12 +556,16 @@ export function HomeSections({
           </Link>
         </div>
       </section>
-
-      {/* 13 — merged: ready when you are + go with flow + newsletter */}
+    ) },
+    // 13 — merged: ready when you are + go with flow + newsletter
+    { key: "cta_newsletter", render: () => (
       <section className="bg-foreground text-white">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 text-center sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-8 lg:text-left">
           <div>
-            <p className="label text-white/60">13 — Ready when you are · Go with flow</p>
+            <p className="label text-white/60">
+              {idxOf("cta_newsletter", 12)} — {lbl("cta_newsletter", "Ready when you are")} · Go with
+              flow
+            </p>
             <h2 className="display-tight mt-4 font-display text-4xl font-bold leading-[1.03] sm:text-5xl">
               Protection you stop thinking about.
             </h2>
@@ -576,6 +618,19 @@ export function HomeSections({
           </div>
         </div>
       </section>
+    ) },
+  ]
+
+  const ordered = parts
+    .map((p, i) => ({ ...p, pos: posOf(p.key, i + 1), show: on(p.key) }))
+    .filter((p) => p.show)
+    .sort((a, b) => a.pos - b.pos)
+
+  return (
+    <>
+      {ordered.map((p) => (
+        <Fragment key={p.key}>{p.render()}</Fragment>
+      ))}
     </>
   )
 }

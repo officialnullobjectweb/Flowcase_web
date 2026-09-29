@@ -18,18 +18,22 @@ import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import { useCart } from "@/context/CartContext"
 import { formatPrice } from "@/lib/format"
+import { couponDiscount, couponLabel, fetchCoupon, type CouponInfo } from "@/lib/coupon"
 import { Calendar } from "./ui/calendar"
 import { Dropdown, DropdownItem } from "./ui/dropdown"
-import { getDefaultRegion } from "@/lib/api"
-import { sdk } from "@/lib/sdk"
 import { supabase } from "@/lib/supabase"
 import {
   isRazorpayConfigured,
   openRazorpay,
 } from "@/lib/razorpay"
-import type { Address, Cart, ShippingOption } from "@/lib/types"
-import { INDIA_STATES, lookupPin, type SavedAddress } from "@/lib/addresses"
+import type { Address } from "@/lib/types"
+import { INDIA_STATES, loadAddressBook, lookupPin, removeFromAddressBook, saveToAddressBook, type SavedAddress } from "@/lib/addresses"
 import { PhoneVerify } from "./PhoneVerify"
+
+/** Flat shipping menu (server recomputes the same rule, never trusts this). */
+const FREE_SHIP_AT = 999
+const SHIP_FLAT = 99
+const SHIP_EXPRESS = 299
 
 interface Step {
   key: "address" | "shipping" | "payment"
@@ -74,9 +78,7 @@ export function CheckoutFlow() {
   const [step, setStep] = useState(0)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [medusaCart, setMedusaCart] = useState<Cart | null>(null)
-  const [shippingOptions, setShippingOptions] = useState<ShippingOption[]>([])
-  const [shippingOptionId, setShippingOptionId] = useState<string>("")
+  const [shippingOptionId, setShippingOptionId] = useState<string>("standard")
   const [paymentMethod, setPaymentMethod] = useState<"razorpay" | "manual">(
     isRazorpayConfigured() ? "razorpay" : "manual"
   )
@@ -95,29 +97,26 @@ export function CheckoutFlow() {
   })
   const [email, setEmail] = useState("")
 
-  // Saved-address picker: last checkout (localStorage) + signed-in identity.
+  // Saved-address book: everything (email, mobile, address) persisted
+  // locally per entry — pick one and checkout completes in one tap.
+  // Signed-in users additionally merge addresses from their account profile.
   const [saved, setSaved] = useState<SavedAddress[]>([])
   const [addrChoice, setAddrChoice] = useState<string>("new")
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [touched, setTouched] = useState(false)
 
+  const applyEntry = (entry: SavedAddress) => {
+    setAddrChoice(entry.id)
+    const { id: _id, email: entryEmail, updatedAt: _ts, ...addr } = entry
+    setAddress({ ...EMPTY_ADDRESS, ...addr })
+    if (entryEmail) setEmail(entryEmail)
+    setFieldErrors({})
+  }
+
   useEffect(() => {
-    const recents: SavedAddress[] = []
-    try {
-      const raw = localStorage.getItem("flowcase_last_address")
-      if (raw) {
-        const parsed = JSON.parse(raw)
-        if (parsed && parsed.address_1) recents.push({ ...EMPTY_ADDRESS, ...parsed, id: "recent" })
-      }
-    } catch {
-      /* ignore corrupt storage */
-    }
-    setSaved(recents)
-    if (recents[0]) {
-      setAddrChoice(recents[0].id)
-      setAddress(recents[0])
-      setEmail((e) => e || "")
-    }
+    const book = loadAddressBook()
+    setSaved(book)
+    if (book[0]) applyEntry(book[0])
 
     // Signed-in Supabase user: prefill identity + saved addresses from the
     // account dashboard (user_metadata.addresses). Last checkout stays in
@@ -163,17 +162,30 @@ export function CheckoutFlow() {
   const [showCalendar, setShowCalendar] = useState(false)
   const [couponInput, setCouponInput] = useState("")
   const [coupon, setCoupon] = useState<string | null>(null)
+  const [couponInfo, setCouponInfo] = useState<CouponInfo | null>(null)
   const [couponError, setCouponError] = useState<string | null>(null)
+  const [reuseInfo, setReuseInfo] = useState<CouponInfo | null>(null)
 
+  useEffect(() => {
+    void fetchCoupon("REUSE10").then(setReuseInfo)
+  }, [])
+
+  const shippingOptions = [
+    {
+      id: "standard",
+      name: "Standard",
+      amount: subtotal >= FREE_SHIP_AT ? 0 : SHIP_FLAT,
+    },
+    { id: "express", name: "Express", amount: SHIP_EXPRESS },
+  ]
   const shippingCost =
     shippingOptions.find((o) => o.id === shippingOptionId)?.amount ?? 0
-  const tax = medusaCart?.tax_total ?? 0
-  const total = subtotal + shippingCost + tax
-  // REUSE10 = 10% off. Shown client-side; also applied to the Medusa cart
-  // (see applyCoupon/syncToMedusa) when the promotion exists in admin.
-  const discount = coupon === "REUSE10" ? Math.round(total * 10) / 100 : 0
+  const total = subtotal + shippingCost
+  const unitPrices = items.flatMap((i) => Array.from({ length: i.quantity }, () => i.unitPrice))
+  const discount =
+    coupon && couponInfo ? couponDiscount(couponInfo, subtotal, shippingCost, unitPrices) : 0
   const payTotal = total - discount
-  const currencyCode = medusaCart?.currency_code ?? currency
+  const currencyCode = currency
 
   const dateMin = (() => {
     const d = new Date()
@@ -220,11 +232,22 @@ export function CheckoutFlow() {
   }
 
   const selectSaved = (s: SavedAddress) => {
-    setAddrChoice(s.id)
-    if (s.id !== "new") {
-      setAddress({ ...EMPTY_ADDRESS, ...s, country_code: s.country_code || "in" })
-      setFieldErrors({})
+    if (s.id === "new") {
+      setAddrChoice("new")
+      return
     }
+    applyEntry(s)
+  }
+
+  const deleteSaved = (id: string) => {
+    const book = removeFromAddressBook(id)
+    setSaved(book)
+    setAddrChoice((cur) => {
+      if (cur !== id) return cur
+      const next = book[0]
+      if (next) applyEntry(next)
+      return next ? next.id : "new"
+    })
   }
 
   const err = (name: string) => (touched ? fieldErrors[name] : undefined)
@@ -246,12 +269,7 @@ export function CheckoutFlow() {
     setBusy(true)
     setError(null)
     try {
-      // Remember for the next checkout — the saved-address picker preloads it.
-      localStorage.setItem("flowcase_last_address", JSON.stringify(address))
-      const cart = await syncToMedusa()
-      const withAddress = await applyAddressAndEmail(cart)
-      setMedusaCart(withAddress)
-      await loadShipping(withAddress)
+      // Remember the checkout shape for next time (email lives in the form).
       setStep(1)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not save address")
@@ -260,169 +278,135 @@ export function CheckoutFlow() {
     }
   }
 
+  // Coupons validate against the server table (any active code works).
+  const applyCode = async (raw: string) => {
+    const code = raw.trim().toUpperCase()
+    if (!code) {
+      setCouponError("Enter a code")
+      return
+    }
+    setCouponError(null)
+    try {
+      const data = await fetchCoupon(code, subtotal, shippingCost)
+      if (data && data.valid && couponDiscount(data, subtotal, shippingCost, unitPrices) <= 0) {
+        setCouponError("This code doesn't reduce your current total")
+      } else if (data && data.valid) {
+        setCoupon(code)
+        setCouponInfo(data)
+        setCouponInput(code)
+      } else if (data && data.reason === "min_subtotal" && data.minSubtotal > 0) {
+        setCoupon(null)
+        setCouponInfo(null)
+        setCouponError(`Needs a ${formatPrice(data.minSubtotal, currencyCode)} order`)
+      } else if (data && data.reason === "no_benefit") {
+        setCoupon(null)
+        setCouponInfo(null)
+        setCouponError("This code doesn't reduce your current total")
+      } else if (data) {
+        setCoupon(null)
+        setCouponInfo(null)
+        setCouponError(`“${code}” is not a valid code`)
+      } else {
+        setCouponError("Could not check the code — try again")
+      }
+    } catch {
+      setCouponError("Could not check the code — try again")
+    }
+  }
+
   // One-tap apply for the offers list in the order summary.
   const applyReuse = () => {
-    setCoupon("REUSE10")
     setCouponInput("REUSE10")
-    setCouponError(null)
-    if (medusaCart) {
-      sdk.store.cart
-        .addPromotions(medusaCart.id, { promo_codes: ["REUSE10"] })
-        .catch(() => {})
-    }
+    void applyCode("REUSE10")
   }
 
   const applyCoupon = (e: React.FormEvent) => {
     e.preventDefault()
-    const code = couponInput.trim().toUpperCase()
-    if (code === "REUSE10") {
-      setCoupon(code)
-      setCouponError(null)
-      setCouponInput(code)
-      // Also register the code on the Medusa cart so admin sees the promotion.
-      if (medusaCart) {
-        sdk.store.cart
-          .addPromotions(medusaCart.id, { promo_codes: ["REUSE10"] })
-          .catch(() => {})
-      }
-    } else {
-      setCouponError(code ? `“${code}” is not a valid code` : "Enter a code")
-    }
-  }
-
-  const syncToMedusa = async (): Promise<Cart> => {
-    const region = await getDefaultRegion()
-    localStorage.removeItem("flowcase_medusa_cart")
-    const { cart } = await sdk.store.cart.create({ region_id: region.id })
-    for (const item of items) {
-      await sdk.store.cart.createLineItem(cart.id, {
-        variant_id: item.id,
-        quantity: item.quantity,
-      })
-    }
-    if (coupon) {
-      // Best effort: when REUSE10 exists as a promotion in admin, the order
-      // records it server-side. Display discount stays client-side either way.
-      await sdk.store.cart
-        .addPromotions(cart.id, { promo_codes: [coupon] })
-        .catch(() => {})
-    }
-    localStorage.setItem("flowcase_medusa_cart", cart.id)
-    const { cart: withItems } = await sdk.store.cart.retrieve(cart.id)
-    return withItems
-  }
-
-  const applyAddressAndEmail = async (cart: Cart): Promise<Cart> => {
-    // Strip the picker's synthetic ids ("recent"/"c0") — sending one makes
-    // Medusa look up a nonexistent address row and 404 the whole update.
-    const { id: _pickerId, ...shipping } = address as Address & { id?: string }
-    const { cart: updated } = await sdk.store.cart.update(cart.id, {
-      email,
-      shipping_address: shipping as Address,
-    })
-    return updated
-  }
-
-  const loadShipping = async (cart: Cart): Promise<ShippingOption[]> => {
-    const { shipping_options } = await sdk.store.fulfillment.listCartOptions({
-      cart_id: cart.id,
-    })
-    setShippingOptions(shipping_options)
-    if (shipping_options[0]) setShippingOptionId(shipping_options[0].id)
-    return shipping_options
-  }
-
-  const selectShipping = async (cart: Cart, optionId: string) => {
-    await sdk.store.cart.addShippingMethod(cart.id, {
-      option_id: optionId,
-    })
+    void applyCode(couponInput)
   }
 
   const handleShippingNext = async () => {
-    if (!medusaCart || !shippingOptionId) return
-    setBusy(true)
-    setError(null)
-    try {
-      await selectShipping(medusaCart, shippingOptionId)
-      const { cart: refreshed } = await sdk.store.cart.retrieve(medusaCart.id)
-      setMedusaCart(refreshed)
-      setStep(2)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not set shipping")
-    } finally {
-      setBusy(false)
-    }
+    if (!shippingOptionId) return
+    setStep(2)
   }
 
   const placeOrder = async () => {
-    if (!medusaCart) return
     setBusy(true)
     setError(null)
     try {
-      if (paymentMethod === "razorpay" && isRazorpayConfigured()) {
-        const orderRes = await fetch("/api/razorpay/order", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            amount: payTotal,
-            currency: currencyCode,
-            receipt: medusaCart.id,
-          }),
-        })
-        if (!orderRes.ok) {
-          const body = (await orderRes.json().catch(() => null)) as
-            | { error?: string }
-            | null
-          throw new Error(body?.error || "Could not create payment order")
-        }
-        const { orderId, amount, currency: rzpCurrency } = (await orderRes.json()) as {
-          orderId: string
-          amount: number
-          currency: string
-        }
+      const payload = {
+        items: items.map((item) => ({ variant_id: item.id, qty: item.quantity })),
+        email,
+        name: `${address.first_name ?? ""} ${address.last_name ?? ""}`.trim(),
+        phone: address.phone ?? "",
+        address: {
+          line1: address.address_1 ?? "",
+          line2: address.address_2 ?? "",
+          city: address.city ?? "",
+          state: address.province ?? "",
+          pin: address.postal_code ?? "",
+        },
+        shipping: shippingOptionId === "express" ? "express" : "standard",
+        coupon,
+        method: paymentMethod === "razorpay" && isRazorpayConfigured() ? "razorpay" : "manual",
+      }
+      const orderRes = await fetch("/api/checkout/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
+      if (!orderRes.ok) {
+        const body = (await orderRes.json().catch(() => null)) as
+          | { error?: string; title?: string }
+          | null
+        throw new Error(
+          body?.error === "out_of_stock"
+            ? `Sorry — ${body.title ?? "an item"} just sold out`
+            : "Could not create order"
+        )
+      }
+      const created = (await orderRes.json()) as {
+        orderId: string
+        razorpayOrderId?: string
+        amount: number
+        keyId?: string
+        manual?: boolean
+      }
 
+      if (!created.manual) {
         const pay = await openRazorpay({
-          amount,
-          currency: rzpCurrency,
-          orderId,
+          amount: created.amount,
+          currency: "inr",
+          orderId: created.razorpayOrderId!,
           name: "Flowcase",
           description: `Order for ${items.length} item(s)`,
           email: email || undefined,
           contact: address.phone || undefined,
         })
-
-        const verifyRes = await fetch("/api/razorpay/verify", {
+        const verifyRes = await fetch("/api/checkout/verify", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(pay),
+          body: JSON.stringify({
+            orderId: created.orderId,
+            razorpay_order_id: pay.razorpay_order_id,
+            razorpay_payment_id: pay.razorpay_payment_id,
+            razorpay_signature: pay.razorpay_signature,
+          }),
         })
         if (!verifyRes.ok) {
           throw new Error("Payment verification failed")
         }
-
-        await sdk.store.payment.initiatePaymentSession(medusaCart, {
-          provider_id: "pp_razorpay_default",
-          data: {
-            ...pay,
-            id: pay.razorpay_payment_id,
-          },
-        } as never)
-      } else {
-        // COD: no online payment — open an empty session the provider
-        // authorizes as-is (see RazorpayProviderService.authorizePayment)
-        await sdk.store.payment.initiatePaymentSession(medusaCart, {
-          provider_id: "pp_razorpay_default",
-          data: {},
-        } as never)
       }
 
-      const result = await sdk.store.cart.complete(medusaCart.id)
-      const order = (result as { order?: { display_id?: number } }).order
       try {
+        // Order placed — file the full record (email, mobile, address) so
+        // next checkout is one tap on the saved entry.
+        setSaved(saveToAddressBook(email, address))
         sessionStorage.setItem(
           "flowcase_last_order",
           JSON.stringify({
-            display_id: order?.display_id ?? null,
+            display_id: null,
+            orderId: created.orderId,
             email,
             items,
             total: payTotal,
@@ -437,10 +421,7 @@ export function CheckoutFlow() {
         // private-mode sessionStorage — confirmation falls back to query params
       }
       clearCart()
-      localStorage.removeItem("flowcase_medusa_cart")
-      router.push(
-        `/order/confirmation${order?.display_id ? `?display_id=${order.display_id}` : ""}`
-      )
+      router.push(`/order/confirmation?orderId=${created.orderId}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not place order")
     } finally {
@@ -510,13 +491,23 @@ export function CheckoutFlow() {
               <fieldset className="space-y-2">
                 <legend className="label text-muted-foreground">Saved addresses</legend>
                 {saved.map((s) => (
-                  <label
+                  <div
                     key={s.id}
                     className={`flex cursor-pointer items-start gap-3 border px-4 py-3 transition ${
                       addrChoice === s.id
                         ? "border-primary bg-accent"
                         : "border-border hover:border-foreground"
                     }`}
+                    onClick={() => selectSaved(s)}
+                    role="radio"
+                    aria-checked={addrChoice === s.id}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault()
+                        selectSaved(s)
+                      }
+                    }}
                   >
                     <input
                       type="radio"
@@ -524,8 +515,9 @@ export function CheckoutFlow() {
                       className="mt-1"
                       checked={addrChoice === s.id}
                       onChange={() => selectSaved(s)}
+                      aria-label={`Use address for ${s.first_name} ${s.last_name}`}
                     />
-                    <span className="text-sm">
+                    <span className="min-w-0 flex-1 text-sm">
                       <span className="block font-medium">
                         {s.first_name} {s.last_name}
                         {s.city ? ` · ${s.city}` : ""}
@@ -538,8 +530,22 @@ export function CheckoutFlow() {
                       {s.phone && (
                         <span className="block text-muted-foreground">{s.phone}</span>
                       )}
+                      {s.email && (
+                        <span className="block truncate text-muted-foreground">{s.email}</span>
+                      )}
                     </span>
-                  </label>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        deleteSaved(s.id)
+                      }}
+                      aria-label={`Delete saved address for ${s.first_name} ${s.last_name}`}
+                      className="label shrink-0 text-muted-foreground transition hover:text-danger"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 ))}
                 <label
                   className={`flex cursor-pointer items-center gap-3 border px-4 py-3 transition ${
@@ -1095,13 +1101,9 @@ export function CheckoutFlow() {
                   : "—"}
               </dd>
             </div>
-            <div className="flex justify-between">
-              <dt className="text-muted-foreground">Tax</dt>
-              <dd className="font-medium">{formatPrice(tax, currencyCode)}</dd>
-            </div>
-            {discount > 0 && (
+            {discount > 0 && coupon && (
               <div className="flex justify-between">
-                <dt className="text-foreground">Discount (REUSE10)</dt>
+                <dt className="text-foreground">Discount ({coupon})</dt>
                 <dd className="font-medium text-foreground">
                   −{formatPrice(discount, currencyCode)}
                 </dd>
@@ -1115,23 +1117,26 @@ export function CheckoutFlow() {
 
           {/* Offers */}
           <ul className="mt-4 space-y-2 border-t border-border pt-4">
-            <li className="flex items-center justify-between gap-2 text-sm">
-              <span className="flex items-center gap-2">
-                <Tag className="h-3.5 w-3.5 shrink-0 text-foreground" aria-hidden="true" />
-                REUSE10 — 10% off (reuse program)
-              </span>
-              {coupon === "REUSE10" ? (
-                <span className="label text-success">Applied ✓</span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={applyReuse}
-                  className="label underline underline-offset-2 transition hover:opacity-70"
-                >
-                  Apply
-                </button>
-              )}
-            </li>
+            {reuseInfo?.valid && (
+              <li className="flex items-center justify-between gap-2 text-sm">
+                <span className="flex items-center gap-2">
+                  <Tag className="h-3.5 w-3.5 shrink-0 text-foreground" aria-hidden="true" />
+                  REUSE10 — {couponLabel(reuseInfo, (n) => formatPrice(n, currencyCode))}{" "}
+                  (reuse program)
+                </span>
+                {coupon === "REUSE10" ? (
+                  <span className="label text-success">Applied ✓</span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={applyReuse}
+                    className="label underline underline-offset-2 transition hover:opacity-70"
+                  >
+                    Apply
+                  </button>
+                )}
+              </li>
+            )}
             <li className="flex items-center gap-2 text-sm">
               <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               Free shipping over ₹999
@@ -1149,7 +1154,7 @@ export function CheckoutFlow() {
                 Sustainability unlocked
               </p>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                REUSE10 refunds 10% when you send back your old case in the prepaid
+                REUSE10 gives you {couponInfo ? couponLabel(couponInfo, (n) => formatPrice(n, currencyCode)) : "your discount"} when you send back your old case in the prepaid
                 reuse envelope. Every order ships plastic-free in recycled board —
                 this one keeps another case out of landfill.
               </p>
@@ -1176,9 +1181,9 @@ export function CheckoutFlow() {
                 Apply
               </button>
             </div>
-            {coupon === "REUSE10" && (
+            {coupon && couponInfo && (
               <p className="label mt-2 text-success">
-                REUSE10 applied — 10% off
+                {coupon} applied — {couponLabel(couponInfo, (n) => formatPrice(n, currencyCode))}
               </p>
             )}
             {couponError && (

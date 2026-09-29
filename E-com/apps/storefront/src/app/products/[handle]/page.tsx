@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { Breadcrumbs } from "@/components/Breadcrumbs"
 import { ImageGallery } from "@/components/ImageGallery"
 import { JsonLd, siteUrl } from "@/components/JsonLd"
+import { PdpStage } from "@/components/PdpStage"
 import { ProductCard } from "@/components/ProductCard"
 import { ProductInfo } from "@/components/ProductInfo"
 import { SelectionProvider } from "@/context/SelectionContext"
@@ -140,12 +141,7 @@ export default async function ProductPage({
           className="mb-8"
         />
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <ImageGallery
-            images={product.images ?? []}
-            thumbnail={product.thumbnail}
-            alt={product.title}
-            product={product}
-          />
+          <PdpStage product={product} />
           <div className="lg:sticky lg:top-24 lg:self-start">
             <ProductInfo product={product} />
           </div>

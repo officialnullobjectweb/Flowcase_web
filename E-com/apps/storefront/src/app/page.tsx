@@ -1,7 +1,7 @@
 import { VideoHero } from "@/components/VideoHero"
 import { HomeSections } from "@/components/home/HomeSections"
 import { getNavModels, listProducts, listCollections } from "@/lib/api"
-import { getCms } from "@/lib/cms"
+import { getCms, getHomeSections } from "@/lib/cms"
 import type { Product } from "@/lib/types"
 
   // Short window on purpose: free-tier backends sleep through builds, and a
@@ -29,7 +29,7 @@ export default async function HomePage() {
   }
 
   const iphone = collections.find((c) => /iphone/i.test(c.title))
-  const cms = await getCms()
+  const [cms, homeSections] = await Promise.all([getCms(), getHomeSections()])
 
   return (
     <>
@@ -63,7 +63,7 @@ export default async function HomePage() {
         }
       />
 
-      <HomeSections products={products} collections={collections} models={models} />
+      <HomeSections products={products} collections={collections} models={models} sections={homeSections} />
     </>
   )
 }

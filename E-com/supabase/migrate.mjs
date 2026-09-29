@@ -12,7 +12,7 @@ import { readFileSync } from "node:fs"
 import { createRequire } from "node:module"
 
 const require = createRequire(import.meta.url)
-const pg = require("/Users/karandhiver/Developer/hero/mindup-game/E-com/apps/backend/node_modules/pg")
+const pg = require("./node_modules/pg")
 const sharp = require("/Users/karandhiver/Developer/hero/mindup-game/E-com/apps/storefront/node_modules/sharp")
 
 const { Client } = pg
@@ -127,7 +127,7 @@ const main = async () => {
   const webpUrls = await pool(sources, webpFor)
   const webpOf = Object.fromEntries(sources.map((s, i) => [s, webpUrls[i]]))
 
-  const db = new Client({ connectionString: envFile("/Users/karandhiver/Developer/hero/mindup-game/E-com/apps/backend/.env").DATABASE_URL, ssl: { rejectUnauthorized: false } })
+  const db = new Client({ connectionString: envFile("/Users/karandhiver/Developer/hero/mindup-game/E-com/apps/storefront/.env").SUPABASE_DB_POOLER_URL, ssl: { rejectUnauthorized: false } })
   await db.connect()
   // Medusa store API doesn't expose categories — derive from handles (stable).
   const catOf = (handle) => {

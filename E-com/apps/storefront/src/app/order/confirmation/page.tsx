@@ -6,10 +6,10 @@ export const metadata: Metadata = { title: "Order confirmed", robots: { index: f
 export default async function OrderConfirmationPage({
   searchParams,
 }: {
-  searchParams: Promise<{ display_id?: string }>
+  searchParams: Promise<{ display_id?: string; orderId?: string }>
 }) {
-  const { display_id } = await searchParams
+  const { display_id, orderId } = await searchParams
   return (
-    <OrderConfirmation displayId={display_id ?? null} />
+    <OrderConfirmation displayId={display_id ?? null} orderId={orderId ?? null} />
   )
 }

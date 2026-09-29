@@ -9,6 +9,75 @@ export interface SavedAddress extends Address {
   id: string
   label?: string
   is_default?: boolean
+  /** contact email captured with the address (checkout stores it per entry) */
+  email?: string
+  /** last-used timestamp (ms) — most recent sorts first */
+  updatedAt?: number
+}
+
+const BOOK_KEY = "flowcase_addresses"
+const LEGACY_KEY = "flowcase_last_address"
+const BOOK_MAX = 5
+
+const uid = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `a${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`
+
+function sameEntry(a: SavedAddress, email: string, b: Address): boolean {
+  return (
+    (a.email ?? "").toLowerCase() === email.toLowerCase() &&
+    (a.address_1 ?? "").trim().toLowerCase() === (b.address_1 ?? "").trim().toLowerCase() &&
+    (a.postal_code ?? "").trim() === (b.postal_code ?? "").trim()
+  )
+}
+
+/** Load the address book (newest first), migrating the legacy single entry once. */
+export function loadAddressBook(): SavedAddress[] {
+  try {
+    const raw = localStorage.getItem(BOOK_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw)
+      if (Array.isArray(parsed)) return parsed.filter((p) => p?.address_1).slice(0, BOOK_MAX)
+    }
+    const legacy = localStorage.getItem(LEGACY_KEY)
+    if (legacy) {
+      const parsed = JSON.parse(legacy)
+      if (parsed?.address_1) {
+        const entry: SavedAddress = { ...parsed, id: uid(), updatedAt: Date.now() }
+        localStorage.setItem(BOOK_KEY, JSON.stringify([entry]))
+        return [entry]
+      }
+    }
+  } catch {
+    /* corrupt storage — start fresh */
+  }
+  return []
+}
+
+/** Insert-or-refresh an entry (dedupe by email + street + PIN), newest first. */
+export function saveToAddressBook(email: string, address: Address): SavedAddress[] {
+  const book = loadAddressBook().filter((p) => !sameEntry(p, email, address))
+  const { id: _drop, ...rest } = address as Address & { id?: string }
+  book.unshift({ ...rest, id: uid(), email, updatedAt: Date.now() })
+  const trimmed = book.slice(0, BOOK_MAX)
+  try {
+    localStorage.setItem(BOOK_KEY, JSON.stringify(trimmed))
+  } catch {
+    /* private mode — picker simply won't persist */
+  }
+  return trimmed
+}
+
+/** Remove one entry by id. */
+export function removeFromAddressBook(id: string): SavedAddress[] {
+  const book = loadAddressBook().filter((p) => p.id !== id)
+  try {
+    localStorage.setItem(BOOK_KEY, JSON.stringify(book))
+  } catch {
+    /* ignore */
+  }
+  return book
 }
 
 export const INDIA_STATES = [

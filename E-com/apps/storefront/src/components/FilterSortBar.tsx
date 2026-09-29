@@ -39,6 +39,7 @@ export const SWATCHES: Record<string, string> = {
   Amber: "#e0a437",
   Forest: "#3d6b4f",
   Lavender: "#c3b2e0",
+  Graphite: "#3a3a3c",
 }
 
 const RATING_OPTS = [

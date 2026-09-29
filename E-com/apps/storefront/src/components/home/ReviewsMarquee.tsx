@@ -101,27 +101,15 @@ const PRESET: Review[] = [
 ]
 
 function ReviewCard({ review }: { review: Review }) {
-  const [broken, setBroken] = useState(!review.avatar)
   return (
     <article className="mr-4 flex w-[17rem] shrink-0 flex-col gap-3 border border-border bg-background p-5 sm:w-[20rem]">
       <div className="flex items-center gap-3">
-        {broken ? (
-          <span
-            className="label grid h-9 w-9 shrink-0 place-items-center rounded-full bg-muted text-foreground"
-            aria-hidden="true"
-          >
-            {review.name.slice(0, 1)}
-          </span>
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={review.avatar}
-            alt={review.name}
-            onError={() => setBroken(true)}
-            className="h-9 w-9 shrink-0 rounded-full object-cover grayscale"
-            loading="lazy"
-          />
-        )}
+        <span
+          className="label grid h-9 w-9 shrink-0 place-items-center rounded-full bg-foreground text-background"
+          aria-hidden="true"
+        >
+          {review.name.slice(0, 1)}
+        </span>
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold">{review.name}</p>
           <p className="label text-muted-foreground">Verified buyer</p>
@@ -154,7 +142,15 @@ function ReviewCard({ review }: { review: Review }) {
 /**
  * Infinite marquee of buyer reviews + a working write-review dialog.
  */
-export function ReviewsMarquee({ products = [] }: { products?: Product[] }) {
+export function ReviewsMarquee({
+  products = [],
+  index = "09",
+  label = "Reviews",
+}: {
+  products?: Product[]
+  index?: string
+  label?: string
+}) {
   // Product thumbnail for a model name ("iPhone 17 Pro" → its case image).
   const thumbFor = (model: string) =>
     products.find((p) => modelFromTitle(p.title) === model)?.thumbnail ?? undefined
@@ -235,8 +231,8 @@ export function ReviewsMarquee({ products = [] }: { products?: Product[] }) {
     <section className="mx-auto max-w-7xl px-4 sm:px-6" aria-labelledby="reviews-heading">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <SectionHeader
-          index="09"
-          label="Reviews"
+          index={index}
+          label={label}
           title="Stories from the drop test."
           className="w-full border-t-0 pt-0"
         />
@@ -246,7 +242,19 @@ export function ReviewsMarquee({ products = [] }: { products?: Product[] }) {
         </Button>
       </div>
 
-      <div className="mt-8 overflow-hidden">
+      {/* mobile + tablet: swipeable snap carousel (touch-first) */}
+      <div className="mt-8 overflow-x-auto pb-2 lg:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex w-max snap-x snap-mandatory" aria-label="Customer reviews">
+          {reviews.map((review, i) => (
+            <div key={`m-${review.name}-${i}`} className="snap-start">
+              {renderCard(review, i)}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* desktop: infinite marquee */}
+      <div className="mt-8 hidden overflow-hidden lg:block">
         <div className="marquee-track flex w-max pb-2" aria-label="Customer reviews">
           {reviews.map(renderCard)}
           <div aria-hidden="true" className="flex">

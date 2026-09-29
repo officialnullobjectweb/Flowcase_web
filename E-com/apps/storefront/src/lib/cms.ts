@@ -145,23 +145,73 @@ function merge(raw: Partial<CmsConfig> | null): CmsConfig {
   }
 }
 
+/* ── homepage section order (admin "Homepage" page) ── */
+
+export interface HomeSectionCfg {
+  key: string
+  title: string
+  enabled: boolean
+  position: number
+  limitCount: number
+}
+
+/** Mirrors supabase/schema-11 seed — fallback when the table is unreachable. */
+export const DEFAULT_HOME_SECTIONS: HomeSectionCfg[] = [
+  { key: "best_sellers", title: "Best sellers", enabled: true, position: 1, limitCount: 10 },
+  { key: "categories", title: "Shop by category", enabled: true, position: 2, limitCount: 6 },
+  { key: "models", title: "Shop by model", enabled: true, position: 3, limitCount: 12 },
+  { key: "just_landed", title: "Just landed", enabled: true, position: 4, limitCount: 8 },
+  { key: "this_month", title: "This month", enabled: true, position: 5, limitCount: 6 },
+  { key: "sustainability", title: "Sustainability", enabled: true, position: 6, limitCount: 4 },
+  { key: "collections", title: "Collections", enabled: true, position: 7, limitCount: 8 },
+  { key: "reviews", title: "Reviews", enabled: true, position: 8, limitCount: 8 },
+  { key: "best_rated", title: "Best rated", enabled: true, position: 9, limitCount: 8 },
+  { key: "the_standard", title: "The standard", enabled: true, position: 10, limitCount: 4 },
+  { key: "reuse", title: "Reuse programme", enabled: true, position: 11, limitCount: 4 },
+  { key: "cta_newsletter", title: "Ready when you are", enabled: true, position: 12, limitCount: 4 },
+]
+
+export async function getHomeSections(): Promise<HomeSectionCfg[]> {
+  try {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!url || !key) return DEFAULT_HOME_SECTIONS
+    // no-store: admin toggles must be seen on the next render — the page's
+    // own ISR window is the only allowed staleness.
+    const res = await fetch(`${url}/rest/v1/home_sections?select=key,title,enabled,position,limit_count`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+      cache: "no-store",
+    })
+    if (!res.ok) return DEFAULT_HOME_SECTIONS
+    const rows = (await res.json()) as
+      | { key: string; title: string; enabled: boolean; position: number; limit_count: number }[]
+      | { message?: string }
+    if (!Array.isArray(rows) || !rows.length) return DEFAULT_HOME_SECTIONS
+    return rows.map((r) => ({
+      key: r.key,
+      title: r.title,
+      enabled: r.enabled,
+      position: r.position,
+      limitCount: r.limit_count,
+    }))
+  } catch {
+    return DEFAULT_HOME_SECTIONS
+  }
+}
+
 export async function getCms(): Promise<CmsConfig> {
   try {
-    const base =
-      process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL ??
-      process.env.MEDUSA_BACKEND_URL ??
-      "http://localhost:9000"
-    const res = await fetch(`${base}/store/cms`, {
-      headers: {
-        "x-publishable-api-key":
-          process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY ?? "",
-      },
-      // free-tier backend may be asleep — never stall the build on CMS copy
-      signal: AbortSignal.timeout(10_000),
-      next: { revalidate: 5 },
-    })
-    if (!res.ok) throw new Error(`cms ${res.status}`)
-    return merge((await res.json()) as Partial<CmsConfig>)
+    const { supabaseAnon } = await import("./supabase")
+    const sb = supabaseAnon()
+    const { data } = await sb.from("site_settings").select("key,value").in("key", ["announcement", "promo"])
+    if (!data?.length) return DEFAULT_CMS
+    const raw: Partial<CmsConfig> = {}
+    for (const row of data as { key: string; value: unknown }[]) {
+      if (row.key === "announcement" || row.key === "promo") {
+        ;(raw as Record<string, unknown>)[row.key] = row.value
+      }
+    }
+    return merge(raw)
   } catch {
     return DEFAULT_CMS
   }
