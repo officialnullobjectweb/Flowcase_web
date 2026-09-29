@@ -8,11 +8,26 @@ export interface CardBadge {
 const KNOWN: Record<string, CardBadge> = {
   trending: { label: "Trending", tone: "ink" },
   bestseller: { label: "Best seller", tone: "ink" },
+  featured: { label: "Featured", tone: "ink" },
+  exclusive: { label: "Exclusive", tone: "ink" },
+  editorschoice: { label: "Editor's choice", tone: "ink" },
   new: { label: "New", tone: "signal" },
   sale: { label: "Sale", tone: "signal" },
+  preorder: { label: "Pre-order", tone: "signal" },
+  clearance: { label: "Clearance", tone: "signal" },
   limited: { label: "Limited", tone: "outline" },
   budget: { label: "Budget pick", tone: "outline" },
+  hot: { label: "Hot", tone: "outline" },
+  eco: { label: "Eco", tone: "outline" },
+  bundle: { label: "Bundle", tone: "outline" },
 }
+
+/** Curated badge library — admin chip picker mirrors this list. */
+export const BADGE_LIBRARY = Object.entries(KNOWN).map(([key, b]) => ({
+  key,
+  label: b.label,
+  tone: b.tone,
+}))
 
 /**
  * Badges for a product card. Explicit assignment wins:
@@ -42,5 +57,5 @@ export function productBadges(
       out.push({ label: "New", tone: "signal" })
   }
 
-  return out.slice(0, 2)
+  return out.slice(0, 3)
 }
