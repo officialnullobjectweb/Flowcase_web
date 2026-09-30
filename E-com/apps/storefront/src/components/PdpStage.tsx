@@ -55,7 +55,7 @@ export function PdpStage({ product }: { product: Product }) {
           product={product}
         />
         {/* hotspot dots */}
-        <div className="pointer-events-none absolute inset-0" aria-hidden={active === null}>
+        <div className="pointer-events-none absolute inset-0">
           {spots.map((s, i) => (
             <div key={s.title} className="pointer-events-auto absolute" style={{ left: `${s.x}%`, top: `${s.y}%` }}>
               <button
