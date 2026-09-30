@@ -4,6 +4,7 @@ import { CartDrawer } from "@/components/CartDrawer"
 import { Footer } from "@/components/Footer"
 import { SiteHeader } from "@/components/SiteHeader"
 import { JsonLd } from "@/components/JsonLd"
+import { Clarity } from "@/components/Clarity"
 import { getNavModels } from "@/lib/api"
 import { getCms } from "@/lib/cms"
 import { CartProvider } from "@/context/CartContext"
@@ -141,6 +142,7 @@ export default async function RootLayout({
             </AuthProvider>
           </WishlistProvider>
         </CartProvider>
+        <Clarity />
       </body>
     </html>
   )
