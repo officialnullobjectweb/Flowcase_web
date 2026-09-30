@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { Catalog } from "@/components/Catalog"
 import { VideoHero } from "@/components/VideoHero"
-import { loadCatalog } from "@/lib/api"
+import { listColorOptions, loadCatalog } from "@/lib/api"
 import { getCms } from "@/lib/cms"
 
 export const metadata: Metadata = {
@@ -46,6 +46,7 @@ export default async function ShopPage({
     badge: p.badge,
     limit: 48,
   })
+  const colorOptions = await listColorOptions()
 
   const limited = p.badge === "limited"
 
@@ -83,6 +84,7 @@ export default async function ShopPage({
           }}
           products={products}
           categories={categories}
+          colorOptions={colorOptions}
         />
         {/* indexable category copy + internal links */}
         <div className="mx-auto mt-14 max-w-3xl border-t border-border pt-8 text-center">

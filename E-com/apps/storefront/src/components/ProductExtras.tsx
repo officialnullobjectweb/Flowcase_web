@@ -10,9 +10,21 @@ import { pdpCopy } from "@/lib/pdp-copy"
 import type { Product } from "@/lib/types"
 
 export function FeatureBanners({ product }: { product: Product }) {
-  const BANNERS = pdpCopy(product).banners
+  const custom = (product.featureBanners ?? []).filter((b) => b.title?.trim() && b.image?.trim())
+  const BANNERS = custom.length
+    ? custom.map((b) => ({
+        eyebrow: b.eyebrow?.trim() || "Feature",
+        title: b.title,
+        copy: b.copy ?? "",
+        image: b.image,
+        alt: b.title,
+      }))
+    : pdpCopy(product).banners
   return (
-    <section aria-label="Product features" className="mt-12 grid gap-4 sm:mt-16 sm:grid-cols-2 sm:gap-6">
+    <section
+      aria-label="Product features"
+      className={`mt-12 grid gap-4 sm:mt-16 sm:gap-6 ${BANNERS.length === 1 ? "" : "sm:grid-cols-2"}`}
+    >
       {BANNERS.map((b, i) => (
         <motion.article
           key={b.title}
@@ -72,9 +84,12 @@ export function FeatureBanners({ product }: { product: Product }) {
 export function DetailsTabs({ product, pdp }: { product: Product; pdp?: CmsPdp }) {
   const [tab, setTab] = useState<"highlights" | "details">("highlights")
   const copy = pdpCopy(product)
-  const rows = pdp?.highlights?.length
-    ? pdp.highlights.filter((r) => r.term?.trim() || r.detail?.trim())
-    : copy.highlights
+  const productRows = (product.highlights ?? []).filter((r) => r.term?.trim() || r.detail?.trim())
+  const rows = productRows.length
+    ? productRows
+    : pdp?.highlights?.length
+      ? pdp.highlights.filter((r) => r.term?.trim() || r.detail?.trim())
+      : copy.highlights
   const full = pdp?.details?.trim() || product.description?.trim() || ""
   const fallback = copy.detailsFallback
 

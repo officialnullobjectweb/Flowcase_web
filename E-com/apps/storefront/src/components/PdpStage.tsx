@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { ImageGallery } from "@/components/ImageGallery"
-import { SWATCHES } from "@/components/FilterSortBar"
+import { swatchHex } from "@/components/FilterSortBar"
 import { useSelection } from "@/context/SelectionContext"
 import type { Product } from "@/lib/types"
 
@@ -37,7 +37,7 @@ export function PdpStage({ product }: { product: Product }) {
   const [active, setActive] = useState<number | null>(null)
   const isCase = /^Flowcase (MagSafe )?for (iPhone|Galaxy|AirPods)/i.test(product.title)
   const spots = isCase ? CASE_SPOTS : GEAR_SPOTS
-  const tint = (colorName && SWATCHES[colorName]) || "#e5e5e5"
+  const tint = (colorName && swatchHex(colorName)) || "#e5e5e5"
 
   return (
     <div

@@ -45,6 +45,8 @@ interface Row {
   badges: string | null
   rating: number | string | null
   review_count: number | string | null
+  highlights: { term: string; detail: string }[] | null
+  feature_banners: { eyebrow: string; title: string; copy: string; image: string }[] | null
   product_images: { url: string; position: number }[]
   variants: {
     id: string
@@ -84,6 +86,8 @@ function adapt(row: Row): Product {
       colors: colors.join(","),
       ...(row.badges ? { badges: row.badges } : {}),
     },
+    highlights: row.highlights ?? null,
+    featureBanners: row.feature_banners ?? null,
     variants: row.variants.map((v) => ({
       id: v.id,
       title: v.title,
@@ -236,6 +240,14 @@ async function listCategoryFacets(items: Product[]): Promise<ProductCategory[]> 
 }
 
 /** One loader for shop / search / collections — pool once, filter in JS. */
+/** Distinct colours across the whole catalogue — the shop filter facet. */
+export async function listColorOptions(): Promise<string[]> {
+  const sb = supabaseAnon()
+  const { data, error } = await sb.from("products").select("colors").limit(500)
+  if (error) throw new Error(error.message)
+  return [...new Set((data ?? []).flatMap((r) => (r.colors ?? []) as string[]))]
+}
+
 export async function loadCatalog(query: CatalogQuery): Promise<{
   products: Product[]
   count: number

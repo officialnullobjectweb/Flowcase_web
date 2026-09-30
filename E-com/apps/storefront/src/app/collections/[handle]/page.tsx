@@ -4,7 +4,7 @@ import Link from "next/link"
 import { Catalog } from "@/components/Catalog"
 import { JsonLd, siteUrl } from "@/components/JsonLd"
 import { PageHeader } from "@/components/PageHeader"
-import { getCollectionByHandle, loadCatalog } from "@/lib/api"
+import { getCollectionByHandle, listColorOptions, loadCatalog } from "@/lib/api"
 
 interface PageProps {
   params: Promise<{ handle: string }>
@@ -110,6 +110,7 @@ export default async function CollectionPage({ params, searchParams }: PageProps
     reviews: p.reviews,
     limit: 48,
   })
+  const colorOptions = await listColorOptions()
 
   const kind = kindOf(collection.title)
   const copy = COPY[kind]
@@ -139,6 +140,7 @@ export default async function CollectionPage({ params, searchParams }: PageProps
           basePath={`/collections/${handle}`}
           state={{ q: p.q, tag: p.tag, cat: p.cat, sort: p.sort, min: p.min, max: p.max, color: p.color, rating: p.rating, reviews: p.reviews }}
           products={products}
+          colorOptions={colorOptions}
           categories={categories}
         />
         {/* indexable buying-guide copy + internal links */}

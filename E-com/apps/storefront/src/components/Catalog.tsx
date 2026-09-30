@@ -13,6 +13,8 @@ interface CatalogProps {
   state: CatalogState
   products: Product[]
   categories: ProductCategory[]
+  /** Distinct colours across the whole catalogue (unfiltered) — filter facet. */
+  colorOptions: string[]
 }
 
 /** Products revealed per bunch — scroll past the grid and the next bunch mounts. */
@@ -67,6 +69,7 @@ export function Catalog({
   state,
   products,
   categories,
+  colorOptions,
 }: CatalogProps) {
   // ponytail: batches revealed client-side from one payload — switch to a
   // route handler fetching /store/products per batch past ~200 products
@@ -96,7 +99,12 @@ export function Catalog({
 
   return (
     <div className="space-y-8">
-      <FilterSortBar basePath={basePath} state={state} categories={categories} />
+      <FilterSortBar
+        basePath={basePath}
+        state={state}
+        categories={categories}
+        colorOptions={colorOptions}
+      />
 
       {products.length === 0 ? (
         <div className="border border-dashed border-border p-12 text-center">

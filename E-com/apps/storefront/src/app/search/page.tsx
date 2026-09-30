@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Catalog } from "@/components/Catalog"
 import { PageHeader } from "@/components/PageHeader"
-import { loadCatalog } from "@/lib/api"
+import { listColorOptions, loadCatalog } from "@/lib/api"
 
 export const metadata: Metadata = {
   title: "Search",
@@ -40,6 +40,7 @@ export default async function SearchPage({
     reviews: p.reviews,
     limit: 48,
   })
+  const colorOptions = await listColorOptions()
 
   return (
     <>
@@ -80,6 +81,7 @@ export default async function SearchPage({
           basePath="/search"
           state={{ q: p.q, tag: p.tag, cat: p.cat, sort: p.sort, min: p.min, max: p.max, color: p.color, rating: p.rating, reviews: p.reviews }}
           products={products}
+          colorOptions={colorOptions}
           categories={categories}
         />
       </section>

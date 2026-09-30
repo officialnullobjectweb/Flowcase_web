@@ -28,8 +28,10 @@ const SORT_OPTIONS = [
   { value: "title", label: "A – Z" },
 ]
 
+/** Canonical palette — mirrors admin `lib/swatches.ts` (keep in sync). */
 export const SWATCHES: Record<string, string> = {
   Onyx: "#141414",
+  Graphite: "#3a3a3c",
   Glacier: "#dbe7e9",
   Sand: "#d9c9a8",
   Sage: "#a9b8a0",
@@ -39,7 +41,41 @@ export const SWATCHES: Record<string, string> = {
   Amber: "#e0a437",
   Forest: "#3d6b4f",
   Lavender: "#c3b2e0",
-  Graphite: "#3a3a3c",
+  White: "#ffffff",
+  Clear: "#f3f4f6",
+  Black: "#141414",
+}
+
+/** Case-insensitive hex lookup; null for custom tokens. */
+export function swatchHex(name: string): string | null {
+  const needle = name.trim().toLowerCase()
+  if (!needle) return null
+  for (const [key, hex] of Object.entries(SWATCHES)) {
+    if (key.toLowerCase() === needle) return hex
+  }
+  return null
+}
+
+/**
+ * Facet chips: palette colours the catalogue actually uses (palette order),
+ * then any custom colours it doesn't cover. Deduped case-insensitively.
+ */
+export function buildColorFacet(values: string[]): { name: string; hex: string }[] {
+  const byKey = new Map<string, string>()
+  for (const v of values) {
+    const t = v.trim()
+    if (t) byKey.set(t.toLowerCase(), t)
+  }
+  const out: { name: string; hex: string }[] = []
+  for (const [key, hex] of Object.entries(SWATCHES)) {
+    const raw = byKey.get(key.toLowerCase())
+    if (raw) {
+      out.push({ name: raw, hex })
+      byKey.delete(key.toLowerCase())
+    }
+  }
+  for (const raw of byKey.values()) out.push({ name: raw, hex: "#e5e5e5" })
+  return out
 }
 
 const RATING_OPTS = [
@@ -82,11 +118,13 @@ function FilterPanel({
   state,
   onApply,
   showSort = false,
+  colorOptions,
 }: {
   basePath: string
   state: CatalogState
   onApply?: () => void
   showSort?: boolean
+  colorOptions?: string[]
 }) {
   const router = useRouter()
   const [price, setPrice] = useState<[number, number]>([
@@ -137,7 +175,7 @@ function FilterPanel({
       <fieldset>
         <legend className="label mb-3 text-muted-foreground">Color</legend>
         <div className="flex flex-wrap gap-2">
-          {Object.entries(SWATCHES).map(([name, hex]) => {
+          {buildColorFacet(colorOptions ?? []).map(({ name, hex }) => {
             const active = state.color === name
             return (
               <button
@@ -276,10 +314,12 @@ export function FilterSortBar({
   basePath,
   state,
   categories,
+  colorOptions,
 }: {
   basePath: string
   state: CatalogState
   categories: ProductCategory[]
+  colorOptions?: string[]
 }) {
   const router = useRouter()
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -356,6 +396,7 @@ export function FilterSortBar({
                 state={state}
                 onApply={close}
                 showSort
+                colorOptions={colorOptions}
               />
             </div>
           )}
@@ -423,7 +464,7 @@ export function FilterSortBar({
           </button>
         }
       >
-        <FilterPanel basePath={basePath} state={state} />
+        <FilterPanel basePath={basePath} state={state} colorOptions={colorOptions} />
       </Dialog>
     </div>
   )

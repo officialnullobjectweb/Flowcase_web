@@ -60,6 +60,8 @@ export interface Product {
   tags?: ProductTag[]
   options?: ProductOption[]
   metadata?: Record<string, string | number | null> | null
+  highlights?: { term: string; detail: string }[] | null
+  featureBanners?: { eyebrow: string; title: string; copy: string; image: string }[] | null
   variants: ProductVariant[]
 }
 

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { useCart } from "@/context/CartContext"
 import { useSelection } from "@/context/SelectionContext"
-import { SWATCHES } from "@/components/FilterSortBar"
+import { swatchHex } from "@/components/FilterSortBar"
 import { productBadges } from "@/lib/badges"
 import { formatPrice } from "@/lib/format"
 import type { Product, ProductVariant } from "@/lib/types"
@@ -203,7 +203,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
               >
                 <span
                   className="h-5 w-5 shrink-0 rounded-full border border-border"
-                  style={{ background: SWATCHES[c] ?? "#e5e5e5" }}
+                  style={{ background: swatchHex(c) ?? "#e5e5e5" }}
                   aria-hidden="true"
                 />
                 {c}
